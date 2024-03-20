@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_instant_abode_cliente,instant_abode.cliente,model_instant_abode_cliente,base.group_user,1,1,1,1
+access_instant_abode_propietario,instant_abode.propietario,model_instant_abode_propietario,base.group_user,1,1,1,1
+access_instant_abode_valoracioncliente,instant_abode.valoracioncliente,model_instant_abode_valoracioncliente,base.group_user,1,1,1,1
+access_instant_abode_inmueble,instant_abode.inmueble,model_instant_abode_inmueble,base.group_user,1,1,1,1
+access_instant_abode_valoracioninmueble,instant_abode.valoracioninmueble,model_instant_abode_valoracioninmueble,base.group_user,1,1,1,1
+access_instant_abode_alquiler,instant_abode.alquiler,model_instant_abode_alquiler,base.group_user,1,1,1,1

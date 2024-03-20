@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="instant_abode.tree_view_cliente">
+            <field name="name">Cliente</field>
+            <field name="model">instant_abode.cliente</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="nombreCliente" />
+                    <field name="dni" />
+                    <field name="correo" />
+                </tree>
+            </field>
+        </record>
+    </data>
+    <record model="ir.ui.view" id="instant_abode.form_view_cliente">
+        <field name="name">Información Cliente</field>
+        <field name="model">instant_abode.cliente</field>
+        <field name="arch" type="xml">
+            <form string="Información Cliente">
+                <group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
+                        <field name="nombreCliente" />
+                        <field name="apellidos" />
+                        <field name="dni"/>
+                        <field name="correo" />
+                        <field name="telefono" />
+                    </group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Cuenta Usuario</h1>
+                        <field name="name" />
+                        <field name="contrasenya" />
+                        <field name="imagen" widget="image" options="{'size': [150, 150]}" />
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Alquileres">
+                        <h1 style="color:#d2d2ff" colspan="2">Alquileres</h1>
+                        <field name="alquileres" />
+                    </page>
+                    <page string="Valoraciones">
+                        <h1 style="color:#d2d2ff" colspan="2">Valoraciones</h1>
+                        <field name="valoraciones" />
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="instant_abode.cliente_action_window">
+        <field name="name">Cliente</field>
+        <field name="res_model">instant_abode.cliente</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

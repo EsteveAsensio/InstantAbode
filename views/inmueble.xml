@@ -1,0 +1,66 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="instant_abode.tree_view_inmueble">
+            <field name="name">Inmueble</field>
+            <field name="model">instant_abode.inmueble</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="provincia" />
+                    <field name="metrosCuadrados" />
+                    <field name="propietario" />
+                </tree>
+            </field>
+        </record>
+    </data>
+    <record model="ir.ui.view" id="instant_abode.form_view_inmueble">
+        <field name="name">Información Inmueble</field>
+        <field name="model">instant_abode.inmueble</field>
+        <field name="arch" type="xml">
+            <form string="Información Inmueble">
+                <header>
+                    <button string="Mostrar" type="object" name="mostrarPublico" class="oe_highlight"
+                        confirm="¿Está seguro que desea mostrar el inmueble al público?"
+                        attrs="{'invisible': [('state', '!=', 'Ocultar')]}" />
+
+                    <button string="Ocultar" type="object" name="ocultarPublico" class="oe_highlight"
+                        confirm="¿Está seguro que desea ocultar el inmueble al público?"
+                        attrs="{'invisible': [('state', '!=', 'Mostrar')]}" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Información</h1>
+                        <field name="name" />
+                        <field name="provincia" />
+                        <field name="localizacion"/>
+                        <field name="state" />
+                        <h1 style="color:#d2d2ff" colspan="2">Características</h1>
+                        <field name="habitaciones" />
+                        <field name="banyos" />
+                        <field name="metrosCuadrados" />
+                        <field name="adicionales" />
+                        <field name="descripcion" />
+                    </group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
+                        <field name="propietario" />
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Alquileres">
+                        <h1 style="color:#d2d2ff" colspan="2">Alquileres</h1>
+                        <field name="alquileres" />
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="instant_abode.inmueble_action_window">
+        <field name="name">Inmueble</field>
+        <field name="res_model">instant_abode.inmueble</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

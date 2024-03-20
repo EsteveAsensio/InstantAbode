@@ -1,0 +1,44 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="instant_abode.tree_view_valoracion">
+            <field name="name">Valoración</field>
+            <field name="model">instant_abode.valoracioncliente</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="fecha" />
+                    <field name="propietario" />
+                    <field name="cliente" />
+                </tree>
+            </field>
+        </record>
+    </data>
+    <record model="ir.ui.view" id="instant_abode.form_view_valoracion">
+        <field name="name">Información Valoración</field>
+        <field name="model">instant_abode.valoracioncliente</field>
+        <field name="arch" type="xml">
+            <form string="Información Valoración">
+                <group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Valoración</h1>
+                        <field name="comentario" />
+                        <field name="puntuacion"/>
+                        <field name="fecha" />
+                    </group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
+                        <field name="propietario" />
+                        <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
+                        <field name="cliente" />
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="instant_abode.valoracioncliente_action_window">
+        <field name="name">Valoración</field>
+        <field name="res_model">instant_abode.valoracioncliente</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

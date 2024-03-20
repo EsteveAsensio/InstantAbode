@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <!-- Top menu item web_icon="clinic,static/description/logo"-->
+        <menuitem name="InstantAbode" id="instant_abode.menu_root"/>
+        
+        <!-- menu Clientes-->
+        <menuitem name="Clientes" id="instant_abode.menu_clientes" parent="instant_abode.menu_root"
+        sequence = "1" />
+        <!-- actions -->
+        <menuitem name="Lista Clientes" id="instant_abode.menu_clientes_lista"
+            parent="instant_abode.menu_clientes" action="instant_abode.cliente_action_window" />
+
+        <!-- menu Propietario-->
+        <menuitem name="Propietario" id="instant_abode.menu_propietarios" parent="instant_abode.menu_root" 
+        sequence = "2"/>
+        <!-- actions -->
+        <menuitem name="Lista Propietarios" id="instant_abode.menu_propietarios_lista"
+            parent="instant_abode.menu_propietarios" action="instant_abode.propietario_action_window" />
+
+        <!-- menu Valoraciones Cliente-->
+        <menuitem name="Valoraciones Clientes" id="instant_abode.menu_valoracionescliente" parent="instant_abode.menu_root" 
+        sequence = "6"/>
+        <!-- actions -->
+        <menuitem name="Valoraciones Clientes" id="instant_abode.menu_valoracionescliente_lista"
+            parent="instant_abode.menu_valoracionescliente" action="instant_abode.valoracioncliente_action_window" />
+
+        <!-- menu Inmuebles-->
+        <menuitem name="Inmuebles" id="instant_abode.menu_inmuebles" parent="instant_abode.menu_root" 
+        sequence = "3"/>
+        <!-- actions -->
+        <menuitem name="Lista Inmuebles" id="instant_abode.menu_inmuebles_lista"
+            parent="instant_abode.menu_inmuebles" action="instant_abode.inmueble_action_window" />
+
+        <!-- menu Valoraciones Inmueble -->
+        <menuitem name="Valoraciones Inmuebles" id="instant_abode.menu_valoracionesinmueble" parent="instant_abode.menu_root" 
+        sequence = "5"/>
+        <!-- actions -->
+        <menuitem name="Valoraciones Inmuebles" id="instant_abode.menu_valoracionesinmueble_lista"
+            parent="instant_abode.menu_valoracionesinmueble" action="instant_abode.valoracioninmueble_action_window" />
+        
+        <!-- menu Alquileres-->
+        <menuitem name="Alquileres" id="instant_abode.menu_alquileres" parent="instant_abode.menu_root" 
+        sequence = "4"/>
+        <!-- actions -->
+        <menuitem name="Lista Alquileres" id="instant_abode.menu_alquileres_lista"
+            parent="instant_abode.menu_alquileres" action="instant_abode.alquiler_action_window" />
+    </data>
+</odoo>

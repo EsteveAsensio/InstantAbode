@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="login.component.css">
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Iniciar Sesión</h1>
+    <form>
+      <div class="grupo">
+        <label for="username">Nombre de Usuario</label>
+        <input type="text" id="username" name="username" placeholder="Nombre de usuario" required>
+      </div>
+      <div class="grupo">
+        <label for="contrasenya">Contraseña</label>
+        <input type="password" id="contrasenya" name="contrasenya" placeholder="Contraseña" required>
+      </div>
+      <div class="grupo-botones">
+        <button type="submit" class="login">Iniciar Sesión</button>
+        <button type="button" class="registrar" onclick="location.href='registro.html';">Registrar Nuevo Usuario</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

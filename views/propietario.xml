@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="instant_abode.tree_view_propietario">
+            <field name="name">Propietario</field>
+            <field name="model">instant_abode.propietario</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="nombrePropietario" />
+                    <field name="dni" />
+                    <field name="correo" />
+                </tree>
+            </field>
+        </record>
+    </data>
+    <record model="ir.ui.view" id="instant_abode.form_view_propietario">
+        <field name="name">Información Propietario</field>
+        <field name="model">instant_abode.propietario</field>
+        <field name="arch" type="xml">
+            <form string="Información Propietario">
+                <group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
+                        <field name="nombrePropietario" />
+                        <field name="apellidos" />
+                        <field name="dni"/>
+                        <field name="correo" />
+                        <field name="telefono" />
+                    </group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Cuenta Usuario</h1>
+                        <field name="name" />
+                        <field name="contrasenya" />
+                        <field name="imagen" widget="image" options="{'size': [150, 150]}" />
+                    </group>
+                    <notebook>
+                        <page string="Inmuebles">
+                            <h1 style="color:#d2d2ff" colspan="2">Inmuebles</h1>
+                            <field name="inmuebles" />
+                        </page>
+                        <page string="Valoraciones Realizadas">
+                            <h1 style="color:#d2d2ff" colspan="2">Valoraciones</h1>
+                            <field name="valoracionesClientes" />
+                        </page>
+                    </notebook>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="instant_abode.propietario_action_window">
+        <field name="name">Propietario</field>
+        <field name="res_model">instant_abode.propietario</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

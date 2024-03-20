@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="instant_abode.tree_view_valoracioninmueble">
+            <field name="name">Valoración</field>
+            <field name="model">instant_abode.valoracioninmueble</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="fecha" />
+                    <field name="cliente" />
+                    <field name="inmueble" />
+                </tree>
+            </field>
+        </record>
+    </data>
+    <record model="ir.ui.view" id="instant_abode.form_view_valoracioninmueble">
+        <field name="name">Información Valoración</field>
+        <field name="model">instant_abode.valoracioninmueble</field>
+        <field name="arch" type="xml">
+            <form string="Información Valoración">
+                <group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Valoración</h1>
+                        <field name="comentario" />
+                        <field name="puntuacion"/>
+                        <field name="fecha" />
+                    </group>
+                    <group>
+                        <h1 style="color:#d2d2ff" colspan="2">Inmueble</h1>
+                        <field name="inmueble" />
+                        <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
+                        <field name="cliente" />
+                        <h1 style="color:#d2d2ff" colspan="2">Alquiler</h1>
+                        <field name="alquiler" />
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="instant_abode.valoracioninmueble_action_window">
+        <field name="name">Valoración</field>
+        <field name="res_model">instant_abode.valoracioninmueble</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
