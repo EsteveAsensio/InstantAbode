@@ -15,7 +15,7 @@ class Propietario(models.Model):
 
     #Infomarción Personal
     dni = fields.Char(string="DNI", help="DNI del propietario", required=True) #No repetidos y formato
-    nombrePropietario = fields.Char(string="Nombre", help="Nombre del propietario", required=True)
+    nombreCliente = fields.Char(string="Nombre", help="Nombre del propietario", required=True)
     apellidos = fields.Char(string="Apellidos", help="Apellidos del propietario")
     correo = fields.Char(string="Correo", help="Correo del propietario", required=True) #No repetidos y formato
     telefono = fields.Char(string="Teléfono", help="Teléfono del propietario") #No repetidos y numeros
