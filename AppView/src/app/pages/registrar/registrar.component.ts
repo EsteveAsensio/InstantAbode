@@ -8,5 +8,12 @@ import { Component } from '@angular/core';
   styleUrl: './registrar.component.css'
 })
 export class RegistrarComponent {
+private Dni: string = "";
+private Nombre: string = "";
+private Apellidos: string = "";
+private correo: string = "";
+private telefono: string = "";
+private username: string = "";
+private password: string = "";
 
 }
