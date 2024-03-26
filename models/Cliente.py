@@ -18,7 +18,7 @@ class Cliente(models.Model):
     nombreCliente = fields.Char(string="Nombre", help="Nombre del cliente", required=True)
     apellidos = fields.Char(string="Apellidos", help="Apellidos del cliente")
     correo = fields.Char(string="Correo", help="Correo del cliente", required=True) #No repetidos y formato
-    telefono = fields.Integer(string="Teléfono", help="Teléfono del cliente") #No repetidos y numeros
+    telefono = fields.Char(string="Teléfono", help="Teléfono del cliente") #No repetidos y numeros
     #Información Cuenta Usuario
     name = fields.Char(string="Nombre de Usuario", help="Nombre del usuario", required=True) #No repetidos
     contrasenya = fields.Char(string="Contraseña", help="Contraseña del usuario", required=True) #No repetidos y formato

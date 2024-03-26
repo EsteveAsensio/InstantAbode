@@ -18,7 +18,7 @@ class Propietario(models.Model):
     nombrePropietario = fields.Char(string="Nombre", help="Nombre del propietario", required=True)
     apellidos = fields.Char(string="Apellidos", help="Apellidos del propietario")
     correo = fields.Char(string="Correo", help="Correo del propietario", required=True) #No repetidos y formato
-    telefono = fields.Integer(string="Teléfono", help="Teléfono del propietario") #No repetidos y numeros
+    telefono = fields.Char(string="Teléfono", help="Teléfono del propietario") #No repetidos y numeros
     #Información Cuenta Usuario
     name = fields.Char(string="Nombre de Usuario", help="Nombre del usuario", required=True) #No repetidos
     contrasenya = fields.Char(string="Contraseña", help="Contraseña del usuario", required=True) #No repetidos y formato
