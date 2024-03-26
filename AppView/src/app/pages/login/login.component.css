@@ -1,10 +1,4 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-  }
-  
+
   .contenedor {
     max-width: 400px;
     margin: 100px auto;
@@ -66,4 +60,3 @@ body {
   .grupo-botones button.registrar:hover {
     background-color: #218838;
   }
-  
