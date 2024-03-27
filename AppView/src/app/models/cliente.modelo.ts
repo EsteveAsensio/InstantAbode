@@ -10,6 +10,7 @@ export class Cliente {
     public apellidos: string,
     public telefono: Date,
     public name: string,
+    public correo: string,
     public contrasenya: string,
     public imagen: string,
     public valoraciones: ValoracionCliente[],
