@@ -28,3 +28,30 @@ class PropietariosController(http.Controller):
                 "error": str(error)
             }
             return data
+        
+    #put
+    @http.route('/InstantAbode/modificarPropietario', type='json', auth='public', methods=['PUT'])
+    def modificarPropietario(self, **kw):
+       response = request.httprequest.json
+       try:
+            result = http.request.env["instant_abode.propietario"].sudo().search([("id","=",response["id"])])
+            if not result.exists():
+                data={
+                "status":400,
+                "id":"Error, no existe el propietario."
+                }   
+                return data
+            
+            result.sudo().write(response)
+            data={
+                "status":200,
+                "id":result.id
+            }
+            return data
+       
+       except Exception as error:
+            data={
+                "status":400,
+                "error":str(error)
+            }
+            return data

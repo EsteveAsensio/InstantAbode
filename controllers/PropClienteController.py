@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 from odoo.http import json
-from odoo.http import request
+from odoo.http import request, Response
 
 class PropClienteController(http.Controller):
 
@@ -26,65 +26,23 @@ class PropClienteController(http.Controller):
                 "error": str(error)
             }
             return data
+    #delete
+    @http.route('/InstantAbode/eliminarValoracionInmueble/<int:valoracionid>', type='http', auth='public', methods=['DELETE'], csrf=False)
+    def eliminarValoracionInmueble(self, valoracionid):
+        valoracion = request.env['instant_abode.valoracioninmueble'].sudo().browse(valoracionid)
+        try:
+            if not valoracion.exists():
+                data = json.dumps({'status': 400, 'message': 'Valoración no encontrada.'})
+                return Response(data, content_type='application/json', status=400)
 
-    #put
-    @http.route('/InstantAbode/modificarUser', type='json', auth='public', methods=['PUT'])
-    def modificarUser(self, **kw):
-       response = request.httprequest.json
-       try:
-            result = http.request.env["trufflesapp.order"].sudo().search([("id","=",response["id"])])
-            if not result.exists():
-                data={
-                "status":400,
-                "id":result.id
-                }   
-                return data
-            
-            if result.state == "Confirmed" or result.state == "Invoiced":
-                data={
-                "status":400,
-                "error":"You cant modify this order because is alredy Confirmed or Invoiced"
-                }   
-                return data
-            
-            base = response.get('base')
-            if base:
-                return {"status": 400, "error": "You cant change the price"}
-            
-            totalIva = response.get('totalIva')
-            if totalIva:
-                return {"status": 400, "error": "You cant change the price"}
-            
-            active = response.get('active')
-            if active:
-                return {"status": 400, "error": "You dont have permissions to modify the active"}
+            valoracion.unlink()
 
-            vendor = response.get('vendor')
-            if not vendor:
-                return {"status": 400, "error": "The vendor is required"}
+            data = json.dumps({'status': 200, 'message': 'Valoración eliminada correctamente.'})
+            return Response(data, content_type='application/json', status=200)
+    
+        except Exception as error:
+            data = json.dumps({'status': 500, 'message': error})
+            return Response(data, content_type='application/json', status=400)
 
-            partner = request.env['res.partner'].sudo().browse(vendor)
-            if not partner.exists():
-                return {"status": 404, "error": "Vendor not found."}
-            
-            invoice = response.get('invoice')
-            if invoice:
-                return {"status": 400, "error": "You dont have permissions to modify the invoice"}
 
-            state = response.get('state')
-            if state:
-                return {"status": 400, "error": "You cant change the state manually"}
-            
-            result.sudo().write(response)
-            data={
-                "status":200,
-                "id":result.id
-            }
-            return data
-       except Exception as error:
-            data={
-                "status":404,
-                "error":error
-            }
-            return data
        

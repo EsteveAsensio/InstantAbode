@@ -31,6 +31,7 @@
                 <group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Información</h1>
+                        <field name="id"/>
                         <field name="name" />
                         <field name="provincia" />
                         <field name="localizacion"/>

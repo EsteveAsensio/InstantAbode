@@ -36,16 +36,16 @@ class ClientesController(http.Controller):
 
             cliente = request.env['instant_abode.cliente'].sudo().search([('name', '=', username)])
             if cliente.exists():
-                return {"status": 400, "error": "Ya existe un cliente con ese nombre de usuario."}
+                return {"status": 400, "error": "Ya existe un usuario con ese nombre."}
             
             propietario = request.env['instant_abode.propietario'].sudo().search([('name', '=', username)])
             if propietario.exists():
-                return {"status": 400, "error": "Ya existe un propietario con ese nombre de usuario."}
+                return {"status": 400, "error": "Ya existe un usuario con ese nombre."}
             
             result = http.request.env["instant_abode.cliente"].sudo().create(response)
 
             data={
-                "status":201,
+                "status":200,
                 "id":result.id
             }
             return data
@@ -56,6 +56,7 @@ class ClientesController(http.Controller):
             }
             return data
         
+    #get
     @http.route(['/InstantAbode/buscarInmuebles'], auth='public', type="json", methods=['GET'], csrf=False)
     def buscarInmuebles(self, **kw):
         try:
@@ -101,5 +102,32 @@ class ClientesController(http.Controller):
             data = {
                 "status": 500,
                 "error": str(error)
+            }
+            return data
+
+    #put
+    @http.route('/InstantAbode/modificarCliente', type='json', auth='public', methods=['PUT'])
+    def modificarCliente(self, **kw):
+       response = request.httprequest.json
+       try:
+            result = http.request.env["instant_abode.cliente"].sudo().search([("id","=",response["id"])])
+            if not result.exists():
+                data={
+                "status":400,
+                "id":"Error, no existe el cliente."
+                }   
+                return data
+            
+            result.sudo().write(response)
+            data={
+                "status":200,
+                "id":result.id
+            }
+            return data
+       
+       except Exception as error:
+            data={
+                "status":400,
+                "error":str(error)
             }
             return data

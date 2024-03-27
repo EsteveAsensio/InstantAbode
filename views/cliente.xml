@@ -21,6 +21,7 @@
                 <group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
+                        <field name="id"/>
                         <field name="nombreCliente" />
                         <field name="apellidos" />
                         <field name="dni"/>

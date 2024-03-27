@@ -19,6 +19,7 @@
             <form string="Información Valoración">
                 <group>
                     <group>
+                        <field name="id"/>
                         <h1 style="color:#d2d2ff" colspan="2">Valoración</h1>
                         <field name="comentario" />
                         <field name="puntuacion"/>
