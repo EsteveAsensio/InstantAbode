@@ -17,7 +17,7 @@ class PropClienteController(http.Controller):
             cliente = http.request.env["instant_abode.cliente"].sudo().search_read(domain,["dni", "nombreCliente", "apellidos", "correo", "telefono", "name", "contrasenya", "imagen", "valoraciones", "alquileres"])
 
             if cliente:
-                return {'status': 200, 'result': 'Usuario encontrado'}
+                return cliente #{'status': 200, 'result': 'Usuario encontrado'}
             else:
                 return {'status': 400, 'message': 'Usuario no encontrado'}
         except Exception as error:

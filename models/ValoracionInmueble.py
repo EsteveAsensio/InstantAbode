@@ -10,7 +10,7 @@ class ValoracionInmueble(models.Model):
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
     comentario = fields.Html(string="Comentario", help="Comentario sobre el inmueble")
     puntuacion = fields.Integer(string="Valoración", help="Valoración del inmueble", required=True)
-    fecha = fields.Datetime(string="Fecha", help="Fecha de la reseña", default=fields.Datetime.now, readonly=True)
+    fecha = fields.Date(string="Fecha", help="Fecha de la reseña", default=fields.Date.today, readonly=True)
     #Alquiler
     alquiler = fields.Many2one("instant_abode.alquiler", string="Alquiler", required=True, ondelete="cascade")
     #Cliente

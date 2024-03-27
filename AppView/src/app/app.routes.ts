@@ -5,9 +5,13 @@ import { RegistrarComponent } from './pages/registrar/registrar.component';
 
 export const routes: Routes = [
     { component: LoginComponent, path: 'login' },
-    { component: LoginComponent, path: ''},
+   
     { component: PrincipalComponent, path: 'principal'},
-    { component: LoginComponent, path: '**' },
-    { component: RegistrarComponent, path: 'registrar' }
+    { component: RegistrarComponent, path: 'registrar' },
+
+    //
+    { component: LoginComponent, path: ''},
+    { component: LoginComponent, path: '**' }
+    
 
 ];
