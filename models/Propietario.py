@@ -1,6 +1,11 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import re
+import random
+import string
+import smtplib
+from email.message import EmailMessage
+import ssl
 
 class Propietario(models.Model):
     _name = 'instant_abode.propietario'
@@ -69,3 +74,68 @@ class Propietario(models.Model):
         # Un número
         if not re.search(r'\d', self.contrasenya):
             raise ValidationError("La contraseña debe tener como mínimo 1 dígito")
+        
+    def nuevoUsuarioNotificacion(self):
+        nombre = self.usuarioAleatorio()
+        contrasenya = self.contrasenyAleatoria()
+
+        # Verificar
+        while self.env['instant_abode.propietario'].search([('name', '=', nombre)]) or \
+                self.env['instant_abode.propietario'].search([('contrasenya', '=', contrasenya)]):
+            nombre = self.usuarioAleatorio()
+            contrasenya = self.contrasenyAleatoria()
+
+        while self.env['instant_abode.cliente'].search([('name', '=', nombre)]) or \
+            self.env['instant_abode.cliente'].search([('contrasenya', '=', contrasenya)]):
+            nombre = self.usuarioAleatorio()
+            contrasenya = self.contrasenyAleatoria()
+
+        self.name = nombre
+        self.contrasenya = contrasenya
+
+    def contrasenyAleatoria(self):
+        especiales = string.punctuation
+        digitos = string.digits
+        letras = string.ascii_letters
+
+        longitud = random.randint(5, 15)  # Longitud aleatoria entre 5 y 15 caracteres
+
+        # Al menos un carácter especial, un dígito y cinco letras
+        contrasenya = ''.join(random.choice(especiales) +
+                              random.choice(digitos) +
+                              ''.join(random.choice(letras) for _ in range(5)) +
+                              ''.join(random.choice(especiales + digitos + letras) for _ in range(longitud - 7)))
+
+        # Mezcla los caracteres de la contraseña
+        contrasenya = ''.join(random.sample(contrasenya, len(contrasenya)))
+        return contrasenya
+
+    def usuarioAleatorio(self):
+        nombre_usuario = ''.join(random.choices(string.ascii_lowercase, k=6))  # Genera un nombre de usuario de 8 caracteres
+        return nombre_usuario
+    
+    def notificarPropietario(self):
+        # Configuración del servidor SMTP
+        correo_emisor = 'esteve.ase2004@gmail.com'
+        contrasenya_emisor = 'zzuq smod izrq mgpu'  # clave
+        correo_receptor = self.correo
+
+        asunto = "¡Bienvenido a InstantAbode!"
+        mensaje = (
+            f'Hola {self.nombreCliente} {self.apellidos}, la petición para hacerte propietario/a en nuestra aplicación InstantAbode ha sido aceptada.\n'
+            f'Tu nuevo usuario y contraseña son los siguientes:\n\nUsuario: {self.name}\nContraseña: {self.contrasenya}\n\n'
+            f'Estos datos pueden ser modificados al entrar dentro de la aplicación > Perfil.\nMuchas gracias por confiar en nosotros.'
+        )
+
+        # Crear el objeto mensaje
+        msg = EmailMessage()
+        msg['From'] = correo_emisor
+        msg['To'] = correo_receptor
+        msg['Subject'] = asunto
+        msg.set_content(mensaje)
+
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context= context) as smtp:
+            smtp.login(correo_emisor, contrasenya_emisor)
+            smtp.sendmail(correo_emisor, correo_receptor, msg.as_string())

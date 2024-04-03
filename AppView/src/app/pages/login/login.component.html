@@ -10,7 +10,7 @@
       <input type="password" id="password" placeholder="Contraseña" name="password" [(ngModel)]="password" required>
     </div>
     <div class="grupo-botones">
-      <button type="submit" class="login">Iniciar Sesión</button>
+      <button type="submit" class="login" (click)="login()">Iniciar Sesión</button>
       <button type="button" class="registrar" (click)="registrar()">Registrar Nuevo Usuario</button>
     </div>
   </form>

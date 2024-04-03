@@ -31,6 +31,6 @@ class ValoracionInmueble(models.Model):
             raise ValidationError("La valoración debe de tener como mínimo un 1 de puntuación i como máximo un 10")
 
     @api.constrains("alquiler")
-    def comprobarPuntuacion(self):
+    def modificarClienteInmueble(self):
         self.cliente = self.alquiler.cliente
         self.inmueble = self.alquiler.inmueble

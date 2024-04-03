@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Route, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Cliente } from '../../models/cliente.modelo';
-import { switchAll } from 'rxjs';
 import { SwalAnimation } from '../../utils/SwalAnimation';
 
 @Component({

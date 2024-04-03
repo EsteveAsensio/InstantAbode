@@ -18,13 +18,19 @@
         <field name="model">instant_abode.propietario</field>
         <field name="arch" type="xml">
             <form string="Información Propietario">
+                <header>
+                    <button string="Generar Cuenta" type="object" name="nuevoUsuarioNotificacion"
+                        confirm="¿Está seguro que desea crear un nuevo nombre y contraseña de usuario?"/>
+                    <button string="Notificar Cuenta" type="object" name="notificarPropietario"
+                        confirm="¿Está seguro que desea notificar al propietario sobre su nueva cuenta?"/>
+                </header>
                 <group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
-                        <field name="id"/>
+                        <field name="id" />
                         <field name="nombreCliente" />
                         <field name="apellidos" />
-                        <field name="dni"/>
+                        <field name="dni" />
                         <field name="correo" />
                         <field name="telefono" />
                     </group>
