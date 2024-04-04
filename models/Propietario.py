@@ -120,9 +120,9 @@ class Propietario(models.Model):
         contrasenya_emisor = 'zzuq smod izrq mgpu'  # clave
         correo_receptor = self.correo
 
-        asunto = "¡Bienvenido a InstantAbode!"
+        asunto = "¡Bienvenido/a a InstantAbode!"
         mensaje = (
-            f'Hola {self.nombreCliente} {self.apellidos}, la petición para hacerte propietario/a en nuestra aplicación InstantAbode ha sido aceptada.\n'
+            f'Hola {self.nombreCliente} {self.apellidos}.\n La petición para hacerte propietario/a en nuestra aplicación InstantAbode ha sido aceptada.\n'
             f'Tu nuevo usuario y contraseña son los siguientes:\n\nUsuario: {self.name}\nContraseña: {self.contrasenya}\n\n'
             f'Estos datos pueden ser modificados al entrar dentro de la aplicación > Perfil.\nMuchas gracias por confiar en nosotros.'
         )

@@ -35,17 +35,20 @@
                         <field name="name" />
                         <field name="provincia" />
                         <field name="localizacion"/>
+                        <field name="precio"/>
                         <field name="state" />
+                        <field name="descripcion" />
+                        <field name="adicionales" />
+                        <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
+                        <field name="propietario" />
+                    </group>
+                    <group>
                         <h1 style="color:#d2d2ff" colspan="2">Características</h1>
+                        <field name="imagenPrincipal" widget="image" options="{'size': [500, 250]}" />
                         <field name="habitaciones" />
                         <field name="banyos" />
                         <field name="metrosCuadrados" />
-                        <field name="adicionales" />
-                        <field name="descripcion" />
-                    </group>
-                    <group>
-                        <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
-                        <field name="propietario" />
+                        <field name="imagenes" widget="many2many_binary_tags" />
                     </group>
                 </group>
                 <notebook>

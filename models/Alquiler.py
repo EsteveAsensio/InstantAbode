@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 class Alquiler(models.Model):
     _name = 'instant_abode.alquiler'
@@ -8,10 +9,18 @@ class Alquiler(models.Model):
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
     fechaInicio = fields.Date(string="Fecha Inicial", help="Fecha inicio instancia", required=True)
     fechaFinal = fields.Date(string="Fecha Final", help="Fecha final instancia", required=True)
-
+    precio = fields.Float(string='Precio Total', compute='modificarPrecio', store=True, readonly=True)
     inmueble = fields.Many2one("instant_abode.inmueble", string="Inmueble", required=True, ondelete="cascade")
     cliente = fields.Many2one("instant_abode.cliente", string="Cliente", required=True)
     valoracionInmueble = fields.Many2one("instant_abode.valoracioninmueble", string="Valoración", readonly=True)
+
+    @api.depends('fechaInicio', 'fechaFinal', 'inmueble')
+    def modificarPrecio(self):
+        for alquiler in self:
+            if alquiler.fechaInicio and alquiler.fechaFinal:
+                dias = alquiler.fechaFinal - alquiler.fechaInicio
+                dias_alquilados = dias.days + 1  # Se suma 1 para incluir también el último día
+                alquiler.precio = dias_alquilados * alquiler.inmueble.precio  # Calcula el precio total
 
     @api.depends('fechaInicio', 'fechaFinal', 'inmueble')
     def crearNombre(self):
@@ -21,7 +30,7 @@ class Alquiler(models.Model):
     @api.constrains('fechaInicio', 'fechaFinal', 'inmueble')
     def comprobarFechas(self):
         for alquiler in self:
-            if alquiler.fechaInicio >= alquiler.fechaFinal:
+            if alquiler.fechaInicio > alquiler.fechaFinal:
                 raise ValidationError("La fecha de inicio debe ser anterior a la fecha final.")
             
             domain = [

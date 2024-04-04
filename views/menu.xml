@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <!-- Top menu item web_icon="clinic,static/description/logo"-->
-        <menuitem name="InstantAbode" id="instant_abode.menu_root"/>
+        <menuitem name="InstantAbode" id="instant_abode.menu_root" web_icon="instant_abode,static/description/InstantAbodeIMG.png"/>
         
         <!-- menu Clientes-->
         <menuitem name="Clientes" id="instant_abode.menu_clientes" parent="instant_abode.menu_root"

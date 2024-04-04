@@ -23,6 +23,7 @@
                         <h1 style="color:#d2d2ff" colspan="2">Alquiler</h1>
                         <field name="fechaInicio" />
                         <field name="fechaFinal"/>
+                        <field name="precio"/>
                     </group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Inmueble</h1>
