@@ -4,7 +4,9 @@ from odoo.exceptions import ValidationError
 class ValoracionCliente(models.Model):
     _name = 'instant_abode.valoracioncliente'
     _description = 'Información de las valoraciones realizadas por un propietario a un cliente'
-
+    _sql_constraints = [
+        ('unique_valoracion_cliente', 'unique(propietario, cliente)', 'Solo se puede realizar una valoración por cliente.')
+    ]
     #Infomarción
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
     comentario = fields.Html(string="Comentario", help="Comentario sobre el cliente")
@@ -27,3 +29,14 @@ class ValoracionCliente(models.Model):
             raise ValidationError("La valoración debe de tener como mínimo un 1 de puntuación i como máximo un 10")
         if self.puntuacion > 10:
             raise ValidationError("La valoración debe de tener como mínimo un 1 de puntuación i como máximo un 10")
+
+    @api.constrains('propietario', 'cliente')
+    def alquilerPrevio(self):
+        for valoracion in self:
+            # Verificar si el cliente ha alquilado al menos un inmueble del propietario
+            alquileres = self.env['instant_abode.alquiler'].search([
+                ('cliente', '=', valoracion.cliente.id),
+                ('inmueble.propietario', '=', valoracion.propietario.id)
+            ])
+            if not alquileres:
+                raise ValidationError("El cliente debe haber alquilado al menos un inmueble del propietario para ser valorado.")

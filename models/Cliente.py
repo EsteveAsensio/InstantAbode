@@ -5,13 +5,6 @@ import re
 class Cliente(models.Model):
     _name = 'instant_abode.cliente'
     _description = 'Información sobre los Clientes que inician sesión en la aplicación.'
-    _sql_constraints= [
-        ('cliente_dni_uniq', 'UNIQUE (dni)', 'No puede haber dos clientes con el mismo DNI.'),
-        ('cliente_correo_uniq', 'UNIQUE (correo)', 'No puede haber dos clientes con el mismo correo.'),
-        ('cliente_name_uniq', 'UNIQUE (name)', 'No puede haber dos clientes con el mismo nombre de usuario.'),
-        ('cliente_contraseña_uniq', 'UNIQUE (contrasenya)', 'No puede haber dos clientes con la misma contraseña de usuario.'),
-        ('cliente_telefono_uniq', 'UNIQUE (telefono)', 'No puede haber dos clientes con el mismo teléfono.')
-    ]
 
     #Infomarción Personal
     dni = fields.Char(string="DNI", help="DNI del cliente", required=True) #No repetidos y formato
@@ -28,10 +21,14 @@ class Cliente(models.Model):
     #Alquileres
     alquileres = fields.One2many("instant_abode.alquiler", "cliente")
 
+    user_id = fields.Many2one("res.users", string="Usuario Asociado", readonly=True)
+
+        
     @api.constrains("correo")
     def comprobarCorreo(self):
         if self.correo and not re.match(r"[^@]+@[^@]+\.[^@]+", self.correo):
             raise ValidationError("El formato del correo es invalido.")
+        
         
     @api.constrains("telefono")
     def comprobarTelefono(self):
@@ -69,3 +66,123 @@ class Cliente(models.Model):
         # Un número
         if not re.search(r'\d', self.contrasenya):
             raise ValidationError("La contraseña debe tener como mínimo 1 dígito")
+        
+    @api.model
+    def create(self, vals):
+        self.validar_unicidad(vals)
+        partner = self.env['res.partner'].create({
+            'name': vals.get('nombreCliente'),
+            'email': vals.get('correo'),
+            'phone': vals.get('telefono'),
+            'vat': vals.get('dni'),
+            'image_1920' : vals.get('imagen'),
+        })
+
+        cliente = super(Cliente, self).create(vals)
+
+        new_user = self.env['res.users'].create({
+            'name': cliente.nombreCliente,
+            'login': cliente.name,
+            'partner_id': partner.id,
+            'password': cliente.contrasenya,
+            'image_1920' : cliente.imagen,
+        })
+
+        cliente.user_id = new_user.id
+
+        return cliente
+
+    def unlink(self):
+        for cliente in self:
+            if cliente.user_id:
+                # Obtener el partner asociado al usuario
+                partner = cliente.user_id.partner_id
+                # Eliminar el usuario
+                cliente.user_id.unlink() 
+                
+                # Si hay un partner asociado, eliminarlo también
+                if partner:
+                    partner.unlink()
+
+        # Eliminar el cliente después de haber eliminado relaciones asociadas
+        return super(Cliente, self).unlink()
+
+    
+    def write(self, vals):
+        # Comprobar si los campos son None o están vacíos antes de realizar validaciones
+        campos_clave = ['dni', 'correo', 'telefono', 'name']
+        campos_validos = {key: vals.get(key) for key in campos_clave if key in vals and vals[key]}
+
+        # Solo llamar a validar_unicidad si hay campos clave con valores válidos
+        if campos_validos:
+            self.validar_unicidad(campos_validos)
+
+        # Lógica para desactivar el usuario y aplicar cambios
+        desactivar_usuario = False
+        if 'name' in vals and vals['name'] != self.name:
+            desactivar_usuario = True
+        if 'dni' in vals and vals['dni'] != self.dni:
+            desactivar_usuario = True
+        if 'correo' in vals and vals['correo'] != self.correo:
+            desactivar_usuario = True
+        if 'telefono' in vals and vals['telefono'] != self.telefono:
+            desactivar_usuario = True
+            
+        # Desactivar el usuario antes de realizar cambios si es necesario
+        for cliente in self:
+            if desactivar_usuario and cliente.user_id:
+                cliente.user_id.active = False  # Desactivar antes de aplicar cambios
+
+            # Actualizar el partner y el usuario asociado
+            partner_vals = {}
+            if 'nombreCliente' in vals:
+                partner_vals['name'] = vals['nombreCliente']
+            if 'correo' in vals:
+                partner_vals['email'] = vals['correo']
+            if 'telefono' in vals:
+                partner_vals['phone'] = vals['telefono']
+            if 'dni' in vals:
+                partner_vals['vat'] = vals['dni']
+            if 'imagen' in vals:
+                partner_vals['image_1920'] = vals['imagen']
+            if partner_vals and cliente.user_id.partner_id:
+                cliente.user_id.partner_id.write(partner_vals)
+
+            user_vals = {}
+            if 'name' in vals:
+                user_vals['login'] = vals['name']
+            if 'contrasenya' in vals:
+                user_vals['password'] = vals['contrasenya']
+            if 'imagen' in vals:
+                user_vals['image_1920'] = vals['imagen']
+            if user_vals and cliente.user_id:
+                cliente.user_id.write(user_vals)
+
+            if desactivar_usuario and cliente.user_id:
+                cliente.user_id.active = True  # Reactivar después de aplicar cambios
+            
+        return super(Cliente, self).write(vals)
+
+
+    def validar_unicidad(self, vals):
+        # Validar que el campo no sea None antes de hacer la búsqueda
+        if 'dni' in vals and vals.get('dni'):
+            existing_dni = self.env['res.partner'].search([('vat', '=', vals['dni'])])
+            if len(existing_dni) > 1 or (existing_dni and existing_dni.id != self.id):
+                raise ValidationError(f"El DNI {vals['dni']} ya está registrado.")
+
+        if 'correo' in vals and vals.get('correo'):
+            existing_correo = self.env['res.partner'].search([('email', '=', vals['correo'])])
+            if len(existing_correo) > 1 or (existing_correo and existing_correo.id != self.id):
+                raise ValidationError(f"El correo {vals['correo']} ya está registrado.")
+
+        if 'telefono' in vals and vals.get('telefono'):
+            existing_telefono = self.env['res.partner'].search([('phone', '=', vals['telefono'])])
+            if len(existing_telefono) > 1 or (existing_telefono and existing_telefono.id != self.id):
+                raise ValidationError(f"El teléfono {vals['telefono']} ya está registrado.")
+
+        if 'name' in vals and vals.get('name'):
+            existing_login = self.env['res.users'].search([('login', '=', vals['name'])])
+            if len(existing_login) > 1 or (existing_login and existing_login.id != self.id):
+                raise ValidationError(f"El nombre de usuario {vals['name']} ya está registrado.")
+

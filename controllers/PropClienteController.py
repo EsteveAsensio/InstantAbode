@@ -5,24 +5,30 @@ from odoo.http import request, Response
 
 class PropClienteController(http.Controller):
 
-    #get
-    @http.route(['/InstantAbode/login'], auth='public', type="json", methods=['GET'], csrf=False)
+    #get                                        user
+    @http.route(['/InstantAbode/login'], auth='public', type="json", methods=['POST'], csrf=False)
     def login(self, **kw):
-        response = request.jsonrequest
         try:
-            username = response.get('username')
-            contrasenya = response.get('contrasenya')
+            request_data = json.loads(request.httprequest.data)
+            username = request_data.get('username')
+            contrasenya = request_data.get('contrasenya')
 
-            domain=[("name","=",username), ("contrasenya","=",contrasenya)]                                                                                                                         
-            cliente = http.request.env["instant_abode.cliente"].sudo().search_read(domain,["dni", "nombreCliente", "apellidos", "correo", "telefono", "name", "contrasenya", "imagen", "valoraciones", "alquileres"])
+            if not username or not contrasenya:
+                return {'status': 400, 'message': 'Datos de usuario incompletos'}
 
-            if cliente:
-                return cliente #{'status': 200, 'result': 'Usuario encontrado'}
+            cliente = http.request.env["instant_abode.cliente"].sudo().search([("name","=",username)])
+
+            propietario = http.request.env["instant_abode.propietario"].sudo().search([("name","=",username)])
+
+            if cliente and cliente.contrasenya == contrasenya:
+                return {'status': 200, 'message': 'Hola Cliente'}
+            elif propietario and propietario.contrasenya == contrasenya:
+                return {'status': 200, 'message': 'Hola Propietario'}
             else:
-                return {'status': 400, 'message': 'Usuario no encontrado'}
+                return {'status': 400, 'message': 'Usuario no encontrado o contraseña incorrecta'}
         except Exception as error:
             data={
-                "status":500,
+                "status": 500,
                 "error": str(error)
             }
             return data

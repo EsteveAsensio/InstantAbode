@@ -3,7 +3,7 @@
     'name': "InstantAbode",
 
     'summary': """
-        InstantAbode simplifica el proceso de alquiler de inmuebles tanto para propietarios como para clientes, ofreciendo una plataforma intuitiva y completa.
+        Simplifica el proceso de alquiler de inmuebles.
     """,
 
     'description': """
