@@ -99,30 +99,30 @@ class Propietario(models.Model):
 
         cliente.user_id = new_user.id
 
+        grup_propietarios = self.env['res.groups'].search([('name', '=', 'Propietarios')], limit=1)
+
+        if grup_propietarios:
+            new_user.write({'groups_id': [(6, 0, [grup_propietarios.id])]})
+
         return cliente
     
     def unlink(self):
         for cliente in self:
             if cliente.user_id:
-                # Obtener el partner asociado al usuario
                 partner = cliente.user_id.partner_id
                 # Eliminar el usuario
                 cliente.user_id.unlink() 
                 
-                # Si hay un partner asociado, eliminarlo también
                 if partner:
                     partner.unlink()
 
-        # Eliminar el cliente después de haber eliminado relaciones asociadas
         return super(Propietario, self).unlink()
 
     
     def write(self, vals):
-        # Comprobar si los campos son None o están vacíos antes de realizar validaciones
         campos_clave = ['dni', 'correo', 'telefono', 'name']
         campos_validos = {key: vals.get(key) for key in campos_clave if key in vals and vals[key]}
 
-        # Solo llamar a validar_unicidad si hay campos clave con valores válidos
         if campos_validos:
             self.validar_unicidad(campos_validos)
 

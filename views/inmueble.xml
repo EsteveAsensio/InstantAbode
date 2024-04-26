@@ -21,10 +21,12 @@
                 <header>
                     <button string="Mostrar" type="object" name="mostrarPublico" class="oe_highlight"
                         confirm="¿Está seguro que desea mostrar el inmueble al público?"
+                        groups="instant_abode.grupo_propietarios,instant_abode.grupo_admins"
                         attrs="{'invisible': [('state', '!=', 'Ocultar')]}" />
 
                     <button string="Ocultar" type="object" name="ocultarPublico" class="oe_highlight"
                         confirm="¿Está seguro que desea ocultar el inmueble al público?"
+                        groups="instant_abode.grupo_propietarios,instant_abode.grupo_admins"
                         attrs="{'invisible': [('state', '!=', 'Mostrar')]}" />
                     <field name="state" widget="statusbar" />
                 </header>
@@ -65,6 +67,13 @@
     <record model="ir.actions.act_window" id="instant_abode.inmueble_action_window">
         <field name="name">Inmueble</field>
         <field name="res_model">instant_abode.inmueble</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="instant_abode.misinmuebles_action_window">
+        <field name="name">Mis Inmuebles</field>
+        <field name="res_model">instant_abode.inmueble</field>
+        <field name="domain">[('propietario.user_id','=',uid)]</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

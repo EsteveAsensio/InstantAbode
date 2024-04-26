@@ -1,0 +1,23 @@
+<odoo>
+    <record id="module_instant_abode_seguridad" model="ir.module.category">
+        <field name="name">InstantAbode Grupos</field>
+    </record>
+
+    <record id="grupo_admins" model="res.groups">
+        <field name="name">AdminsInstantAbode</field>
+        <field name="category_id" ref="module_instant_abode_seguridad" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+    <!--  Clientes Group  -->
+    <record id="grupo_clientes" model="res.groups">
+        <field name="name">Clientes</field>
+        <field name="category_id" ref="module_instant_abode_seguridad" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+    <!--  Propietarios Group  -->
+    <record id="grupo_propietarios" model="res.groups">
+        <field name="name">Propietarios</field>
+        <field name="category_id" ref="module_instant_abode_seguridad" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+</odoo>

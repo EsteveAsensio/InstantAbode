@@ -42,4 +42,19 @@
         <field name="res_model">instant_abode.valoracioncliente</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record model="ir.actions.act_window" id="instant_abode.valorecCliente_action_window">
+        <field name="name">Valoraciones Recibidas</field>
+        <field name="res_model">instant_abode.valoracioncliente</field>
+        <field name="domain">[('cliente.user_id','=',uid)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="instant_abode.valoracinoesReaProp_action_window">
+        <field name="name">Valoraciones Realizadas</field>
+        <field name="res_model">instant_abode.valoracioncliente</field>
+        <field name="domain">[('propietario.user_id','=',uid)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
 </odoo>

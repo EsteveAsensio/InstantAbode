@@ -20,9 +20,11 @@
             <form string="Información Propietario">
                 <header>
                     <button string="Generar Cuenta" type="object" name="nuevoUsuarioNotificacion"
-                        confirm="¿Está seguro que desea crear un nuevo nombre y contraseña de usuario?"/>
+                        confirm="¿Está seguro que desea crear un nuevo nombre y contraseña de usuario?"
+                        groups="instant_abode.grupo_admins"/>
                     <button string="Notificar Cuenta" type="object" name="notificarPropietario"
-                        confirm="¿Está seguro que desea notificar al propietario sobre su nueva cuenta?"/>
+                        confirm="¿Está seguro que desea notificar al propietario sobre su nueva cuenta?"
+                        groups="instant_abode.grupo_admins"/>
                 </header>
                 <group>
                     <group>

@@ -28,6 +28,7 @@
 
     # always loaded
     'data': [
+        'security/grupos_seguridad.xml',
         'security/ir.model.access.csv',
         'views/cliente.xml',
         'views/propietario.xml',

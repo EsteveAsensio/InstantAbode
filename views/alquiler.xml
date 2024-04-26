@@ -29,9 +29,7 @@
                         <h1 style="color:#d2d2ff" colspan="2">Inmueble</h1>
                         <field name="inmueble" />
                         <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
-                        <field name="cliente" />
-                        <h1 style="color:#d2d2ff" colspan="2">Valoración</h1>
-                        <field name="valoracionInmueble" />
+                        <field name="cliente"/>
                     </group>
                 </group>
             </form>
@@ -42,6 +40,20 @@
     <record model="ir.actions.act_window" id="instant_abode.alquiler_action_window">
         <field name="name">Alquiler</field>
         <field name="res_model">instant_abode.alquiler</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="instant_abode.alquileresCliente_action_window">
+        <field name="name">Alquileres Cliente</field>
+        <field name="res_model">instant_abode.alquiler</field>
+        <field name="domain">[('cliente.user_id','=',uid)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="instant_abode.alquileresProp_action_window">
+        <field name="name">Alquileres Recibidos</field>
+        <field name="res_model">instant_abode.alquiler</field>
+        <field name="domain">[('inmueble.propietario.user_id','=',uid)]</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

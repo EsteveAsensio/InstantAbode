@@ -5,14 +5,14 @@
         
         <!-- menu Clientes-->
         <menuitem name="Clientes" id="instant_abode.menu_clientes" parent="instant_abode.menu_root"
-        sequence = "1" />
+        sequence = "1" groups="grupo_admins"/>
         <!-- actions -->
         <menuitem name="Lista Clientes" id="instant_abode.menu_clientes_lista"
             parent="instant_abode.menu_clientes" action="instant_abode.cliente_action_window" />
 
         <!-- menu Propietario-->
         <menuitem name="Propietario" id="instant_abode.menu_propietarios" parent="instant_abode.menu_root" 
-        sequence = "2"/>
+        sequence = "2" groups="grupo_admins"/>
         <!-- actions -->
         <menuitem name="Lista Propietarios" id="instant_abode.menu_propietarios_lista"
             parent="instant_abode.menu_propietarios" action="instant_abode.propietario_action_window" />
@@ -22,7 +22,16 @@
         sequence = "6"/>
         <!-- actions -->
         <menuitem name="Valoraciones Clientes" id="instant_abode.menu_valoracionescliente_lista"
-            parent="instant_abode.menu_valoracionescliente" action="instant_abode.valoracioncliente_action_window" />
+            parent="instant_abode.menu_valoracionescliente" action="instant_abode.valoracioncliente_action_window" 
+            groups="grupo_admins"/>
+
+        <menuitem name="Valoraciones Recibidas" id="instant_abode.menu_valoracinoesrecibidas_list"
+            parent="instant_abode.menu_valoracionescliente" action="instant_abode.valorecCliente_action_window" 
+            groups="grupo_clientes"/>
+
+        <menuitem name="Valoraciones Realizadas" id="instant_abode.menu_valoRealizadas_list"
+            parent="instant_abode.menu_valoracionescliente" action="instant_abode.valoracinoesReaProp_action_window" 
+            groups="grupo_propietarios"/>
 
         <!-- menu Inmuebles-->
         <menuitem name="Inmuebles" id="instant_abode.menu_inmuebles" parent="instant_abode.menu_root" 
@@ -31,18 +40,44 @@
         <menuitem name="Lista Inmuebles" id="instant_abode.menu_inmuebles_lista"
             parent="instant_abode.menu_inmuebles" action="instant_abode.inmueble_action_window" />
 
+        <menuitem name="Mis Inmuebles" id="instant_abode.menu_misinmuebles_lista"
+            parent="instant_abode.menu_inmuebles" action="instant_abode.misinmuebles_action_window" 
+            groups="grupo_propietarios"/>
+
         <!-- menu Valoraciones Inmueble -->
         <menuitem name="Valoraciones Inmuebles" id="instant_abode.menu_valoracionesinmueble" parent="instant_abode.menu_root" 
         sequence = "5"/>
         <!-- actions -->
         <menuitem name="Valoraciones Inmuebles" id="instant_abode.menu_valoracionesinmueble_lista"
-            parent="instant_abode.menu_valoracionesinmueble" action="instant_abode.valoracioninmueble_action_window" />
+            parent="instant_abode.menu_valoracionesinmueble" action="instant_abode.valoracioninmueble_action_window" 
+            groups="grupo_admins"/>
+
+        <menuitem name="Valoraciones Realizadas" id="instant_abode.menu_valoracinoesinmuebleCliente_list"
+            parent="instant_abode.menu_valoracionesinmueble" action="instant_abode.valoracionesInmuebleCliente_action_window" 
+            groups="grupo_clientes"
+            sequence="2"/>
+
+        <menuitem name="Valoraciones Recibidas" id="instant_abode.menu_valoracinoesinmuebleProp_list"
+            parent="instant_abode.menu_valoracionesinmueble" action="instant_abode.valoracinoesinmuebleProp_action_window" 
+            groups="grupo_propietarios"
+            sequence="2"/>
         
         <!-- menu Alquileres-->
         <menuitem name="Alquileres" id="instant_abode.menu_alquileres" parent="instant_abode.menu_root" 
         sequence = "4"/>
         <!-- actions -->
         <menuitem name="Lista Alquileres" id="instant_abode.menu_alquileres_lista"
-            parent="instant_abode.menu_alquileres" action="instant_abode.alquiler_action_window" />
+            parent="instant_abode.menu_alquileres" action="instant_abode.alquiler_action_window" 
+            groups="grupo_admins"
+            />
+        <menuitem name="Mis Alquileres" id="instant_abode.menu_alquileresCliente_list"
+            parent="instant_abode.menu_alquileres" action="instant_abode.alquileresCliente_action_window" 
+            groups="grupo_clientes"
+            sequence="2"/>
+
+        <menuitem name="Alquileres Recibido" id="instant_abode.menu_alquileresProp_list"
+            parent="instant_abode.menu_alquileres" action="instant_abode.alquileresProp_action_window" 
+            groups="grupo_propietarios"
+            sequence="2"/>
     </data>
 </odoo>

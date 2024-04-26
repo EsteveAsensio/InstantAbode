@@ -90,6 +90,11 @@ class Cliente(models.Model):
 
         cliente.user_id = new_user.id
 
+        grup_cliente = self.env['res.groups'].search([('name', '=', 'Clientes')], limit=1)
+
+        if grup_cliente:
+            new_user.write({'groups_id': [(6, 0, [grup_cliente.id])]})
+
         return cliente
 
     def unlink(self):
