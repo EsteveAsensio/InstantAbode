@@ -36,7 +36,7 @@ class ClientesController(http.Controller):
             return data
         
     #get
-    @http.route(['/InstantAbode/buscarInmuebles'], auth='public', type="json", methods=['GET'], csrf=False)
+    @http.route(['/InstantAbode/buscarInmuebles'], auth='user', type="json", methods=['GET'], csrf=False)
     def buscarInmuebles(self, **kw):
         try:
             response = request.httprequest.json
@@ -85,7 +85,7 @@ class ClientesController(http.Controller):
             return data
 
     #put
-    @http.route('/InstantAbode/modificarCliente', type='json', auth='public', methods=['PUT'])
+    @http.route('/InstantAbode/modificarCliente', type='json', auth='user', methods=['PUT'])
     def modificarCliente(self, **kw):
        response = request.httprequest.json
        try:
@@ -112,7 +112,7 @@ class ClientesController(http.Controller):
             return data
        
     #delete
-    @http.route('/InstantAbode/eliminarValoracionInmueble/<int:valoracionid>', type='http', auth='public', methods=['DELETE'], csrf=False)
+    @http.route('/InstantAbode/eliminarValoracionInmueble/<int:valoracionid>', type='http', auth='user', methods=['DELETE'], csrf=False)
     def eliminarValoracionInmueble(self, valoracionid):
         valoracion = request.env['instant_abode.valoracioninmueble'].sudo().browse(valoracionid)
         try:
@@ -130,7 +130,7 @@ class ClientesController(http.Controller):
             return Response(data, content_type='application/json', status=400)
         
     #put
-    @http.route('/InstantAbode/modificarValoracionInmueble', type='json', auth='public', methods=['PUT'])
+    @http.route('/InstantAbode/modificarValoracionInmueble', type='json', auth='user', methods=['PUT'])
     def modificarValoracionInmueble(self, **kw):
        response = request.httprequest.json
        try:

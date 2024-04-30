@@ -1,0 +1,40 @@
+<div class="contenedor">
+    <button class="back-button" (click)="goBack()">&#x2190; Atrás</button>
+
+    <h1>Perfil del Cliente</h1>
+    <form>
+      <div class="grupo">
+        <label for="username">Nombre de Usuario</label>
+        <input type="text" id="username" name="username" placeholder="Nombre de usuario" [(ngModel)]="usuario.name" required>
+      </div>
+      <div>
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" placeholder="Contraseña" [(ngModel)]="usuario.contrasenya"  required>
+      </div>
+      <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre" [(ngModel)]="usuario.nombreCliente" required>
+      </div>
+      <div>
+        <label for="apellidos">Apellidos</label>
+        <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos">
+      </div>
+      <div>
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" name="dni" placeholder="DNI" [(ngModel)]="usuario.dni" required>
+      </div>
+      <div>
+        <label for="correo">Correo Electrónico</label>
+        <input type="email" id="correo" name="correo" placeholder="Correo electrónico" [(ngModel)]="usuario.correo" required>
+      </div>
+      <div>
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono">
+      </div>
+      <div class="grupo-botones">
+        <button type="button" class="aceptar">Actualizar</button>
+        <button type="button" class="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+  

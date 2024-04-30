@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Route, Router, RouterModule } from '@angular/router';
 import { SwalAnimation } from '../../utils/SwalAnimation';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent {
   public password: string = '';
 
 
-constructor(private router: Router){}
+constructor(private router: Router, private authService: AuthService){}
 
   registrar(){
     this.router.navigate(['registrar'])
@@ -23,7 +24,7 @@ constructor(private router: Router){}
 
   login(){
     if(this.comprobar()){
-      
+      this.authService.login(this.username, this.password, true);
     }
   }
 

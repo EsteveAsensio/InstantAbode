@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { GeneralDAO } from '../../services/general.dao';
+import { AuthService } from '../../services/auth-service';
+import { Inmueble } from '../../models/inmueble.modelo';
 
 @Component({
   selector: 'app-principal',
@@ -9,4 +12,22 @@ import { Component } from '@angular/core';
 })
 export class PrincipalComponent {
 
+   
+  constructor(private articuloService: GeneralDAO, private authService: AuthService){}
+
+  /*
+  inmuebles: Inmueble[] = [];
+
+  async loadInmuebles() {
+   
+    this.inmuebles = await this.articuloService.getGeneral('inmuebles') || [];
+    //this.cargados = true;
+  */
+
+    logout() {
+      this.authService.logout();
+      // Redirect to login or do other cleanup
+    }
+
 }
+

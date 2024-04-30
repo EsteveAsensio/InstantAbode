@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+
+import { tap } from 'rxjs/operators';
 import * as CryptoJS from 'crypto-js';
 
 import { Router } from '@angular/router';
-import { URL_BACKEND } from './constantesHTTP';
 
-import { Cliente } from '../models/cliente.modelo';
+
+
 import { BaseService } from './base.service';
+import { Usuario } from '../models/usuario.modelo';
+import { URL_BACKEND } from './constantesHTTP';
+import { ErrorHandlerService } from './errorHandler.service';
 
 
-const jsog = new JsogService();
 
 @Injectable({
   providedIn: 'root'
@@ -19,89 +21,57 @@ const jsog = new JsogService();
 export class AuthService {
   private readonly baseUrl = URL_BACKEND;
   private authToken: string | null = null;
-  private encryptedKey = 'Oberta2022**';
-  private static encryptedKey = 'Oberta2022**';
+  private encryptedKey = 'aaaaa';
+  private static encryptedKey = 'aaaaa';
   constructor(private http: HttpClient, private router: Router, private service: BaseService, private errorHandler: ErrorHandlerService) { }
 
   async login(username: string, password: string, sesionIniciada: boolean) {
-    const loginData = { username, password };
+    const loginData = {
+      "username": username,
+      "contrasenya": password
+    };
     try {
-      var data: any = await this.service.post('auth/login', loginData).toPromise();
-      if (data) {
-        data = jsog.deserialize(data);
-        this.authToken = data.token;
-        var empresa = data.usuario.empresa as Empresa;
-        var usuario = data.usuario as Usuario;
-        usuario.roles = [];
-        for (let rol of data.usuario.authorities) {
-          usuario.roles.push(new Rol(0, rol.authority, "#456456"));
-        }
-        const userAgent = navigator.userAgent;
-        const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-        if (!usuario.propiedades) {
-          usuario.propiedades = {};
+      var data: any = await this.service.post('InstantAbode/login', loginData).toPromise();
+      console.log(data)
+      if (data.result) {
+
+        if (data.result.status == 200) {
+
+          this.authToken = data.token;
+          var usuario = data.usuario as Usuario;
+
+          sessionStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
+          sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
+          if (sesionIniciada) {
+            localStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
+            localStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
+          }
+
+          this.controladorDepPaginas();
         } else {
-          usuario.propiedades = JSON.parse(usuario.propiedades)
+          ////console.log(data)
+          this.errorHandler.handleHttpError(data, false, "login");
         }
-        if (esMovil) {
-          usuario.propiedades.telefono = true;
-        } else {
-          usuario.propiedades.telefono = false;
-        }
-
-        sessionStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
-        sessionStorage.setItem('encryptedEmpresa', this.encryptData(JSON.stringify(jsog.serialize(empresa)), this.encryptedKey));
-        sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(jsog.serialize(usuario)), this.encryptedKey));
-
-        if (sesionIniciada) {
-          localStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
-          localStorage.setItem('encryptedEmpresa', this.encryptData(JSON.stringify(jsog.serialize(empresa)), this.encryptedKey));
-          localStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(jsog.serialize(usuario)), this.encryptedKey));
-        }
-
-        this.controladorDepPaginas();
       } else {
         ////console.log(data)
-        this.errorHandler.handleHttpError(data,false,"login");
+        this.errorHandler.handleHttpError(data, false, "login");
       }
     } catch (error: any) {
       ////console.log(error)
-      this.errorHandler.handleHttpError(error,false,"login");
+      this.errorHandler.handleHttpError(error, false, "login");
     }
     return false;
 
   }
 
   controladorDepPaginas() {
-    if (this.hasRole('ADMIN')) {
-      this.router.navigateByUrl('escritorio');
-    } else {
-      this.router.navigateByUrl('escritorio');
-    }
-  }
 
-  confirmarTerminosYServicios() {
-    return this.http.post(`${this.baseUrl}login/terminos`, null).pipe(
-      tap(() => {
-        var usuario: Usuario = this.getUsuario() || {} as Usuario;
-        //////////console.log((usuario);
+    this.router.navigateByUrl('principal');
 
-        usuario.condicionesaceptadas = true;
-        sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
-      })
-    );
   }
 
 
-  async guardarFiltrosPedidos(filtropedidos: any) {
-    //console.log("Paso 6.2")
-    sessionStorage.setItem('encryptedFiltroPedidos', this.encryptData(JSON.stringify(jsog.serialize(filtropedidos)), this.encryptedKey));
-  }
-  async getFiltrosPedidos(): Promise<any> {
-    const encryptedFiltroPedidos = sessionStorage.getItem('encryptedFiltroPedidos');
-    var filtroPedidos: any = encryptedFiltroPedidos ? this.decryptData(encryptedFiltroPedidos, this.encryptedKey) : null;
-    return jsog.deserialize(JSON.parse(filtroPedidos));
-  }
+
 
 
   logout(): void {
@@ -151,60 +121,15 @@ export class AuthService {
     return this.authToken;
   }
 
-  async delOfCarrito(articulo: Articulo) {
-    const carrito: Carrito = await this.getCarrito() || new Carrito([]);
 
-    // Usar findIndex para encontrar el índice del objeto que coincide con el artículo.
-    const indexToRemove = carrito.articulos.findIndex(objeto => objeto.articulo_id === articulo.id);
-
-    if (indexToRemove !== -1) {
-      const objeto = carrito.articulos[indexToRemove];
-      objeto.cantidad -= 1;
-
-      if (objeto.cantidad === 0) {
-        // Si la cantidad llega a cero, eliminar el objeto.
-        carrito.articulos.splice(indexToRemove, 1);
-      }
-
-      // Actualizar el carrito en la sesión de almacenamiento.
-      var usuario: Usuario = this.getUsuario()!
-      usuario.carrito = JSON.stringify(carrito);
-      sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
-      this.service.put('usuarios/carrito', JSON.stringify(carrito)).toPromise();
-    }
-  }
-
-  async addToCarrito(articulo: Articulo) {
-    const carrito: Carrito = await this.getCarrito() || new Carrito([]);
-    const objetoEnCarrito = carrito.articulos.find(objeto => objeto.articulo_id === articulo.id);
-
-    if (objetoEnCarrito) {
-      objetoEnCarrito.cantidad += 1;
-    } else {
-      carrito.articulos.push(new ObjetoCarrito(articulo.id, 1));
-    }
-    ////console.log(carrito)
-
-    var usuario: Usuario = this.getUsuario()!
-    usuario.carrito = JSON.stringify(carrito);
-    sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
-    this.service.put('usuarios/carrito', JSON.stringify(carrito)).toPromise();
-  }
-
-  async refreshCarrito(carrito: Carrito) {
-    var usuario: Usuario = this.getUsuario()!
-    usuario.carrito = JSON.stringify(carrito);
-    sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
-    await this.service.put('usuarios/carrito', JSON.stringify(carrito)).toPromise();
-  }
   saveInstantObject(object: any) {
-    sessionStorage.setItem('encryptedMomentObject', this.encryptData(JSON.stringify(jsog.serialize(object)), this.encryptedKey));
+    sessionStorage.setItem('encryptedMomentObject', this.encryptData(JSON.stringify(object), this.encryptedKey));
   }
   getInstantObject() {
     var encryptObject: string | null = sessionStorage.getItem('encryptedMomentObject');
     sessionStorage.removeItem('encryptedMomentObject')
     if (encryptObject) {
-      const decryptedObject = jsog.deserialize(JSON.parse(this.decryptData(encryptObject, this.encryptedKey)));
+      const decryptedObject = JSON.parse(this.decryptData(encryptObject, this.encryptedKey));
       return decryptedObject;
     }
     return null;
@@ -249,54 +174,11 @@ export class AuthService {
   }
 
 
-
-  getUser(): Usuario | null {
-    const encryptedUsuario = this.getencryptedUsuario();
-    if (encryptedUsuario) {
-      const decryptedUser = this.decryptData(encryptedUsuario, this.encryptedKey);
-      const user = jsog.deserialize(JSON.parse(decryptedUser)) as Usuario;
-      return user;
-    }
-    return null;
-  }
-
-  async getCarrito(): Promise<Carrito | null> {
-    const encryptedUsuario = this.getencryptedUsuario();
-    if (encryptedUsuario) {
-      const decryptedUsuario = this.decryptData(encryptedUsuario, this.encryptedKey);
-      const Usuario = jsog.deserialize(JSON.parse(decryptedUsuario)) as Usuario;
-      if (Usuario.carrito) {
-        return JSON.parse(Usuario.carrito);
-      }
-    }
-    return null;
-  }
-
-  getEmpresa(): Empresa | null {
-    const encryptedEmpresa = this.getEncryptedEmpresa();
-    if (encryptedEmpresa) {
-      const decryptedEmpresa = this.decryptData(encryptedEmpresa, this.encryptedKey);
-      const empresa = jsog.deserialize(JSON.parse(decryptedEmpresa)) as Empresa;
-      return empresa;
-    }
-    return null;
-  }
-
-  static getEmpresa(): Empresa | null {
-    const encryptedEmpresa = this.getEncryptedEmpresa();
-    if (encryptedEmpresa) {
-      const decryptedEmpresa = this.decryptData(encryptedEmpresa, this.encryptedKey);
-      const empresa = jsog.deserialize(JSON.parse(decryptedEmpresa)) as Empresa;
-      return empresa;
-    }
-    return null;
-  }
-
   getUsuario(): Usuario | null {
     const encryptedUsuario = this.getencryptedUsuario();
     if (encryptedUsuario) {
       const decryptedUsuario = this.decryptData(encryptedUsuario, this.encryptedKey);
-      const Usuario = jsog.deserialize(JSON.parse(decryptedUsuario)) as Usuario;
+      const Usuario = JSON.parse(decryptedUsuario) as Usuario;
       return Usuario;
     }
     return null;
@@ -306,8 +188,7 @@ export class AuthService {
     const encryptedUsuario = this.getencryptedUsuario();
     if (encryptedUsuario) {
       const decryptedUsuario = this.decryptData(encryptedUsuario, this.encryptedKey);
-      const Usuario = jsog.deserialize(JSON.parse(decryptedUsuario)) as Usuario;
-      Usuario.propiedades = JSON.stringify(Usuario.propiedades);
+      const Usuario = JSON.parse(decryptedUsuario) as Usuario;
       return Usuario;
     }
     return null;
@@ -416,12 +297,10 @@ export class AuthService {
   }
 
   hasRole(rol: string): boolean {
-    const usuario = this.getUser();
+    const usuario = this.getUsuario();
     if (usuario) {
-      for (const rolUsuario of usuario.roles) {
-        if (rolUsuario.name.toString().toLowerCase() == rol.toLowerCase()) {
-          return true;
-        }
+      if (usuario.rol.toLowerCase() == rol.toLowerCase()) {
+        return true;
       }
     }
     return false;

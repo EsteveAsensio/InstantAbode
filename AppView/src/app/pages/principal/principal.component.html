@@ -1,1 +1,37 @@
-<p>principal works!</p>
+<!-- Side Navigation Menu -->
+<div class="sidebar">
+    <h1>FormApp</h1>
+    <a href="#">Página principal</a>
+    <a href="perfil-usuario">Perfil</a>
+    <a href="#">Alquileres</a>
+    <a href="#">Valoraciones</a>
+    <a href="#">Inmuebles alquilados</a>
+    <a href="#">Cerrar sesión</a>
+  </div>
+  
+  <!-- Main Content Area -->
+  <div class="contenedor">
+    <h1>Registrar Alquiler</h1>
+    <form>
+      <div class="grupo">
+        <label for="provincia">Provincia:</label>
+        <select id="provincia">
+          <option value="">Seleccionar</option>
+          <option value="provincia1">Provincia 1</option>
+          <option value="provincia2">Provincia 2</option>
+        </select>
+      </div>
+      <div class="grupo">
+        <label for="fechaInicio">Primer día de alquiler:</label>
+        <input type="date" id="fechaInicio">
+      </div>
+      <div class="grupo">
+        <label for="fechaFin">Último día de alquiler:</label>
+        <input type="date" id="fechaFin">
+      </div>
+      <div class="grupo-botones">
+        <button type="submit" class="login">Buscar inmuebles disponibles</button>
+      </div>
+    </form>
+  </div>
+  
