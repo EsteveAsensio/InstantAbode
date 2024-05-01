@@ -106,40 +106,6 @@ export class GeneralDAO {
     }
   }
 
-    ///
-    /// DAO Inmuebles
-    ///
-  async obtenerInmueblesFechas(tipo: string, fechaInicio: Date, fechaFinal: Date, provincia: String){
-    try {
-      console.log(tipo)
-      const inmuebleData = {
-        "provincia": provincia,
-        "fechaInicio": fechaInicio,
-        "fechaFinal": fechaFinal
-      };
-      const data: any = await this.service.post(tipo, inmuebleData).toPromise();
-      console.log(data);
-
-      if (data.result) {
-        if (data.result.status == 200) {
-          return data.result.inmuebles;
-        }else{
-          ////console.log(data)
-          this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
-        }
-      }else{
-        ////console.log(data)
-        this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
-      }
-    } catch (error: any) {
-      ////console.log(error)
-      this.errorHandler.handleHttpError(error, false, "Obtener Inmuebles");
-    }
-    return false;
-  }
-
-
-
   async getGeneralFiltrados(tipo: string, filtro: any): Promise<void | any[]> {
     try {
       const data: any = await this.service.getFiltrados(tipo + '/filtro', filtro).toPromise();

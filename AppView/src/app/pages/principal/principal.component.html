@@ -1,13 +1,5 @@
 <div class="contenedor">
-  <div class="sidebar">
-    <h1>InstantAbode</h1>
-    <a href="#">Página principal</a>
-    <a href="perfil-usuario">Perfil</a>
-    <a href="#">Alquileres</a>
-    <a href="#">Valoraciones</a>
-    <a href="#">Inmuebles alquilados</a>
-    <a href="#">Cerrar sesión</a>
-  </div>
+  <app-sidebar></app-sidebar>
   <!-- Solo muestra el formulario si no hay inmuebles cargados -->
   <div *ngIf="inmuebles.length === 0">
     <h1>Registrar Alquiler</h1>

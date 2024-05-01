@@ -1,0 +1,32 @@
+.contenedor {
+    margin-left: 250px; /* Compensar por el ancho del sidebar */
+    padding: 0 10px;
+    max-width: 760px; /* Ajustado para una mejor visualización */
+    margin-top: 100px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .inmueble-card {
+    border: 2px solid #007bff;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .inmueble-card h2 {
+    color: #0056b3;
+  }
+  
+  p {
+    margin: 5px 0;
+  }
+  
+  .no-inmuebles {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }
+  

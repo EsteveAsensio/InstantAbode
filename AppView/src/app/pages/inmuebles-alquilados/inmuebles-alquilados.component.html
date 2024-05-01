@@ -1,0 +1,18 @@
+<div class="contenedor">
+    <app-sidebar></app-sidebar>
+    <!-- Muestra los inmuebles si están cargados -->
+    <div *ngIf="inmuebles.length > 0" class="inmuebles-container">
+        <div *ngFor="let inmueble of inmuebles" class="inmueble-card">
+            <h2>{{ inmueble.name }}</h2>
+            <p><strong>Provincia:</strong> {{ inmueble.provincia }}</p>
+            <p><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
+            <p><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
+            <p><strong>Baños:</strong> {{ inmueble.banyos }}</p>
+            <p><strong>Precio:</strong> {{ inmueble.precio | currency:'EUR' }}</p>
+        </div>
+    </div>
+    <!-- Si no hay inmuebles cargados, muestra un mensaje -->
+    <div *ngIf="inmuebles.length === 0" class="no-inmuebles">
+        <p>No hay inmuebles alquilados disponibles.</p>
+    </div>
+</div>

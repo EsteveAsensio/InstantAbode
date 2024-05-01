@@ -25,6 +25,7 @@ class ClientesController(http.Controller):
         except Exception as error:
             return {"status": 500, "message": str(error)}
 
+    #GET
     @http.route('/InstantAbode/provincias', type='http', auth='public', methods=['GET'])
     def get_provincias(self):
         provincias_data = request.env['instant_abode.inmueble'].sudo().read_group(
@@ -35,6 +36,43 @@ class ClientesController(http.Controller):
         provincias = [prov['provincia'] for prov in provincias_data if prov['provincia']]
         response = json.dumps(provincias)
         return request.make_response(response, [('Content-Type', 'application/json')])
+        
+    #GET
+    @http.route(['/InstantAbode/inmueblesAlquilados/<int:idUser>'], auth='public', type="http", methods=['GET'])
+    def inmueblesAlquilados(self, idUser):
+        try:
+            alquileres = request.env['instant_abode.alquiler'].sudo().search([('cliente.id', '=', idUser)])
+
+            if not alquileres:
+                data = json.dumps({'status': 400, 'message': 'Todavía no has alquilado ningún inmueble.'})
+                return Response(data, content_type='application/json', status=200)
+
+            inmuebles_disponibles = []
+            inmuebles_agregados = {}
+
+            for alquiler in alquileres:
+                inmueble_id = alquiler.inmueble.id
+                if inmueble_id not in inmuebles_agregados:
+                    inmuebles_agregados[inmueble_id] = True
+                    inmuebles_disponibles.append({
+                        'id' : alquiler.inmueble.id,
+                        'name': alquiler.inmueble.name,
+                        'provincia': alquiler.inmueble.provincia,
+                        'localizacion': alquiler.inmueble.localizacion,
+                        'habitaciones': alquiler.inmueble.habitaciones,
+                        'banyos': alquiler.inmueble.banyos,
+                        'metrosCuadrados': alquiler.inmueble.metrosCuadrados,
+                        'descripcion': alquiler.inmueble.descripcion,
+                        'adicionales': alquiler.inmueble.adicionales,
+                        'precio': alquiler.inmueble.precio
+                    })
+            data = json.dumps({'status': 200, 'inmuebles': inmuebles_disponibles})
+            return Response(data, content_type='application/json', status=200)
+
+        except Exception as error:
+            data = json.dumps({'status': 500, 'message': str(error)})
+            return Response(data, content_type='application/json', status=500)
+        
         
     #get
     @http.route(['/InstantAbode/buscarInmuebles'], auth='public', type="json", methods=['POST'], csrf=False)
@@ -90,7 +128,7 @@ class ClientesController(http.Controller):
                 "message": str(error)
             }
             return data
-
+        
     #put
     @http.route('/InstantAbode/modificarCliente', type='json', auth='public', methods=['PUT'])
     def modificarCliente(self, **kw):
