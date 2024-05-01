@@ -5,7 +5,6 @@ from odoo.http import request, Response
 
 class PropClienteController(http.Controller):
 
-    #get                                        user
     @http.route(['/InstantAbode/login'], auth='public', type="json", methods=['POST'], csrf=False)
     def login(self, **kw):
         try:
@@ -18,20 +17,29 @@ class PropClienteController(http.Controller):
 
             cliente = http.request.env["instant_abode.cliente"].sudo().search([("name","=",username)])
 
-            propietario = http.request.env["instant_abode.propietario"].sudo().search([("name","=",username)])
-
             if cliente and cliente.contrasenya == contrasenya:
-                return {'status': 200, 'message': 'Hola Cliente'}
-            elif propietario and propietario.contrasenya == contrasenya:
-                return {'status': 200, 'message': 'Hola Propietario'}
+                usuario = {
+                    'id': cliente.id,
+                    'dni': cliente.dni,
+                    'nombreCliente': cliente.nombreCliente,
+                    'apellidos': cliente.apellidos,
+                    'telefono': cliente.telefono,
+                    'name': cliente.name,
+                    'contrasenya': cliente.contrasenya,
+                    'correo': cliente.correo,
+                    'imagen': cliente.imagen,
+                    'rol': 'Cliente',
+                }
+                return {'status': 200, 'usuario': usuario}
             else:
                 return {'status': 400, 'message': 'Usuario no encontrado o contraseña incorrecta'}
         except Exception as error:
-            data={
+            data = {
                 "status": 500,
-                "error": str(error)
+                "message": str(error)
             }
             return data
+
     
 
 

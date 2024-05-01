@@ -17,7 +17,7 @@
       </div>
       <div>
         <label for="apellidos">Apellidos</label>
-        <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos">
+        <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos" [(ngModel)]="usuario.apellidos">
       </div>
       <div>
         <label for="dni">DNI</label>
@@ -29,11 +29,11 @@
       </div>
       <div>
         <label for="telefono">Teléfono</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono">
+        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" [(ngModel)]="usuario.telefono">
       </div>
       <div class="grupo-botones">
         <button type="button" class="aceptar">Actualizar</button>
-        <button type="button" class="cancelar">Cancelar</button>
+        <button type="button" class="cancelar" (click)="cancelar()">Cancelar</button>
       </div>
     </form>
   </div>

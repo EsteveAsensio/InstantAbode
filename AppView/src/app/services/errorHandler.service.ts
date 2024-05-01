@@ -18,15 +18,16 @@ export class ErrorHandlerService {
         if (error.result) {
             if (error.result.status != 200) {
                 await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.status, error.result.message);
-                this.logout();
+                
             }
         } else {
             await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.status, error.result.message);
-            this.logout();
+            
         }
 
 
     }
+    
     handleUnauthorizedError(procedencia: string = ''): void {
         if (procedencia == "login") {
             SwalAnimation.showCustomWarningMessageSwal('Contraseña o usuario incorrecto', 'La contraseña o el usuario es incorrecto');

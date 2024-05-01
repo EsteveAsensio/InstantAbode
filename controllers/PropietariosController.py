@@ -93,7 +93,7 @@ class PropietariosController(http.Controller):
             if not result.exists():
                 data={
                 "status":400,
-                "error":"No existe la valoración"
+                "message":"No existe la valoración"
                 }   
                 return data
             
@@ -106,7 +106,7 @@ class PropietariosController(http.Controller):
        except Exception as error:
             data={
                 "status":500,
-                "error":str(error)
+                "message":str(error)
             }
             return data
        

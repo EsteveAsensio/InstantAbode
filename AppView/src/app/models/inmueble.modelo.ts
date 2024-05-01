@@ -12,6 +12,7 @@ export class Inmueble {
       public metrosCuadrados: number,
       public descripcion: string,
       public adicionales: string,
+      public precio: number,
       public state: string,
       public propietario: Propietario,
       public alquileres: Alquiler[]

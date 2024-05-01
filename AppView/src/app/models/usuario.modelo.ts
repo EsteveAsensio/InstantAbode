@@ -10,7 +10,7 @@ export class Usuario {
       public dni: string,
       public nombreCliente: string,
       public apellidos: string,
-      public telefono: Date,
+      public telefono: number,
       public name: string,
       public contrasenya: string,
       public correo: string,

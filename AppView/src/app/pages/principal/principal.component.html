@@ -1,6 +1,6 @@
-<!-- Side Navigation Menu -->
-<div class="sidebar">
-    <h1>FormApp</h1>
+<div class="contenedor">
+  <div class="sidebar">
+    <h1>InstantAbode</h1>
     <a href="#">Página principal</a>
     <a href="perfil-usuario">Perfil</a>
     <a href="#">Alquileres</a>
@@ -8,30 +8,39 @@
     <a href="#">Inmuebles alquilados</a>
     <a href="#">Cerrar sesión</a>
   </div>
-  
-  <!-- Main Content Area -->
-  <div class="contenedor">
+  <!-- Solo muestra el formulario si no hay inmuebles cargados -->
+  <div *ngIf="inmuebles.length === 0">
     <h1>Registrar Alquiler</h1>
     <form>
       <div class="grupo">
         <label for="provincia">Provincia:</label>
-        <select id="provincia">
-          <option value="">Seleccionar</option>
-          <option value="provincia1">Provincia 1</option>
-          <option value="provincia2">Provincia 2</option>
+        <select id="provincia" name="provincia" [(ngModel)]="provinciaSelec">
+          <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
         </select>
       </div>
       <div class="grupo">
         <label for="fechaInicio">Primer día de alquiler:</label>
-        <input type="date" id="fechaInicio">
+        <input type="date" id="fechaInicio" name="fechaInicio" [(ngModel)]="fechaInicio" required>
       </div>
       <div class="grupo">
         <label for="fechaFin">Último día de alquiler:</label>
-        <input type="date" id="fechaFin">
+        <input type="date" id="fechaFin" name="fechaFinal" [(ngModel)]="fechaFinal" required>
       </div>
       <div class="grupo-botones">
-        <button type="submit" class="login">Buscar inmuebles disponibles</button>
+        <button type="submit" class="login" (click)="loadInmuebles()">Buscar inmuebles disponibles</button>
       </div>
     </form>
   </div>
-  
+
+  <!-- Muestra los inmuebles si están cargados -->
+  <div *ngIf="inmuebles.length > 0">
+    <div *ngFor="let inmueble of inmuebles" class="inmueble-card">
+      <h2>{{ inmueble.name }}</h2>
+      <p><strong>Provincia:</strong> {{ inmueble.provincia }}</p>
+      <p><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
+      <p><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
+      <p><strong>Baños:</strong> {{ inmueble.banyos }}</p>
+      <p><strong>Precio:</strong> {{ inmueble.precio | currency:'EUR' }}</p>
+    </div>
+  </div>
+</div>

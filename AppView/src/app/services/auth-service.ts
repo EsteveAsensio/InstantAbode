@@ -6,8 +6,6 @@ import * as CryptoJS from 'crypto-js';
 
 import { Router } from '@angular/router';
 
-
-
 import { BaseService } from './base.service';
 import { Usuario } from '../models/usuario.modelo';
 import { URL_BACKEND } from './constantesHTTP';
@@ -38,7 +36,7 @@ export class AuthService {
         if (data.result.status == 200) {
 
           this.authToken = data.token;
-          var usuario = data.usuario as Usuario;
+          var usuario = data.result.usuario as Usuario;
 
           sessionStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
           sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
@@ -59,6 +57,39 @@ export class AuthService {
     } catch (error: any) {
       ////console.log(error)
       this.errorHandler.handleHttpError(error, false, "login");
+    }
+    return false;
+
+  }
+
+  async registrarUsuario(username: string, password: string, dni: string, nombre: string, apellidos: string, correo: string, telefono: number, sesionIniciada: boolean) {
+    const registrarData = {
+      "name": username,
+      "apellidos": apellidos,
+      "dni": dni,
+      "nombreCliente" : nombre,
+      "correo" : correo,
+      "contrasenya" : password,
+      "telefono" : telefono
+    };
+    try {
+      var data: any = await this.service.post('InstantAbode/registrarNuevoUsuario', registrarData).toPromise();
+      console.log(data)
+      if (data.result) {
+
+        if (data.result.status == 200) {
+ 
+        } else {
+          ////console.log(data)
+          this.errorHandler.handleHttpError(data, false, "Registrar Usuario");
+        }
+      } else {
+        ////console.log(data)
+        this.errorHandler.handleHttpError(data, false, "Registrar Usuario");
+      }
+    } catch (error: any) {
+      ////console.log(error)
+      this.errorHandler.handleHttpError(error, false, "Registrar Usuario");
     }
     return false;
 

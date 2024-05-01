@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { Route, Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Cliente } from '../../models/cliente.modelo';
 import { SwalAnimation } from '../../utils/SwalAnimation';
+import { Usuario } from '../../models/usuario.modelo';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-registrar',
@@ -12,16 +13,17 @@ import { SwalAnimation } from '../../utils/SwalAnimation';
   styleUrl: './registrar.component.css'
 })
 export class RegistrarComponent {
-  public cliente: Cliente  = {} as Cliente;
+  public cliente: Usuario  = {} as Usuario;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   cancelar() {
     this.router.navigate(['login'])
   }
   registrarUsuario() {
     if(this.comprobar()){
-      this.router.navigate(['login'])
+      this.authService.registrarUsuario(this.cliente.name, this.cliente.contrasenya,this.cliente.dni,
+        this.cliente.nombreCliente,this.cliente.apellidos,this.cliente.correo,this.cliente.telefono, false);
     }
   }
   comprobar(): boolean {

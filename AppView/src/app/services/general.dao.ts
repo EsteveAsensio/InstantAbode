@@ -82,7 +82,7 @@ export class GeneralDAO {
       if (data && !data['error']) {
         if (mensaje)
           SwalAnimation.showCustomSuccessSwal('Actualizado exitosamente');
-          return data;
+        return data;
       } else {
         this.errorHandler.handleHttpError(data);
       }
@@ -95,7 +95,7 @@ export class GeneralDAO {
     try {
       console.log(tipo)
       const data: any = await this.service.get(tipo).toPromise();
-    
+
       if (data && !data.error) {
         return data;
       } else {
@@ -105,6 +105,39 @@ export class GeneralDAO {
       this.errorHandler.handleHttpError(error);
     }
   }
+
+    ///
+    /// DAO Inmuebles
+    ///
+  async obtenerInmueblesFechas(tipo: string, fechaInicio: Date, fechaFinal: Date, provincia: String){
+    try {
+      console.log(tipo)
+      const inmuebleData = {
+        "provincia": provincia,
+        "fechaInicio": fechaInicio,
+        "fechaFinal": fechaFinal
+      };
+      const data: any = await this.service.post(tipo, inmuebleData).toPromise();
+      console.log(data);
+
+      if (data.result) {
+        if (data.result.status == 200) {
+          return data.result.inmuebles;
+        }else{
+          ////console.log(data)
+          this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
+        }
+      }else{
+        ////console.log(data)
+        this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
+      }
+    } catch (error: any) {
+      ////console.log(error)
+      this.errorHandler.handleHttpError(error, false, "Obtener Inmuebles");
+    }
+    return false;
+  }
+
 
 
   async getGeneralFiltrados(tipo: string, filtro: any): Promise<void | any[]> {
@@ -124,8 +157,7 @@ export class GeneralDAO {
 
   async postGeneral(tipo: string, objeto: any, mensaje: boolean = true): Promise<any> {
     try {
-  
-     
+
       const data: any = await this.service.post(tipo, objeto).toPromise();
 
       if (data && !data.error) {
@@ -149,7 +181,7 @@ export class GeneralDAO {
         SwalAnimation.showCustomSuccessSwal('Eliminado exitosamente');
         return data;
       } else {
-        this.errorHandler.handleHttpError(data,true);
+        this.errorHandler.handleHttpError(data, true);
       }
     } catch (error: any) {
       this.errorHandler.handleHttpError(error);

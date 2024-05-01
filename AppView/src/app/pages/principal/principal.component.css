@@ -23,6 +23,16 @@
     background-color: #ddd;
   }
   
+  .inmueble-card {
+    border: 2px solid #007bff;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .inmueble-card h2 {
+    color: #0056b3;
+  }
   /* Main content area */
   .contenedor {
     margin-left: 250px; /* Same as the width of the sidebar */
