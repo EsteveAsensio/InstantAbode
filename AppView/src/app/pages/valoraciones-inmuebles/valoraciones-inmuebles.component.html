@@ -1,0 +1,17 @@
+<div class="contenedor">
+    <app-sidebar></app-sidebar>
+    <!-- Muestra las valoraciones si están cargadas -->
+    <div *ngIf="valoraciones.length > 0" class="valoraciones-container">
+        <div *ngFor="let valoracion of valoraciones" class="valoracion-card">
+            <h2>{{ valoracion.name }}</h2>
+            <p><strong>Fecha:</strong> {{ valoracion.fecha | date:'mediumDate' }}</p>
+            <p><strong>Comentario:</strong> {{ valoracion.comentario }}</p>
+            <p><strong>Puntuación:</strong> {{ valoracion.puntuacion }}/10</p>
+            <!-- <p><strong>Inmueble:</strong> {{ valoracion.inmuebleId }}</p> Asumiendo que se desea mostrar el ID -->
+        </div>
+    </div>
+    <!-- Si no hay valoraciones cargadas, muestra un mensaje -->
+    <div *ngIf="valoraciones.length === 0" class="no-valoraciones">
+        <p>No se encontraron valoraciones.</p>
+    </div>
+</div>

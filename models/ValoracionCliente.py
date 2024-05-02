@@ -9,7 +9,7 @@ class ValoracionCliente(models.Model):
     ]
     #Infomarción
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
-    comentario = fields.Html(string="Comentario", help="Comentario sobre el cliente")
+    comentario = fields.Char(string="Comentario", help="Comentario sobre el cliente")
     puntuacion = fields.Integer(string="Valoración", help="Valoración del cliente", required=True)
     fecha = fields.Datetime(string="Fecha", help="Fecha de la reseña", default=fields.Datetime.now, readonly=True)
     #Propietario

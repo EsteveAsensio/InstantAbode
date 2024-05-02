@@ -4,12 +4,15 @@ import { PrincipalComponent } from './pages/principal/principal.component';
 import { RegistrarComponent } from './pages/registrar/registrar.component';
 import { PerfilUsuarioComponent } from './pages/perfil-usuario/perfil-usuario.component';
 import { InmueblesAlquiladosComponent } from './pages/inmuebles-alquilados/inmuebles-alquilados.component';
+import { ValoracionesInmueblesComponent } from './pages/valoraciones-inmuebles/valoraciones-inmuebles.component';
+
 export const routes: Routes = [
     { component: LoginComponent, path: 'login' },
    
     { component: PrincipalComponent, path: 'principal'},
     { component: PerfilUsuarioComponent, path: 'perfil-usuario'},
     { component: InmueblesAlquiladosComponent, path: 'inmuebles-alquilados'},
+    { component: ValoracionesInmueblesComponent, path: 'valoraciones-inmuebles'},
     { component: RegistrarComponent, path: 'registrar' },
 
     //

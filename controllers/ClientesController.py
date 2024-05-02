@@ -156,6 +156,40 @@ class ClientesController(http.Controller):
             }
             return data
        
+
+    #GET
+    @http.route(['/InstantAbode/valoracionesUsuario/<int:idUser>'], auth='public', type="http", methods=['GET'])
+    def valoracionesUsuario(self, idUser):
+        try:
+            valoraciones = request.env['instant_abode.valoracioninmueble'].sudo().search([('cliente.id', '=', idUser)])
+
+            if not valoraciones:
+                data = json.dumps({'status': 400, 'message': 'El usuario no ha realizado ninguna valoración.'})
+                return Response(data, content_type='application/json', status=200)
+
+            lista_valoraciones = []
+
+            for valoracion in valoraciones:
+                # Convertir la fecha a una cadena en el formato deseado, por ejemplo 'YYYY-MM-DD'
+                fecha_formateada = valoracion.fecha.strftime("%Y-%m-%d") if valoracion.fecha else None
+
+                lista_valoraciones.append({
+                    'id': valoracion.id,
+                    'name': valoracion.name,
+                    'comentario': valoracion.comentario,
+                    'puntuacion': valoracion.puntuacion,
+                    'fecha': fecha_formateada 
+                })
+
+            data = json.dumps({'status': 200, 'valoraciones': lista_valoraciones})
+            return Response(data, content_type='application/json', status=200)
+
+        except Exception as error:
+            data = json.dumps({'status': 500, 'message': str(error)})
+            return Response(data, content_type='application/json', status=500)
+
+
+
     #delete
     @http.route('/InstantAbode/eliminarValoracionInmueble/<int:valoracionid>', type='http', auth='public', methods=['DELETE'], csrf=False)
     def eliminarValoracionInmueble(self, valoracionid):

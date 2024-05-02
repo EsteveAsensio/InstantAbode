@@ -8,7 +8,7 @@ class ValoracionInmueble(models.Model):
 
     #Infomarción
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
-    comentario = fields.Html(string="Comentario", help="Comentario sobre el inmueble")
+    comentario = fields.Char(string="Comentario", help="Comentario sobre el inmueble")
     puntuacion = fields.Integer(string="Valoración", help="Valoración del inmueble", required=True)
     fecha = fields.Date(string="Fecha", help="Fecha de la reseña", default=fields.Date.today, readonly=True)
     #Alquiler
@@ -18,7 +18,7 @@ class ValoracionInmueble(models.Model):
     #Inmueble
     inmueble = fields.Many2one("instant_abode.inmueble", string="Inmueble", readonly=True, ondelete="cascade")
 
-    @api.depends('fecha', 'inmueble', 'cliente')
+    @api.depends('fecha', 'inmueble', 'cliente', 'alquiler')
     def crearNombre(self):
         for valoracion in self:
             fecha_valoracion = valoracion.fecha.strftime("%d/%m/%Y")
