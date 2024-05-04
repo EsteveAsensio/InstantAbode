@@ -74,7 +74,7 @@ class ClientesController(http.Controller):
             return Response(data, content_type='application/json', status=500)
         
         
-    #get
+    #post
     @http.route(['/InstantAbode/buscarInmuebles'], auth='public', type="json", methods=['POST'], csrf=False)
     def buscarInmuebles(self, **kw):
         try:
@@ -106,6 +106,7 @@ class ClientesController(http.Controller):
                 ])
                 if not alquileres:
                     inmuebles_disponibles.append({
+                        'id' : inmueble.id,
                         'name': inmueble.name,
                         'provincia': inmueble.provincia,
                         'localizacion': inmueble.localizacion,
@@ -114,7 +115,9 @@ class ClientesController(http.Controller):
                         'metrosCuadrados' : inmueble.metrosCuadrados,
                         'descripcion' : inmueble.descripcion,
                         'adicionales' : inmueble.adicionales,
-                        'precio' : inmueble.precio
+                        'precio' : inmueble.precio,
+                        'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
+                        'imagenes': ['http://localhost:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes]
                     })
 
             return {
@@ -129,6 +132,81 @@ class ClientesController(http.Controller):
             }
             return data
         
+    #GET
+    @http.route(['/InstantAbode/infoInmueble/<int:idInmueble>'], auth='public', type="http", methods=['GET'])
+    def inmueblesAlquilados(self, idInmueble):
+        try:
+            inmueble = request.env['instant_abode.inmueble'].sudo().search([('id', '=', idInmueble)])
+
+            if not inmueble:
+                data = json.dumps({'status': 400, 'message': 'Ya no existe ese inmueble'})
+                return Response(data, content_type='application/json', status=200)
+
+            lista_valoraciones = self.valoracionesInmueble(inmueble.id)
+
+            inmuebleInfo = {
+                'id' : inmueble.id,
+                'name': inmueble.name,
+                'provincia': inmueble.provincia,
+                'localizacion': inmueble.localizacion,
+                'habitaciones': inmueble.habitaciones,
+                'banyos' : inmueble.banyos,
+                'metrosCuadrados' : inmueble.metrosCuadrados,
+                'descripcion' : inmueble.descripcion,
+                'adicionales' : inmueble.adicionales,
+                'precio' : inmueble.precio,
+                'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
+                'imagenes': ['http://localhost:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes],
+                'valoraciones' : lista_valoraciones
+            }
+
+
+            data = json.dumps({'status': 200, 'inmueble': inmuebleInfo})
+            return Response(data, content_type='application/json', status=200)
+
+        except Exception as error:
+            data = json.dumps({'status': 500, 'message': str(error)})
+            return Response(data, content_type='application/json', status=500)
+        
+    #GET
+    def valoracionesInmueble(self, idInmueble):
+        try:
+            valoraciones = request.env['instant_abode.valoracioninmueble'].sudo().search([('alquiler.inmueble.id', '=', idInmueble)])
+
+            lista_valoraciones = []
+
+            for valoracion in valoraciones:
+                # Convertir la fecha a una cadena en el formato deseado, por ejemplo 'YYYY-MM-DD'
+                fecha_formateada = valoracion.fecha.strftime("%Y-%m-%d") if valoracion.fecha else None
+
+                clienteInfo = self.clienteValoracion(valoracion.cliente.id)
+                lista_valoraciones.append({
+                    'id': valoracion.id,
+                    'name': valoracion.name,
+                    'comentario': valoracion.comentario,
+                    'puntuacion': valoracion.puntuacion,
+                    'fecha': fecha_formateada,
+                    'cliente': clienteInfo
+                })
+
+            return lista_valoraciones
+        except Exception as error:
+            return str(error)
+        
+
+    def clienteValoracion(self, idCliente):
+        try:
+            cliente = request.env['instant_abode.cliente'].sudo().search([('id', '=', idCliente)])
+
+            clienteInfo = {
+                'id' : cliente.id,
+                'name' : cliente.name,
+                'imagen' : 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id),
+            }
+
+            return clienteInfo
+        except Exception as error:
+            return str(error)
     #put
     @http.route('/InstantAbode/modificarCliente', type='json', auth='public', methods=['PUT'])
     def modificarCliente(self, **kw):

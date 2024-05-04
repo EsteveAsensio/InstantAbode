@@ -5,6 +5,9 @@ from datetime import datetime
 class ValoracionInmueble(models.Model):
     _name = 'instant_abode.valoracioninmueble'
     _description = 'Información de las valoraciones realizadas por un cliente a un inmueble'
+    _sql_constraints = [
+        ('unique_name', 'unique(name)', 'Ese nombre ya está registrado')
+    ]
 
     #Infomarción
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
@@ -21,8 +24,8 @@ class ValoracionInmueble(models.Model):
     @api.depends('fecha', 'inmueble', 'cliente', 'alquiler')
     def crearNombre(self):
         for valoracion in self:
-            fecha_valoracion = valoracion.fecha.strftime("%d/%m/%Y")
-            valoracion.name = f'Valoración de {valoracion.cliente.name} a {valoracion.inmueble.name} el {fecha_valoracion}'
+            valoracion.name = f'Valoración de {valoracion.cliente.name} a {valoracion.alquiler.name}'
+    
     @api.constrains("puntuacion")
     def comprobarPuntuacion(self):
         if self.puntuacion < 1:

@@ -3,6 +3,9 @@ from odoo import models, fields, api
 class Inmueble(models.Model):
     _name = 'instant_abode.inmueble'
     _description = 'Información sobre los Inmuebles introducios por los propietarios.'
+    _sql_constraints = [
+        ('unique_name', 'unique(name)', 'Ese nombre ya está registrado')
+    ]
 
     name = fields.Char(string="Nombre", help="Características básicas del inmueble", required=True) 
     provincia = fields.Char(string="Provincia", help="Provincia donde se localiza el inmueble", required=True)

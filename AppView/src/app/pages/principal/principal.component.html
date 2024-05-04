@@ -1,38 +1,46 @@
-<div class="contenedor">
-  <app-sidebar></app-sidebar>
-  <!-- Solo muestra el formulario si no hay inmuebles cargados -->
-  <div *ngIf="inmuebles.length === 0">
-    <h1>Registrar Alquiler</h1>
-    <form>
-      <div class="grupo">
-        <label for="provincia">Provincia:</label>
-        <select id="provincia" name="provincia" [(ngModel)]="provinciaSelec">
-          <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
-        </select>
-      </div>
-      <div class="grupo">
-        <label for="fechaInicio">Primer día de alquiler:</label>
-        <input type="date" id="fechaInicio" name="fechaInicio" [(ngModel)]="fechaInicio" required>
-      </div>
-      <div class="grupo">
-        <label for="fechaFin">Último día de alquiler:</label>
-        <input type="date" id="fechaFin" name="fechaFinal" [(ngModel)]="fechaFinal" required>
-      </div>
-      <div class="grupo-botones">
-        <button type="submit" class="login" (click)="loadInmuebles()">Buscar inmuebles disponibles</button>
-      </div>
-    </form>
-  </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InstantAbode - Alquiler de Inmuebles</title>
+</head>
 
-  <!-- Muestra los inmuebles si están cargados -->
-  <div *ngIf="inmuebles.length > 0">
-    <div *ngFor="let inmueble of inmuebles" class="inmueble-card">
-      <h2>{{ inmueble.name }}</h2>
-      <p><strong>Provincia:</strong> {{ inmueble.provincia }}</p>
-      <p><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
-      <p><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
-      <p><strong>Baños:</strong> {{ inmueble.banyos }}</p>
-      <p><strong>Precio:</strong> {{ inmueble.precio | currency:'EUR' }}</p>
+<body>
+  <div class="contenedor">
+    <app-sidebar></app-sidebar>
+    <div *ngIf="inmuebles.length === 0">
+      <h1>Registrar Alquiler</h1>
+      <form>
+        <div class="grupo">
+          <label for="provincia">Provincia:</label>
+          <select id="provincia" name="provincia" [(ngModel)]="provinciaSelec">
+            <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
+          </select>
+        </div>
+        <div class="grupo-fechas">
+          <label for="fechaInicio">Primer día de alquiler:</label>
+          <input type="date" id="fechaInicio" name="fechaInicio" [(ngModel)]="fechaInicio" required>
+        </div>
+        <div class="grupo-fechas">
+          <label for="fechaFin">Último día de alquiler:</label>
+          <input type="date" id="fechaFin" name="fechaFinal" [(ngModel)]="fechaFinal" required>
+        </div>
+        <div class="grupo-botones">
+          <button type="submit" class="login" (click)="loadInmuebles()">Buscar inmuebles disponibles</button>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="inmuebles.length > 0" class="inmuebles-container">
+      <div *ngFor="let inmueble of inmuebles" class="inmueble-card" [routerLink]="['/inmueble', inmueble.id]">
+        <img [src]="sanitizeImageUrl(inmueble.imagenPrincipal)" alt="Imagen Principal" class="image-large">
+        <div class="inmueble-info">
+          <h2>{{ inmueble.name }}</h2>
+          <p class="info"><strong>Provincia:</strong> {{ inmueble.provincia }}</p>
+          <p class="info"><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
+          <p class="info"><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
+          <p class="info"><strong>Baños:</strong> {{ inmueble.banyos }}</p>
+          <p class="price"><strong>Precio:</strong> {{ inmueble.precio | currency:'EUR' }}</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</body>

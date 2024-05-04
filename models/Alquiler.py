@@ -5,7 +5,10 @@ from datetime import datetime
 class Alquiler(models.Model):
     _name = 'instant_abode.alquiler'
     _description = 'Información sobre los Alquileres realizados de un cliente a un inmueble'
-
+    _sql_constraints = [
+        ('unique_name', 'unique(name)', 'Ese nombre ya está registrado')
+    ]
+    
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)
     fechaInicio = fields.Date(string="Fecha Inicial", help="Fecha inicio instancia", required=True)
     fechaFinal = fields.Date(string="Fecha Final", help="Fecha final instancia", required=True)

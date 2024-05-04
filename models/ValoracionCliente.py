@@ -5,7 +5,8 @@ class ValoracionCliente(models.Model):
     _name = 'instant_abode.valoracioncliente'
     _description = 'Información de las valoraciones realizadas por un propietario a un cliente'
     _sql_constraints = [
-        ('unique_valoracion_cliente', 'unique(propietario, cliente)', 'Solo se puede realizar una valoración por cliente.')
+        ('unique_valoracion_cliente', 'unique(propietario, cliente)', 'Solo se puede realizar una valoración por cliente.'),
+        ('unique_name', 'unique(name)', 'Ese nombre ya está registrado')
     ]
     #Infomarción
     name = fields.Char(string='Nombre', compute='crearNombre', store=True)

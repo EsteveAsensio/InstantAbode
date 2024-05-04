@@ -1,5 +1,6 @@
 import { Alquiler } from "./alquiler.modelo";
 import { Propietario } from "./propietario.modelo";
+import { ValoracionInmueble } from "./valoracionInmueble.modelo";
 
 export class Inmueble {
     constructor(
@@ -14,8 +15,11 @@ export class Inmueble {
       public adicionales: string,
       public precio: number,
       public state: string,
+      public imagenPrincipal: string,
+      public imagenes : string[],
       public propietario: Propietario,
-      public alquileres: Alquiler[]
+      public alquileres: Alquiler[],
+      public valoraciones: ValoracionInmueble[]
     ) { }
   }
   

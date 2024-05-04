@@ -1,0 +1,116 @@
+.app-container {
+  display: flex;
+}
+
+.app-sidebar {
+  width: 250px; /* Adjust based on your actual sidebar width */
+  position: fixed;
+  height: 100vh;
+  background-color: #f4f4f4;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.inmueble-container {
+  flex-grow: 1;
+  margin-left: 260px; /* slightly more than the width of the sidebar */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.header-details {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.main-image {
+  width: 30%; /* Adjust size as needed */
+  height: auto;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.text-details {
+  flex: 1;
+}
+
+.additional-images img {
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  border-radius: 4px;
+}
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.review {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.client-info {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.client-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.client-name {
+  font-weight: bold;
+}
+
+.review-content {
+  flex: 1;
+}
+
+.review-date {
+  font-style: italic;
+  color: #666;
+}
+.valoraciones-container {
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+}
+.h2-valoraciones {
+  text-align: left;
+}
+
+.alquilar-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: blanchedalmond;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px; /* Espacio antes de las valoraciones */
+}
+
+.alquilar-btn:hover {
+  background-color: #0056b3;
+}
+
+.no-valoraciones {
+  color: #666;
+  font-size: 16px;
+  padding: 10px;
+}
+

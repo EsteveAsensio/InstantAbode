@@ -1,63 +1,108 @@
-  
-  .inmueble-card {
-    border: 2px solid #007bff;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-  }
-  
-  .inmueble-card h2 {
-    color: #0056b3;
-  }
-  /* Main content area */
+.contenedor {
+  padding: 20px;
+  margin-left: 250px; 
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: margin-left 0.3s;
+}
+
+@media (max-width: 768px) {
   .contenedor {
-    margin-left: 250px; /* Same as the width of the sidebar */
-    padding: 0px 10px;
-    max-width: 400px;
-    margin-top: 100px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  .grupo {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input, select {
-    width: 100%;
+    margin-left: 60px;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
   }
-  
-  .grupo-botones {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .grupo-botones button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .grupo-botones button:hover {
-    background-color: #0056b3;
-  }
-  
+}
+
+.inmuebles-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+.inmueble-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  transition: transform 0.1s ease-in-out;
+}
+
+.inmueble-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.image-large {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.inmueble-info {
+  padding: 15px;
+  background-color: #fff;
+}
+
+.inmueble-card h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info, .price {
+  margin: 5px 0;
+  color: #666;
+}
+
+.price {
+  font-weight: bold;
+  color: #000;
+}
+
+h1 {
+  text-align: center;
+}
+
+.grupo {
+  margin-bottom: 20px;
+}
+
+.grupo-fechas {
+  margin-right: 18px;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.grupo-botones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grupo-botones button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #007bff;
+  color: #fff;
+  width: 100%;
+}
+
+.grupo-botones button:hover {
+  background-color: #0056b3;
+}

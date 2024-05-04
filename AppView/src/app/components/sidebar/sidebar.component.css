@@ -1,28 +1,46 @@
 /* Sidebar Styles */
 .sidebar {
-    height: 100vh;
-    width: 250px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #f4f4f4;
-    overflow-x: hidden;
-    padding-top: 20px;
-  }
-  
-  .sidebar a {
-    padding: 10px 15px;
-    text-decoration: none;
-    font-size: 16px;
-    color: #000;
-    display: block;
-  }
-  
-  .sidebar a:hover {
-    background-color: #ddd;
-  }
+  height: 100vh;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  overflow-x: hidden;
+  padding-top: 20px;
+  box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.1);
+  transition: width 0.3s;
+}
 
-  h1 {
-    text-align: center;
+.sidebar a {
+  padding: 10px 15px;
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  display: block;
+  transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: #ddd;
+}
+
+.sidebar h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px; /* Compact sidebar for mobile */
   }
+  
+  .sidebar h1 {
+    display: none; /* Hide title in compact mode */
+  }
+  
+  .contenedor {
+    margin-left: 60px; /* Adjust main container margin for compact sidebar */
+  }
+}

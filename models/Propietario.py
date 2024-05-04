@@ -198,23 +198,23 @@ class Propietario(models.Model):
     
     def nuevoUsuarioNotificacion(self):
         nombre = self.usuarioAleatorio()
-        contrasenya = self.contrasenyAleatoria()
+        contrasenya = self.contrasenyaAleatoria()
 
         # Verificar
         while self.env['instant_abode.propietario'].search([('name', '=', nombre)]) or \
                 self.env['instant_abode.propietario'].search([('contrasenya', '=', contrasenya)]):
             nombre = self.usuarioAleatorio()
-            contrasenya = self.contrasenyAleatoria()
+            contrasenya = self.contrasenyaAleatoria()
 
         while self.env['instant_abode.cliente'].search([('name', '=', nombre)]) or \
             self.env['instant_abode.cliente'].search([('contrasenya', '=', contrasenya)]):
             nombre = self.usuarioAleatorio()
-            contrasenya = self.contrasenyAleatoria()
+            contrasenya = self.contrasenyaAleatoria()
 
         self.name = nombre
         self.contrasenya = contrasenya
 
-    def contrasenyAleatoria(self):
+    def contrasenyaAleatoria(self):
         especiales = string.punctuation
         digitos = string.digits
         letras = string.ascii_letters
