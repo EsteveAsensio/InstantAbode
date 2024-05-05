@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, booleanAttribute } from '@angular/core';
 import { GeneralDAO } from '../../services/general.dao';
 import { AuthService } from '../../services/auth-service';
-import { Inmueble } from '../../models/inmueble.modelo';
 import { FormsModule } from '@angular/forms';
-import { CommonModule  } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { InmuebleDAO } from '../../services/inmuebles.dao';
 import { Usuario } from '../../models/usuario.modelo';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+import { Alquiler } from '../../models/alquiler.modelo';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { InfoValoracioninmuebleComponent } from '../info-valoracioninmueble/info-valoracioninmueble.component';
+import { SwalAnimation } from '../../utils/SwalAnimation';
+import { Router } from '@angular/router';
+import { ValoracionesDAO } from '../../services/valoraciones.dao';
 
 @Component({
   selector: 'app-inmuebles-alquilados',
@@ -16,9 +22,10 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
   styleUrl: './inmuebles-alquilados.component.css'
 })
 export class InmueblesAlquiladosComponent {
-  constructor(private articuloService: GeneralDAO, private inmueblesService: InmuebleDAO, private authService: AuthService) { }
-  inmuebles: Inmueble[] = [];
-  usuario: Usuario  = {} as Usuario;
+  constructor(private valoDAO: ValoracionesDAO, private router: Router, public dialog: MatDialog,
+    private sanitizer: DomSanitizer, private articuloService: GeneralDAO, private inmueblesService: InmuebleDAO, private authService: AuthService) { }
+  alquileres: Alquiler[] = [];
+  usuario: Usuario = {} as Usuario;
 
   async ngOnInit(): Promise<void> {
     await this.loadUserData();
@@ -34,7 +41,34 @@ export class InmueblesAlquiladosComponent {
   }
 
   async cargarInmueblesUser() {
-    this.inmuebles = await this.inmueblesService.obtenerInmueblesAlquilados('InstantAbode/inmueblesAlquilados/' + this.usuario.id) || [];
+    this.alquileres = await this.inmueblesService.obtenerInmueblesAlquilados('InstantAbode/inmueblesAlquilados/' + this.usuario.id) || [];
   }
 
+  sanitizeImageUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
+  async eliminarValoracion(idValoracion: number) {
+    const confirm = await SwalAnimation.showConfirmDeleteMessageSwal();
+    if (confirm) {
+      await this.valoDAO.eliminarValoracionInmueble("InstantAbode/eliminarValoracionInmueble/" + idValoracion);
+      this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['inmuebles-alquilados']);
+      });
+
+    }
+  }
+
+  openDialog(alquiler: Alquiler): void {
+    const dialogRef = this.dialog.open(InfoValoracioninmuebleComponent, {
+      width: '250px',
+      data: { valoracion: alquiler.valoracionInmueble || { comentario: '', puntuacion: 0, fecha: new Date(), idAlquiler: alquiler.id } }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['inmuebles-alquilados']);
+      });
+    });
+
+  }
 }

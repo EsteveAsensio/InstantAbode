@@ -1,32 +1,109 @@
-.contenedor {
-    margin-left: 250px; /* Compensar por el ancho del sidebar */
-    padding: 0 10px;
-    max-width: 760px; /* Ajustado para una mejor visualización */
-    margin-top: 100px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  height: 100vh;
+}
+
+.inmuebles-container {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.inmueble-card {
+  width: calc(50% - 20px);
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #fff;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.inmueble-image {
+  width: 100%; /* Se ajusta al ancho de la tarjeta */
+  height: 300px; /* Altura fija para consistencia visual */
+  object-fit: cover; /* La imagen cubre el espacio asignado sin distorsión */
+  border-radius: 5px 5px 0 0; /* Redondea las esquinas superiores */
+}
+
+.inmueble-details {
+  padding: 15px;
+  text-align: center; /* Centra el texto dentro de la sección de detalles */
+  width: 100%;
+}
+
+.valoracion-details {
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.inmueble-actions {
+  display: flex;
+  justify-content: space-evenly; /* Distribuye los botones uniformemente */
+  padding: 10px 0;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.btn-añadir, .btn-modificar, .btn-eliminar {
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-añadir:hover, .btn-modificar:hover, .btn-eliminar:hover {
+  transform: scale(1.05);
+}
+
+.btn-añadir {
+  background-color: #4CAF50; /* Verde */
+  color: white;
+}
+
+.btn-modificar {
+  background-color: #007bff; /* Azul */
+  color: white;
+}
+
+.btn-eliminar {
+  background-color: #f44336; /* Rojo */
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+      flex-direction: column;
   }
-  
+
+  .app-sidebar, .inmuebles-container {
+      width: 100%;
+      padding: 10px;
+  }
+
   .inmueble-card {
-    border: 2px solid #007bff;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+      width: 100%;
   }
-  
-  .inmueble-card h2 {
-    color: #0056b3;
+
+  .inmueble-image {
+      height: 150px; /* Menor altura en dispositivos móviles */
   }
-  
-  p {
-    margin: 5px 0;
-  }
-  
-  .no-inmuebles {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-  }
-  
+}

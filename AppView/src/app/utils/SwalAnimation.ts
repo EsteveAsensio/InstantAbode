@@ -238,7 +238,7 @@ export class SwalAnimation {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, eliminar!',
+            confirmButtonText: 'Sí, eliminar!',
         }).then((result: any) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {

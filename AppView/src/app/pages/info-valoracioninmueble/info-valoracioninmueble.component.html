@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>{{ data.valoracion.id ? 'Modificar Valoración' : 'Añadir Valoración' }}</h1>
+<div class="content" mat-dialog-content>
+  <p>Comentario:</p>
+  <textarea [(ngModel)]="data.valoracion.comentario" rows="4" style="width:100%;"></textarea>
+  <p>Puntuación:</p>
+  <input type="number" [(ngModel)]="data.valoracion.puntuacion" min="1" max="10" style="width:100%;">
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="save()" cdkFocusInitial>Guardar</button>
+</div>

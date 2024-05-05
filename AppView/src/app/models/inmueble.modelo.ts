@@ -14,6 +14,7 @@ export class Inmueble {
       public descripcion: string,
       public adicionales: string,
       public precio: number,
+      public precioAlquiler: number,
       public state: string,
       public imagenPrincipal: string,
       public imagenes : string[],

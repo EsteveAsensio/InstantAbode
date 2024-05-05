@@ -55,15 +55,15 @@ export class InmuebleDAO {
                     return data.inmuebles;
                 } else {
                     ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
+                    this.errorHandler.handleHttpError(data, false, "Obtener Alquileres");
                 }
             } else {
                 ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
+                this.errorHandler.handleHttpError(data, false, "Obtener Alquileres");
             }
         } catch (error: any) {
             ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Obtener Inmuebles");
+            this.errorHandler.handleHttpError(error, false, "Obtener Alquileres");
         }
     }
 

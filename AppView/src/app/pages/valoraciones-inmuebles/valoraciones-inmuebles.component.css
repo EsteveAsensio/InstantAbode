@@ -1,32 +1,78 @@
-.contenedor {
-    margin-left: 250px; /* Compensar por el ancho del sidebar */
-    padding: 0 10px;
-    max-width: 760px; /* Ajustado para una mejor visualización */
-    margin-top: 100px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+.valoraciones-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    align-items: flex-start; /* Alinea los elementos al principio de la línea */
+    gap: 20px; /* Espacio uniforme entre tarjetas */
 }
 
 .valoracion-card {
-    border: 2px solid #007bff;
-    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% / 2 - 20px); /* Aumento del ancho para que las tarjetas sean más largas */
+    padding: 20px; /* Aumento del padding para mayor coherencia visual */
     margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #fff;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+
+.valoracion-image {
+    width: 40%; /* Proporción de la imagen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inmueble-image {
+    width: 100%;
+    height: auto;
     border-radius: 5px;
-    background-color: #f0f8ff; /* Añadiendo un fondo claro para diferenciar cada tarjeta */
+    margin: 10px;
 }
 
-.valoracion-card h2 {
-    color: #0056b3;
+.valoracion-content {
+    width: 60%; /* Proporción del contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-p {
-    margin: 5px 0;
+@media (max-width: 768px) {
+    .valoracion-card {
+        flex-direction: column;
+        width: 100%; /* Tarjetas de ancho completo en pantallas más pequeñas */
+    }
+
+    .valoracion-content, .valoracion-image {
+        width: 100%; /* Ajuste al 100% para una vista coherente */
+    }
 }
 
 .no-valoraciones {
-    text-align: center;
-    padding: 20px;
     color: #666;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
 }
+
+@media (max-width: 768px) {
+    .inmueble-container {
+        margin-left: 0; /* Ajuste para pantallas más pequeñas */
+        padding: 10px;
+    }
+
+    .app-sidebar {
+        width: 100%; /* Sidebar de ancho completo para dispositivos móviles */
+        position: static; /* Posición estática para mejor navegación */
+        height: auto;
+        overflow-y: auto;
+        box-shadow: none;
+    }
+}
+

@@ -7,6 +7,7 @@ import { Usuario } from '../../models/usuario.modelo';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { ValoracionInmueble } from '../../models/valoracionInmueble.modelo';
 import { ValoracionesDAO } from '../../services/valoraciones.dao';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-valoraciones-inmuebles',
@@ -16,7 +17,7 @@ import { ValoracionesDAO } from '../../services/valoraciones.dao';
   styleUrl: './valoraciones-inmuebles.component.css'
 })
 export class ValoracionesInmueblesComponent {
-  constructor(private articuloService: GeneralDAO, private valoracionesService: ValoracionesDAO, private authService: AuthService) { }
+  constructor(private sanitizer: DomSanitizer, private articuloService: GeneralDAO, private valoracionesService: ValoracionesDAO, private authService: AuthService) { }
 
   valoraciones : ValoracionInmueble[] = [];
   usuario: Usuario  = {} as Usuario;
@@ -37,5 +38,7 @@ export class ValoracionesInmueblesComponent {
   async cargarInmueblesUser() {
     this.valoraciones = await this.valoracionesService.obtenerValoracionesUsuario('InstantAbode/valoracionesUsuario/' + this.usuario.id) || [];
   }
-
+  sanitizeImageUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
 }

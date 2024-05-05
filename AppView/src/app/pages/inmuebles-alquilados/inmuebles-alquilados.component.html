@@ -1,18 +1,29 @@
-<div class="contenedor">
-    <app-sidebar></app-sidebar>
-    <!-- Muestra los inmuebles si están cargados -->
-    <div *ngIf="inmuebles.length > 0" class="inmuebles-container">
-        <div *ngFor="let inmueble of inmuebles" class="inmueble-card">
-            <h2>{{ inmueble.name }}</h2>
-            <p><strong>Provincia:</strong> {{ inmueble.provincia }}</p>
-            <p><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
-            <p><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
-            <p><strong>Baños:</strong> {{ inmueble.banyos }}</p>
-            <p><strong>Precio:</strong> {{ inmueble.precio | currency:'EUR' }}</p>
-        </div>
+<!-- inmuebles-alquilados.component.html -->
+<div class="app-container">
+    <app-sidebar></app-sidebar> <!-- Componente Sidebar -->
+    <div class="inmuebles-container">
+        <ng-container *ngFor="let alquiler of alquileres">
+            <div class="inmueble-card">
+                <div class="inmueble-details">
+                    <h3>{{ alquiler.name }}</h3>
+                    <p><strong>Desde:</strong> {{ alquiler.fechaInicio | date:'mediumDate' }} hasta: {{ alquiler.fechaFinal | date:'mediumDate' }}</p>
+                    <p><strong>Ubicación:</strong> {{ alquiler.inmueble.localizacion }}, {{ alquiler.inmueble.provincia }}</p>
+                    <p><strong>Precio:</strong> {{ alquiler.precio | currency:'EUR' }}</p>
+                </div>
+                <img [src]="sanitizeImageUrl(alquiler.inmueble.imagenPrincipal)" alt="Imagen del Inmueble" class="inmueble-image">
+                <div *ngIf="alquiler.valoracionInmueble" class="valoracion-details">
+                    <p><strong>Valoración:</strong> {{ alquiler.valoracionInmueble.name }}</p>
+                    <p><strong>Comentario:</strong> {{ alquiler.valoracionInmueble.comentario }}</p>
+                    <p><strong>Puntuación:</strong> {{ alquiler.valoracionInmueble.puntuacion }} / 10</p>
+                    <p><strong>Fecha:</strong> {{ alquiler.valoracionInmueble.fecha | date:'mediumDate' }}</p>
+                </div>
+                <div class="inmueble-actions">
+                    <button *ngIf="!alquiler.valoracionInmueble" class="btn-añadir" (click)="openDialog(alquiler)">Añadir Valoración</button>
+                    <button *ngIf="alquiler.valoracionInmueble" class="btn-modificar" (click)="openDialog(alquiler)">Modificar Valoración</button>
+                    <button *ngIf="alquiler.valoracionInmueble" class="btn-eliminar" (click)="eliminarValoracion(alquiler.valoracionInmueble.id)">Eliminar Valoración</button>
+                </div>
+            </div>
+        </ng-container>
     </div>
-    <!-- Si no hay inmuebles cargados, muestra un mensaje -->
-    <div *ngIf="inmuebles.length === 0" class="no-inmuebles">
-        <p>No hay inmuebles alquilados disponibles.</p>
-    </div>
-</div>
+  </div>
+  

@@ -28,6 +28,11 @@ export class BaseService {
   public delete<T>(path: string, data: any): any {
     return this.http.delete<T>(`${URL_BACKEND}${path}`, data);
   }
+  
+  public deleteUno<T>(path: string): any {
+    return this.http.delete<T>(`${URL_BACKEND}${path}`);
+  }
+
 
   public cambioDeContrasena<T>(pathObject: string, data: any) {
     const url = `${URL_BACKEND}${pathObject}`;

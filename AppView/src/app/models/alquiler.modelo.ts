@@ -11,7 +11,7 @@ export class Alquiler {
       public fechaFinal: Date,
       public inmueble: Inmueble,
       public cliente: Cliente,
-      public valoracionInmueble: ValoracionInmueble
-
+      public valoracionInmueble: ValoracionInmueble,
+      public precio: number
     ) { }
   }

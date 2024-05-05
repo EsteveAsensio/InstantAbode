@@ -20,7 +20,7 @@ export class ValoracionesDAO {
     async obtenerValoracionesUsuario(tipo: string): Promise<void | any[]> {
         try {
             const data: any = await this.service.get(tipo).toPromise();
-            console.log(data)
+            ///console.log(data)
 
             if (data) {
                 if (data.status == 200) {
@@ -36,6 +36,85 @@ export class ValoracionesDAO {
         } catch (error: any) {
             ////console.log(error)
             this.errorHandler.handleHttpError(error, false, "Obtener Valoraciones");
+        }
+    }
+
+    async modificarValoracionInmueble(tipo: string, valoracion: any): Promise<void | string> {
+        try {
+            const valoracionData = {
+                "id": valoracion.id,
+                "comentario": valoracion.comentario,
+                "puntuacion": valoracion.puntuacion,
+                "fecha": valoracion.fecha
+            };
+            const data: any = await this.service.put(tipo, valoracionData).toPromise();
+            ///console.log(data)
+
+            if (data) {
+                if (data.status == 200) {
+                    return data.result.message;
+                } else {
+                    ////console.log(data)
+                    this.errorHandler.handleHttpError(data, false, "Modificar Valoraciones");
+                }
+            } else {
+                ////console.log(data)
+                this.errorHandler.handleHttpError(data, false, "Modificar Valoraciones");
+            }
+        } catch (error: any) {
+            ////console.log(error)
+            this.errorHandler.handleHttpError(error, false, "Modificar Valoraciones");
+        }
+    }
+
+    async addValoracionInmueble(tipo: string, valoracion: any): Promise<void | string> {
+        try {
+            const valoracionData = {
+                "id": valoracion.id,
+                "comentario": valoracion.comentario,
+                "puntuacion": valoracion.puntuacion,
+                "fecha": valoracion.fecha,
+                "idAlquiler" : valoracion.idAlquiler
+            };
+            const data: any = await this.service.post(tipo, valoracionData).toPromise();
+            ///console.log(data)
+
+            if (data) {
+                if (data.status == 200) {
+                    return data.result.message;
+                } else {
+                    ////console.log(data)
+                    this.errorHandler.handleHttpError(data, false, "Añadir Valoraciones");
+                }
+            } else {
+                ////console.log(data)
+                this.errorHandler.handleHttpError(data, false, "Añadir Valoraciones");
+            }
+        } catch (error: any) {
+            ////console.log(error)
+            this.errorHandler.handleHttpError(error, false, "Añadir Valoraciones");
+        }
+    }
+
+    async eliminarValoracionInmueble(tipo: string): Promise<void | any> {
+        try {
+            const data: any = await this.service.deleteUno(tipo).toPromise();
+            ///console.log(data)
+
+            if (data) {
+                if (data.status == 200) {
+                    return data.result.message;
+                } else {
+                    ////console.log(data)
+                    this.errorHandler.handleHttpError(data, false, "Eliminar Valoraciones");
+                }
+            } else {
+                ////console.log(data)
+                this.errorHandler.handleHttpError(data, false, "Eliminar Valoraciones");
+            }
+        } catch (error: any) {
+            ////console.log(error)
+            this.errorHandler.handleHttpError(error, false, "Eliminar Valoraciones");
         }
     }
 

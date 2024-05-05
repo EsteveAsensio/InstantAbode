@@ -18,8 +18,15 @@
   text-decoration: none;
   font-size: 16px;
   color: #333;
-  display: block;
+  display: flex;
+  align-items: center;
   transition: background-color 0.3s;
+}
+
+.sidebar a img.icon {
+  margin-right: 10px;
+  width: 24px; /* Adjust based on your icon size */
+  height: 24px; /* Adjust based on your icon size */
 }
 
 .sidebar a:hover {
@@ -34,6 +41,11 @@
 @media (max-width: 768px) {
   .sidebar {
     width: 60px; /* Compact sidebar for mobile */
+  }
+  
+  .sidebar a {
+    justify-content: center; /* Center icons in compact mode */
+    padding: 12px; /* Adjust padding for better touch target */
   }
   
   .sidebar h1 {
