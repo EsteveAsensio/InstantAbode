@@ -1,23 +1,70 @@
 <odoo>
-    <record id="module_instant_abode_seguridad" model="ir.module.category">
-        <field name="name">InstantAbode Grupos</field>
-    </record>
+    <data>
+        <record id="module_instant_abode_seguridad" model="ir.module.category">
+            <field name="name">InstantAbode Grupos</field>
+        </record>
 
-    <record id="grupo_admins" model="res.groups">
-        <field name="name">AdminsInstantAbode</field>
-        <field name="category_id" ref="module_instant_abode_seguridad" />
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
-    </record>
-    <!--  Clientes Group  -->
-    <record id="grupo_clientes" model="res.groups">
-        <field name="name">Clientes</field>
-        <field name="category_id" ref="module_instant_abode_seguridad" />
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
-    </record>
-    <!--  Propietarios Group  -->
-    <record id="grupo_propietarios" model="res.groups">
-        <field name="name">Propietarios</field>
-        <field name="category_id" ref="module_instant_abode_seguridad" />
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
-    </record>
+        <record id="grupo_admins" model="res.groups">
+            <field name="name">AdminsInstantAbode</field>
+            <field name="category_id" ref="module_instant_abode_seguridad" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+
+        <record id="grupo_clientes" model="res.groups">
+            <field name="name">Clientes</field>
+            <field name="category_id" ref="module_instant_abode_seguridad" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+
+        <record id="grupo_propietarios" model="res.groups">
+            <field name="name">Propietarios</field>
+            <field name="category_id" ref="module_instant_abode_seguridad" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+
+        <!-- ACL para modelo específico en InstantAbode, 'propietario' -->
+        <record id="model_instant_abode_propietario" model="ir.model">
+            <field name="name">instant_abode.propietario</field>
+            <field name="model">instant_abode.propietario</field>
+        </record>
+
+        <record id="instant_abode_propietario_own_access" model="ir.rule">
+            <field name="name">Mi prefil Propietario</field>
+            <field name="model_id" ref="model_instant_abode_propietario" />
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('grupo_propietarios'))]" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="True" />
+        </record>
+
+        <!-- Record Rule for Inmueble Owners -->
+        <record id="model_instant_abode_inmueble" model="ir.model">
+            <field name="name">instant_abode.inmueble</field>
+            <field name="model">instant_abode.inmueble</field>
+        </record>
+
+        <record id="inmueble_owner_rule" model="ir.rule">
+            <field name="name">Inmueble propietario</field>
+            <field name="model_id" ref="model_instant_abode_inmueble" />
+            <field name="domain_force">[('propietario.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('grupo_propietarios'))]" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="True" />
+        </record>
+
+        <record id="res_partner_own_access_restricted" model="ir.rule">
+            <field name="name">Acceso Restringido a Partner Propio</field>
+            <field name="model_id" ref="base.model_res_partner" />
+            <field name="domain_force">[('id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('instant_abode.grupo_propietarios'))]" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="True" />
+        </record>
+    </data>
 </odoo>

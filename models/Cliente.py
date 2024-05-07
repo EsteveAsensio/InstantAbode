@@ -80,22 +80,20 @@ class Cliente(models.Model):
 
         cliente = super(Cliente, self).create(vals)
 
+        public_group = self.env.ref('base.group_public')
         new_user = self.env['res.users'].create({
             'name': cliente.nombreCliente,
             'login': cliente.name,
             'partner_id': partner.id,
             'password': cliente.contrasenya,
             'image_1920' : cliente.imagen,
+            'groups_id': [(6, 0, [public_group.id])]  # Asigna directamente el grupo público
         })
 
         cliente.user_id = new_user.id
 
-        grup_cliente = self.env['res.groups'].search([('name', '=', 'Clientes')], limit=1)
-
-        if grup_cliente:
-            new_user.write({'groups_id': [(6, 0, [grup_cliente.id])]})
-
         return cliente
+
 
     def unlink(self):
         for cliente in self:

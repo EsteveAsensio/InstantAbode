@@ -19,12 +19,14 @@
         <field name="arch" type="xml">
             <form string="Información Inmueble">
                 <header>
-                    <button string="Mostrar" type="object" name="mostrarPublico" class="oe_highlight"
+                    <button string="Mostrar" type="object" name="mostrarPublico"
+                        class="oe_highlight"
                         confirm="¿Está seguro que desea mostrar el inmueble al público?"
                         groups="instant_abode.grupo_propietarios,instant_abode.grupo_admins"
                         attrs="{'invisible': [('state', '!=', 'Ocultar')]}" />
 
-                    <button string="Ocultar" type="object" name="ocultarPublico" class="oe_highlight"
+                    <button string="Ocultar" type="object" name="ocultarPublico"
+                        class="oe_highlight"
                         confirm="¿Está seguro que desea ocultar el inmueble al público?"
                         groups="instant_abode.grupo_propietarios,instant_abode.grupo_admins"
                         attrs="{'invisible': [('state', '!=', 'Mostrar')]}" />
@@ -33,16 +35,15 @@
                 <group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Información</h1>
-                        <field name="id"/>
                         <field name="name" />
                         <field name="provincia" />
-                        <field name="localizacion"/>
-                        <field name="precio"/>
+                        <field name="localizacion" />
+                        <field name="precio" />
                         <field name="state" />
                         <field name="descripcion" />
                         <field name="adicionales" />
                         <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
-                        <field name="propietario" />
+                        <field name="propietario" readonly="1" />
                     </group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Características</h1>
@@ -61,19 +62,57 @@
                 </notebook>
             </form>
         </field>
+
+    </record>
+
+    <!-- Vista Kanban para Inmuebles -->
+    <!-- Vista Kanban para Inmuebles con agrupación por provincia y diseño mejorado -->
+    <record id="instant_abode.kanban_view_inmueble" model="ir.ui.view">
+        <field name="name">Inmueble Kanban</field>
+        <field name="model">instant_abode.inmueble</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" default_group_by="provincia">
+                <field name="provincia" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click"
+                            style="border: 1px solid #e2e2e2; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); border-radius: 5px; overflow: hidden; background: white;">
+                            <div class="o_kanban_image"
+                                style="width: 100%; height: 120px; background: #f2f2f2; text-align: center;">
+                                <field name="imagenPrincipal" widget="image" />
+                            </div>
+                            <div class="o_kanban_details" style="padding: 8px;">
+                                <strong>
+                                    <field name="name" style="font-size: 16px;" />
+                                </strong>
+                                <div style="color: #666; font-size: 14px; margin-top: 5px;">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    <field name="localizacion" />
+                                </div>
+                                <div style="color: #666; font-size: 14px; margin-top: 5px;">
+                                    <i class="fa fa-euro" aria-hidden="true"></i>
+                                    <field name="precio" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="instant_abode.misinmuebles_action_window">
+        <field name="name">Mis Inmuebles</field>
+        <field name="res_model">instant_abode.inmueble</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('propietario.user_id','=',uid)]</field>
     </record>
 
     <!-- actions opening views on models -->
     <record model="ir.actions.act_window" id="instant_abode.inmueble_action_window">
         <field name="name">Inmueble</field>
         <field name="res_model">instant_abode.inmueble</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window" id="instant_abode.misinmuebles_action_window">
-        <field name="name">Mis Inmuebles</field>
-        <field name="res_model">instant_abode.inmueble</field>
-        <field name="domain">[('propietario.user_id','=',uid)]</field>
-        <field name="view_mode">tree,form</field>
-    </record>
 </odoo>

@@ -19,7 +19,6 @@
             <form string="Información Valoración">
                 <group>
                     <group>
-                        <field name="id"/>
                         <h1 style="color:#d2d2ff" colspan="2">Valoración</h1>
                         <field name="comentario" />
                         <field name="puntuacion"/>
@@ -52,10 +51,4 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window" id="instant_abode.valoracinoesinmuebleProp_action_window">
-        <field name="name">Valoraciones Recibidas</field>
-        <field name="res_model">instant_abode.valoracioninmueble</field>
-        <field name="domain">[('inmueble.propietario.user_id','=',uid)]</field>
-        <field name="view_mode">tree,form</field>
-    </record>
 </odoo>

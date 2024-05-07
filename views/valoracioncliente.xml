@@ -19,7 +19,6 @@
             <form string="Información Valoración">
                 <group>
                     <group>
-                        <field name="id"/>
                         <h1 style="color:#d2d2ff" colspan="2">Valoración</h1>
                         <field name="comentario" />
                         <field name="puntuacion"/>
@@ -27,7 +26,7 @@
                     </group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Propietario</h1>
-                        <field name="propietario" />
+                        <field name="propietario" readonly="1"/>
                         <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
                         <field name="cliente" />
                     </group>
@@ -40,13 +39,6 @@
     <record model="ir.actions.act_window" id="instant_abode.valoracioncliente_action_window">
         <field name="name">Valoración</field>
         <field name="res_model">instant_abode.valoracioncliente</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record model="ir.actions.act_window" id="instant_abode.valorecCliente_action_window">
-        <field name="name">Valoraciones Recibidas</field>
-        <field name="res_model">instant_abode.valoracioncliente</field>
-        <field name="domain">[('cliente.user_id','=',uid)]</field>
         <field name="view_mode">tree,form</field>
     </record>
 

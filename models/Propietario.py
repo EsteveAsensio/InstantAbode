@@ -99,14 +99,28 @@ class Propietario(models.Model):
 
         cliente.user_id = new_user.id
 
+            # Buscar los grupos necesarios
         grup_propietarios = self.env['res.groups'].search([('name', '=', 'Propietarios')], limit=1)
+        grupo_permisos_extra = self.env['res.groups'].search([('name', '=', 'Creación de contactos')], limit=1)
 
+        # Lista para mantener los ids de los grupos
+        groups_ids = []
         if grup_propietarios:
-            new_user.write({'groups_id': [(6, 0, [grup_propietarios.id])]})
+            groups_ids.append(grup_propietarios.id)
+        if grupo_permisos_extra:
+            groups_ids.append(grupo_permisos_extra.id)
+
+        # Asignar los grupos al usuario
+        if groups_ids:
+            new_user.groups_id = [(6, 0, groups_ids)]
 
         return cliente
     
     def unlink(self):
+        grupo_propietarios = 'instant_abode.grupo_propietarios'
+        if self.env.user.has_group(grupo_propietarios):
+            if not all(self.mapped(lambda x: x.user_id.id == self.env.user.id)):
+                raise ValidationError("No tiene permiso para eliminar otros propietarios.")
         for cliente in self:
             if cliente.user_id:
                 partner = cliente.user_id.partner_id
@@ -120,6 +134,11 @@ class Propietario(models.Model):
 
     
     def write(self, vals):
+        grupo_propietarios = 'instant_abode.grupo_propietarios'
+        if self.env.user.has_group(grupo_propietarios):
+            if not all(self.mapped(lambda x: x.user_id.id == self.env.user.id)):
+                raise ValidationError("No está autorizado para modificar el perfil de otro propietario.")
+
         campos_clave = ['dni', 'correo', 'telefono', 'name']
         campos_validos = {key: vals.get(key) for key in campos_clave if key in vals and vals[key]}
 

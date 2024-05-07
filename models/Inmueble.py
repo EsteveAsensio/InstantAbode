@@ -16,14 +16,20 @@ class Inmueble(models.Model):
     descripcion = fields.Html(string="Descripción", help="Descripción del inmueble")
     adicionales = fields.Char(string="Adicionales", help="Datos adicionales del inmueble")
     imagenPrincipal = fields.Binary(string="Imagen Principal", help="Foto principal del inmueble, será la primera imagen que se mostrará al cliente", store=True, required=True)
-    imagenes = fields.Many2many('ir.attachment', string="Imágenes")
+    imagenes = fields.One2many('ir.attachment', 'inmueble_id', string='Imágenes')
     precio = fields.Float(string="Precio", help="Precio del inmueble, puede variar dependiendo de la instancia en el", required=True)
     #Propietario
-    propietario = fields.Many2one("instant_abode.propietario", string="Propietario", ondelete="cascade", required=True)
+    propietario = fields.Many2one("instant_abode.propietario", string="Propietario", ondelete="cascade", default=lambda self: self.default_propietario())
     #Alquileres
     alquileres = fields.One2many("instant_abode.alquiler", "inmueble")
     #Dar de alta
     state=fields.Selection(string="Cara al Público", selection=[('Mostrar', 'Activo'), ('Ocultar', 'Inactivo')], default="Ocultar", readonly=True)
+
+    @api.model
+    def default_propietario(self):
+        # Aquí se busca el propietario relacionado al usuario que ha iniciado sesión
+        propietario_id = self.env['instant_abode.propietario'].search([('user_id', '=', self.env.uid)], limit=1)
+        return propietario_id
 
     def mostrarPublico(self):
         self.state = 'Mostrar'

@@ -21,7 +21,6 @@
                 <group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
-                        <field name="id"/>
                         <field name="nombreCliente" />
                         <field name="apellidos" />
                         <field name="dni"/>
@@ -54,5 +53,12 @@
         <field name="name">Cliente</field>
         <field name="res_model">instant_abode.cliente</field>
         <field name="view_mode">tree,form</field>
+    </record>
+    <record id="instant_abode.miscliente_action_window" model="ir.actions.act_window">
+        <field name="name">Clientes del Propietario</field>
+        <field name="res_model">instant_abode.cliente</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('alquileres.inmueble.propietario.user_id', '=', uid)]</field>
+        <field name="context">{'search_default_group_by_inmueble': 1}</field>
     </record>
 </odoo>
