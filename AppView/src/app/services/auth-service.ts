@@ -10,7 +10,9 @@ import { BaseService } from './base.service';
 import { Usuario } from '../models/usuario.modelo';
 import { URL_BACKEND } from './constantesHTTP';
 import { ErrorHandlerService } from './errorHandler.service';
-
+import { OdooAuthResponse } from '../interface/odoo.interfaces';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 
 @Injectable({
@@ -23,6 +25,32 @@ export class AuthService {
   private static encryptedKey = 'aaaaa';
   constructor(private http: HttpClient, private router: Router, private service: BaseService, private errorHandler: ErrorHandlerService) { }
 
+  loginOdoo(username: string, password: string) {
+    const body = {
+      jsonrpc: "2.0",
+      params: {
+        db: "InstantAbode",
+        login: username,
+        password: password
+      }
+    };
+  
+    return this.http.post<OdooAuthResponse>(`${this.baseUrl}/web/session/authenticate`, body)
+      .pipe(
+        tap(response => {
+          if (response && response.result && response.result.session_id) {
+            const sessionId = response.result.session_id;
+            localStorage.setItem('odoo_session_id', sessionId);  // Guardar session_id
+          }
+        }),
+        catchError(error => {
+          console.error('Error during Odoo authentication:', error);
+          return throwError(() => error);  // Propaga el error para manejo externo
+        })
+      );
+  }
+
+
   async login(username: string, password: string, sesionIniciada: boolean) {
     const loginData = {
       "username": username,
@@ -30,7 +58,7 @@ export class AuthService {
     };
     try {
       var data: any = await this.service.post('InstantAbode/login', loginData).toPromise();
-      console.log(data)
+      ///console.log(data)
       if (data.result) {
 
         if (data.result.status == 200) {
@@ -67,10 +95,10 @@ export class AuthService {
       "name": username,
       "apellidos": apellidos,
       "dni": dni,
-      "nombreCliente" : nombre,
-      "correo" : correo,
-      "contrasenya" : password,
-      "telefono" : telefono
+      "nombreCliente": nombre,
+      "correo": correo,
+      "contrasenya": password,
+      "telefono": telefono
     };
     try {
       var data: any = await this.service.post('InstantAbode/registrarNuevoUsuario', registrarData).toPromise();
@@ -78,7 +106,7 @@ export class AuthService {
       if (data.result) {
 
         if (data.result.status == 200) {
- 
+
         } else {
           ////console.log(data)
           this.errorHandler.handleHttpError(data, false, "Registrar Usuario");
@@ -100,9 +128,6 @@ export class AuthService {
     this.router.navigateByUrl('principal');
 
   }
-
-
-
 
 
   logout(): void {

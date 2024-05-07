@@ -18,6 +18,22 @@ export class InmuebleDAO {
         private authService: AuthService,
     ) { }
 
+    async getProvincias(tipo: string): Promise<void | any[]> {
+        try {
+          const data: any = await this.service.get(tipo).toPromise();
+          if (data && !data.error) {
+            return data.provincias;
+          } else {
+            console.log(data)
+            this.errorHandler.handleHttpError(data);
+            return [];
+          }
+        } catch (error: any) {
+          this.errorHandler.handleHttpError(error);
+          return [];
+        }
+      }
+
     async obtenerInmueblesFechas(tipo: string, fechaInicio: Date, fechaFinal: Date, provincia: String) {
         try {
             const inmuebleData = {
@@ -32,7 +48,7 @@ export class InmuebleDAO {
                 if (data.result.status == 200) {
                     return data.result.inmuebles;
                 } else {
-                    ////console.log(data)
+                    console.log(data)
                     this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
                 }
             } else {

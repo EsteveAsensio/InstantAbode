@@ -7,6 +7,40 @@ import datetime
 
 class ClientesController(http.Controller):
 
+    @http.route(['/InstantAbode/login'], auth='public', type="json", methods=['POST'], csrf=False)
+    def login(self, **kw):
+        try:
+            request_data = json.loads(request.httprequest.data)
+            username = request_data.get('username')
+            contrasenya = request_data.get('contrasenya')
+
+            if not username or not contrasenya:
+                return {'status': 400, 'message': 'Datos de usuario incompletos'}
+
+            cliente = http.request.env["instant_abode.cliente"].sudo().search([("name","=",username)])
+
+            if cliente and cliente.contrasenya == contrasenya:
+                usuario = {
+                    'id': cliente.id,
+                    'dni': cliente.dni,
+                    'nombreCliente': cliente.nombreCliente,
+                    'apellidos': cliente.apellidos,
+                    'telefono': cliente.telefono,
+                    'name': cliente.name,
+                    'contrasenya': cliente.contrasenya,
+                    'correo': cliente.correo,
+                    'imagen': cliente.imagen,
+                    'rol': 'Cliente',
+                }
+                return {'status': 200, 'usuario': usuario}
+            else:
+                return {'status': 400, 'message': 'Usuario no encontrado o contraseña incorrecta'}
+        except Exception as error:
+            data = {
+                "status": 500,
+                "message": str(error)
+            }
+            return data
     #post
     @http.route('/InstantAbode/registrarNuevoUsuario', type='json', auth='public', methods=['POST'], csrf=False)
     def registrarNuevoUsuario(self, **kw):
@@ -26,7 +60,7 @@ class ClientesController(http.Controller):
             return {"status": 500, "message": str(error)}
 
     #GET
-    @http.route('/InstantAbode/provincias', type='http', auth='public', methods=['GET'])
+    @http.route('/InstantAbode/provincias', type='http', auth='user', methods=['GET'])
     def get_provincias(self):
         provincias_data = request.env['instant_abode.inmueble'].sudo().read_group(
             [('state', '=', 'Mostrar')], 
@@ -34,11 +68,11 @@ class ClientesController(http.Controller):
             ['provincia']  
         )
         provincias = [prov['provincia'] for prov in provincias_data if prov['provincia']]
-        response = json.dumps(provincias)
-        return request.make_response(response, [('Content-Type', 'application/json')])
+        data = json.dumps({'status': 200, 'provincias': provincias})
+        return Response(data, content_type='application/json', status=200)
         
     #GET
-    @http.route(['/InstantAbode/inmueblesAlquilados/<int:idUser>'], auth='public', type="http", methods=['GET'])
+    @http.route(['/InstantAbode/inmueblesAlquilados/<int:idUser>'], auth='user', type="http", methods=['GET'])
     def inmueblesAlquilados(self, idUser):
         try:
             alquileres = request.env['instant_abode.alquiler'].sudo().search([('cliente.id', '=', idUser)])
@@ -93,7 +127,7 @@ class ClientesController(http.Controller):
         
         
     #post
-    @http.route(['/InstantAbode/buscarInmuebles'], auth='public', type="json", methods=['POST'], csrf=False)
+    @http.route(['/InstantAbode/buscarInmuebles'], auth='user', type="json", methods=['POST'], csrf=False)
     def buscarInmuebles(self, **kw):
         try:
             response = request.httprequest.json
@@ -158,7 +192,7 @@ class ClientesController(http.Controller):
             return data
         
     #GET
-    @http.route(['/InstantAbode/infoInmueble/<int:idInmueble>'], auth='public', type="http", methods=['GET'])
+    @http.route(['/InstantAbode/infoInmueble/<int:idInmueble>'], auth='user', type="http", methods=['GET'])
     def infoInmueble(self, idInmueble):
         try:
             inmueble = request.env['instant_abode.inmueble'].sudo().search([('id', '=', idInmueble)])
@@ -233,7 +267,7 @@ class ClientesController(http.Controller):
         except Exception as error:
             return str(error)
     #put
-    @http.route('/InstantAbode/modificarCliente', type='json', auth='public', methods=['PUT'])
+    @http.route('/InstantAbode/modificarCliente', type='json', auth='user', methods=['PUT'])
     def modificarCliente(self, **kw):
        response = request.httprequest.json
        try:
@@ -261,7 +295,7 @@ class ClientesController(http.Controller):
        
 
     #GET
-    @http.route(['/InstantAbode/valoracionesUsuario/<int:idUser>'], auth='public', type="http", methods=['GET'])
+    @http.route(['/InstantAbode/valoracionesUsuario/<int:idUser>'], auth='user', type="http", methods=['GET'])
     def valoracionesUsuario(self, idUser):
         try:
             valoraciones = request.env['instant_abode.valoracioninmueble'].sudo().search([('cliente.id', '=', idUser)])
@@ -301,7 +335,7 @@ class ClientesController(http.Controller):
 
 
     #delete
-    @http.route('/InstantAbode/eliminarValoracionInmueble/<int:valoracionid>', type='http', auth='public', methods=['DELETE'], csrf=False)
+    @http.route('/InstantAbode/eliminarValoracionInmueble/<int:valoracionid>', type='http', auth='user', methods=['DELETE'], csrf=False)
     def eliminarValoracionInmueble(self, valoracionid):
         try:
             valoracion = request.env['instant_abode.valoracioninmueble'].sudo().browse(valoracionid)
@@ -320,7 +354,7 @@ class ClientesController(http.Controller):
         
         
     #put
-    @http.route('/InstantAbode/addValoracionInmueble', type='json', auth='public', methods=['POST'])
+    @http.route('/InstantAbode/addValoracionInmueble', type='json', auth='user', methods=['POST'])
     def addValoracionInmueble(self, **kw):
         response = request.httprequest.json
         try:
@@ -354,7 +388,7 @@ class ClientesController(http.Controller):
             }
        
     #put
-    @http.route('/InstantAbode/modificarValoracionInmueble', type='json', auth='public', methods=['PUT'])
+    @http.route('/InstantAbode/modificarValoracionInmueble', type='json', auth='user', methods=['PUT'])
     def modificarValoracionInmueble(self, **kw):
        response = request.httprequest.json
        try:

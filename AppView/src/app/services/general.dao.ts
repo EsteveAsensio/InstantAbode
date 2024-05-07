@@ -93,16 +93,17 @@ export class GeneralDAO {
 
   async getGeneral(tipo: string): Promise<void | any[]> {
     try {
-      console.log(tipo)
       const data: any = await this.service.get(tipo).toPromise();
-
       if (data && !data.error) {
         return data;
       } else {
+        console.log(data)
         this.errorHandler.handleHttpError(data);
+        return [];
       }
     } catch (error: any) {
       this.errorHandler.handleHttpError(error);
+      return [];
     }
   }
 
