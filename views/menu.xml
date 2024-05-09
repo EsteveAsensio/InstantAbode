@@ -6,6 +6,7 @@
         <!-- menu Clientes-->
         <menuitem name="Clientes" id="instant_abode.menu_clientes" parent="instant_abode.menu_root"
         sequence = "1" groups="grupo_admins" action="instant_abode.cliente_action_window"/>
+        
         <!-- actions -->
 
         <menuitem name="Mis Clientes" id="instant_abode.menu_clientes_lista"

@@ -20,7 +20,9 @@ export class Inmueble {
       public imagenes : string[],
       public propietario: Propietario,
       public alquileres: Alquiler[],
-      public valoraciones: ValoracionInmueble[]
+      public valoraciones: ValoracionInmueble[],
+      public fechaInicio: Date,
+      public fechaFinal: Date,
     ) { }
   }
   

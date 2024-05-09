@@ -1,0 +1,42 @@
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.pagar-btn {
+    background-color: #28a745; /* Verde */
+}
+
+.pagar-btn:hover {
+    background-color: #218838;
+}
+
+.cancelar-btn {
+    background-color: #007bff; /* Azul */
+}
+
+.cancelar-btn:hover {
+    background-color: #0056b3;
+}

@@ -40,10 +40,12 @@ export class AuthService {
         tap(response => {
           if (response && response.result && response.result.session_id) {
             const sessionId = response.result.session_id;
+            console.log(response)
             localStorage.setItem('odoo_session_id', sessionId);  // Guardar session_id
           }
         }),
         catchError(error => {
+          console.log(error)
           console.error('Error during Odoo authentication:', error);
           return throwError(() => error);  // Propaga el error para manejo externo
         })
@@ -120,7 +122,36 @@ export class AuthService {
       this.errorHandler.handleHttpError(error, false, "Registrar Usuario");
     }
     return false;
+  }
 
+  async modificarCliente(user : Usuario) {
+    const registrarData = {
+      "id": user.id,
+      "name": user.name,
+      "apellidos": user.apellidos,
+      "dni": user.apellidos,
+      "nombreCliente": user.nombreCliente,
+      "correo": user.correo,
+      "contrasenya": user.contrasenya,
+      "telefono": user.telefono,
+      "imagen": user.imagen
+    };
+    try {
+      var data: any = await this.service.put('InstantAbode/modificarCliente', registrarData).toPromise();
+      ///console.log(data)
+      if (data.result) {
+        if (data.result.status == 200) {
+          return true;
+        } else {
+          this.errorHandler.handleHttpError(data, false, "Modificar Usuario");
+        }
+      } else {
+        this.errorHandler.handleHttpError(data, false, "Modificar Usuario");
+      }
+    } catch (error: any) {
+      this.errorHandler.handleHttpError(error, false, "Modificar Usuario");
+    }
+    return false;
   }
 
   controladorDepPaginas() {

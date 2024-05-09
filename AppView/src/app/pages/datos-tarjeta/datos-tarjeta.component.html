@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Tarjeta Bancaria</h1>
+<div class="content" mat-dialog-content>
+    <label for="cardNumber">Número de tarjeta:</label>
+    <input id="cardNumber" type="text" pattern="\d*" inputmode="numeric" maxlength="16" style="width:100%;">
+
+    <label for="cardHolder">Nombre del titular:</label>
+    <input id="cardHolder" type="text" style="width:100%;">
+
+    <label for="expirationDate">Fecha de expiración (MM/YY):</label>
+    <input id="expirationDate" type="text" pattern="\d{2}/\d{2}" placeholder="MM/YY" style="width:100%;">
+
+    <label for="cvv">CVV:</label>
+    <input id="cvv" type="text" pattern="\d*" inputmode="numeric" maxlength="3" style="width:100%;">
+</div>
+<div mat-dialog-actions>
+    <button mat-button class="pagar-btn" (click)="pagar()">Pagar</button>
+    <button mat-button class="cancelar-btn" (click)="cancelar()" cdkFocusInitial>Cancelar</button>
+</div>

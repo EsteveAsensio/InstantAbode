@@ -29,8 +29,7 @@ class ClientesController(http.Controller):
                     'name': cliente.name,
                     'contrasenya': cliente.contrasenya,
                     'correo': cliente.correo,
-                    'imagen': cliente.imagen,
-                    'rol': 'Cliente',
+                    'imagen': 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
                 }
                 return {'status': 200, 'usuario': usuario}
             else:
@@ -62,14 +61,19 @@ class ClientesController(http.Controller):
     #GET
     @http.route('/InstantAbode/provincias', type='http', auth='user', methods=['GET'])
     def get_provincias(self):
-        provincias_data = request.env['instant_abode.inmueble'].sudo().read_group(
-            [('state', '=', 'Mostrar')], 
-            ['provincia'],  
-            ['provincia']  
-        )
-        provincias = [prov['provincia'] for prov in provincias_data if prov['provincia']]
-        data = json.dumps({'status': 200, 'provincias': provincias})
-        return Response(data, content_type='application/json', status=200)
+        try:
+            provincias_data = request.env['instant_abode.inmueble'].sudo().read_group(
+                [('state', '=', 'Mostrar')], 
+                ['provincia'],  
+                ['provincia']  
+            )
+            provincias = [prov['provincia'] for prov in provincias_data if prov['provincia']]
+            data = json.dumps({'status': 200, 'provincias': provincias})
+            return Response(data, content_type='application/json', status=200)
+        
+        except Exception as error:
+            data = json.dumps({'status': 500, 'message': str(error)})
+            return Response(data, content_type='application/json', status=500)    
         
     #GET
     @http.route(['/InstantAbode/inmueblesAlquilados/<int:idUser>'], auth='user', type="http", methods=['GET'])
@@ -138,7 +142,6 @@ class ClientesController(http.Controller):
 
             fecha_inicio = datetime.datetime.strptime(fecha_inicio_str, "%Y-%m-%d").date()
             fecha_final = datetime.datetime.strptime(fecha_final_str, "%Y-%m-%d").date()
-
             inmuebles = request.env['instant_abode.inmueble'].sudo().search([
                 ('provincia', '=', provincia),
                 ('state', '=', 'Mostrar'),
@@ -161,6 +164,9 @@ class ClientesController(http.Controller):
 
                     if diferencia_dias <= 0:
                         return {"status": 400, "message": "La fecha final debe ser posterior a la fecha de inicio."}
+
+                    fecha_inicio_iso = fecha_inicio.isoformat()
+                    fecha_final_iso = fecha_final.isoformat()
                     
                     precioAlquiler = diferencia_dias * inmueble.precio
                     inmuebles_disponibles.append({
@@ -176,7 +182,9 @@ class ClientesController(http.Controller):
                         'precio' : inmueble.precio,
                         'precioAlquiler' : precioAlquiler,
                         'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
-                        'imagenes': ['http://localhost:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes]
+                        'imagenes': ['http://localhost:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes],
+                        'fechaInicio' : fecha_inicio_iso,
+                        "fechaFinal" : fecha_final_iso
                     })
 
             return {
@@ -199,6 +207,10 @@ class ClientesController(http.Controller):
 
             if not inmueble:
                 data = json.dumps({'status': 400, 'message': 'Ya no existe ese inmueble'})
+                return Response(data, content_type='application/json', status=200)
+
+            if inmueble.state == "Ocultar":
+                data = json.dumps({'status': 400, 'message': 'El inmueble ya no está cara al público'})
                 return Response(data, content_type='application/json', status=200)
 
             lista_valoraciones = self.valoracionesInmueble(inmueble.id)
@@ -226,6 +238,7 @@ class ClientesController(http.Controller):
         except Exception as error:
             data = json.dumps({'status': 500, 'message': str(error)})
             return Response(data, content_type='application/json', status=500)
+            
         
     #GET
     def valoracionesInmueble(self, idInmueble):
@@ -266,33 +279,90 @@ class ClientesController(http.Controller):
             return clienteInfo
         except Exception as error:
             return str(error)
-    #put
+
+    @http.route('/InstantAbode/realizarAlquiler', type='json', auth='user', methods=['POST'])
+    def realizarAlquiler(self, **kw):
+        response = request.httprequest.json
+        try:
+            cliente_id = response.get("cliente")
+            inmueble_id = response.get("inmueble")
+            fecha_inicio = response.get("fechaInicio")
+            fecha_final = response.get("fechaFinal")
+
+            existe_cliente = request.env['instant_abode.cliente'].sudo().search([("id", '=', cliente_id)])
+            if not existe_cliente:
+                return {"status": 400, "message": "El usuario con el que está iniciado sesión no existe. Cerra sesión lo antes posible."}
+            
+            existe_inmueble = request.env['instant_abode.inmueble'].sudo().search([("id", '=', inmueble_id)])
+            if not existe_inmueble:
+                return {"status": 400, "message": "El inmueble ya no existe."}
+
+            if existe_inmueble.state == 'Ocultar':
+                return {"status": 400, "message": "El inmueble ya no está cara al público."}
+
+            alquiler_data = {
+                'cliente': cliente_id,
+                'inmueble': inmueble_id,
+                'fechaInicio': fecha_inicio,
+                'fechaFinal': fecha_final
+            }
+            request.env['instant_abode.alquiler'].sudo().create(alquiler_data)
+
+            return {"status": 200, "message": "Alquiler realizado con éxito."}
+
+        except Exception as error:
+            return {"status": 500, "message": str(error)}
+
+        
     @http.route('/InstantAbode/modificarCliente', type='json', auth='user', methods=['PUT'])
     def modificarCliente(self, **kw):
-       response = request.httprequest.json
-       try:
-            result = http.request.env["instant_abode.cliente"].sudo().search([("id","=",response["id"])])
-            if not result.exists():
-                data={
-                "status":400,
-                "id":"Error, no existe el cliente."
-                }   
-                return data
+        response = request.httprequest.json
+        try:
+            cliente_obj = request.env["instant_abode.cliente"]
+            cliente_actual = cliente_obj.sudo().search([("id", "=", response["id"])])
             
-            result.sudo().write(response)
-            data={
-                "status":200,
-                "id":result.id
+            if not cliente_actual.exists():
+                return {
+                    "status": 400,
+                    "message": "Error, no existe el cliente."
+                }
+
+            # Verificar la unicidad en los campos críticos del usuario asociado
+            campos_unicos = {
+                'vat': 'DNI',
+                'email': 'correo electrónico',
+                'phone': 'teléfono',
+                'login': 'nombre de usuario (login)'
             }
-            return data
-       
-       except Exception as error:
-            data={
-                "status":500,
-                "message":str(error)
+
+            for campo, descripcion in campos_unicos.items():
+                if campo in response and getattr(cliente_actual, campo, None) != response[campo]:
+                    dominio = [(campo, '=', response[campo])]
+                    if campo == 'name':
+                        dominio.append(('id', '!=', cliente_actual.user_id.id))
+                    else:
+                        dominio.append(('partner_id', '!=', cliente_actual.user_id.partner_id.id))
+                    
+                    if request.env['res.users'].sudo().search(dominio).exists():
+                        return {
+                            "status": 400,
+                            "message": f"El {descripcion} {response[campo]} ya está registrado en otro usuario."
+                        }
+
+            # Actualizar el cliente y su usuario asociado
+            cliente_actual.sudo().write(response)
+
+            return {
+                "status": 200,
+                "id": cliente_actual.id
             }
-            return data
-       
+
+        except Exception as error:
+            return {
+                "status": 500,
+                "message": str(error)
+            }
+
 
     #GET
     @http.route(['/InstantAbode/valoracionesUsuario/<int:idUser>'], auth='user', type="http", methods=['GET'])

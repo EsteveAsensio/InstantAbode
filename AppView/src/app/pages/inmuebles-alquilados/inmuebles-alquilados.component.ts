@@ -1,4 +1,4 @@
-import { Component, booleanAttribute } from '@angular/core';
+import { Component } from '@angular/core';
 import { GeneralDAO } from '../../services/general.dao';
 import { AuthService } from '../../services/auth-service';
 import { FormsModule } from '@angular/forms';
@@ -61,7 +61,7 @@ export class InmueblesAlquiladosComponent {
 
   openDialog(alquiler: Alquiler): void {
     const dialogRef = this.dialog.open(InfoValoracioninmuebleComponent, {
-      width: '250px',
+      width: '400px',
       data: { valoracion: alquiler.valoracionInmueble || { comentario: '', puntuacion: 0, fecha: new Date(), idAlquiler: alquiler.id } }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -69,6 +69,5 @@ export class InmueblesAlquiladosComponent {
         this.router.navigate(['inmuebles-alquilados']);
       });
     });
-
   }
 }

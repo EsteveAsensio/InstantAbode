@@ -30,7 +30,8 @@
       </form>
     </div>
     <div *ngIf="inmuebles.length > 0" class="inmuebles-container">
-      <div *ngFor="let inmueble of inmuebles" class="inmueble-card" [routerLink]="['/inmueble', inmueble.id]">
+      <div *ngFor="let inmueble of inmuebles" class="inmueble-card"
+      [routerLink]="['/inmueble', inmueble.id, { fechaInicio: fechaInicio | date:'yyyy-MM-dd', fechaFinal: fechaFinal | date:'yyyy-MM-dd'}]">
         <img [src]="sanitizeImageUrl(inmueble.imagenPrincipal)" alt="Imagen Principal" class="image-large">
         <div class="inmueble-info">
           <h2>{{ inmueble.name }}</h2>

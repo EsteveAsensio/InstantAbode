@@ -75,22 +75,36 @@ class Cliente(models.Model):
             'email': vals.get('correo'),
             'phone': vals.get('telefono'),
             'vat': vals.get('dni'),
-            'image_1920' : vals.get('imagen'),
+            'image_1920': vals.get('imagen'),
         })
 
         cliente = super(Cliente, self).create(vals)
 
-        public_group = self.env.ref('base.group_public')
+        # Creación del usuario con los grupos adecuados
         new_user = self.env['res.users'].create({
             'name': cliente.nombreCliente,
             'login': cliente.name,
             'partner_id': partner.id,
             'password': cliente.contrasenya,
-            'image_1920' : cliente.imagen,
-            'groups_id': [(6, 0, [public_group.id])]  # Asigna directamente el grupo público
+            'image_1920': cliente.imagen
         })
 
         cliente.user_id = new_user.id
+
+        #Buscar los grupos necesarios
+        grupo_clientes = self.env['res.groups'].search([('name', '=', 'Clientes')], limit=1)
+        grupo_permisos_extra = self.env['res.groups'].search([('name', '=', 'Creación de contactos')], limit=1)
+
+        # Lista para mantener los ids de los grupos
+        groups_ids = []
+        if grupo_clientes:
+            groups_ids.append(grupo_clientes.id)
+        if grupo_permisos_extra:
+            groups_ids.append(grupo_permisos_extra.id)
+
+        # Asignar los grupos al usuario
+        if groups_ids:
+            new_user.groups_id = [(6, 0, groups_ids)]
 
         return cliente
 
@@ -102,23 +116,14 @@ class Cliente(models.Model):
                 partner = cliente.user_id.partner_id
                 # Eliminar el usuario
                 cliente.user_id.unlink() 
-                
-                # Si hay un partner asociado, eliminarlo también
                 if partner:
                     partner.unlink()
 
-        # Eliminar el cliente después de haber eliminado relaciones asociadas
         return super(Cliente, self).unlink()
 
     
     def write(self, vals):
-        # Comprobar si los campos son None o están vacíos antes de realizar validaciones
-        campos_clave = ['dni', 'correo', 'telefono', 'name']
-        campos_validos = {key: vals.get(key) for key in campos_clave if key in vals and vals[key]}
-
-        # Solo llamar a validar_unicidad si hay campos clave con valores válidos
-        if campos_validos:
-            self.validar_unicidad(campos_validos)
+        self.validar_unicidad(vals)
 
         # Lógica para desactivar el usuario y aplicar cambios
         desactivar_usuario = False
@@ -169,23 +174,22 @@ class Cliente(models.Model):
 
     def validar_unicidad(self, vals):
         # Validar que el campo no sea None antes de hacer la búsqueda
-        if 'dni' in vals and vals.get('dni'):
-            existing_dni = self.env['res.partner'].search([('vat', '=', vals['dni'])])
-            if len(existing_dni) > 1 or (existing_dni and existing_dni.id != self.id):
+        if 'dni' in vals and vals.get('dni') and vals.get('dni') != self.dni:
+            existing_dni = self.env['res.partner'].search([('vat', '=', vals['dni']), ('id', '!=', self.user_id.partner_id.id)])
+            if existing_dni:
                 raise ValidationError(f"El DNI {vals['dni']} ya está registrado.")
 
-        if 'correo' in vals and vals.get('correo'):
-            existing_correo = self.env['res.partner'].search([('email', '=', vals['correo'])])
-            if len(existing_correo) > 1 or (existing_correo and existing_correo.id != self.id):
+        if 'correo' in vals and vals.get('correo') and vals.get('correo') != self.correo:
+            existing_correo = self.env['res.partner'].search([('email', '=', vals['correo']), ('id', '!=', self.user_id.partner_id.id)])
+            if existing_correo:
                 raise ValidationError(f"El correo {vals['correo']} ya está registrado.")
 
-        if 'telefono' in vals and vals.get('telefono'):
-            existing_telefono = self.env['res.partner'].search([('phone', '=', vals['telefono'])])
-            if len(existing_telefono) > 1 or (existing_telefono and existing_telefono.id != self.id):
+        if 'telefono' in vals and vals.get('telefono') and vals.get('telefono') != self.telefono:
+            existing_telefono = self.env['res.partner'].search([('phone', '=', vals['telefono']), ('id', '!=', self.user_id.partner_id.id)])
+            if existing_telefono:
                 raise ValidationError(f"El teléfono {vals['telefono']} ya está registrado.")
 
-        if 'name' in vals and vals.get('name'):
-            existing_login = self.env['res.users'].search([('login', '=', vals['name'])])
-            if len(existing_login) > 1 or (existing_login and existing_login.id != self.id):
+        if 'name' in vals and vals.get('name') and vals.get('name') != self.name:
+            existing_login = self.env['res.users'].search([('login', '=', vals['name']), ('id', '!=', self.user_id.id)])
+            if existing_login:
                 raise ValidationError(f"El nombre de usuario {vals['name']} ya está registrado.")
-

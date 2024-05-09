@@ -4,19 +4,21 @@
         <img [src]="sanitizeImageUrl(inmueble.imagenPrincipal)" alt="Imagen Principal" class="main-image">
         <div class="text-details">
             <h1>{{ inmueble.name }}</h1>
+            <h3>Fechas de Alquiler</h3>
+            <p>{{ fechaInicio | date: 'longDate' }} - {{ fechaFinal | date: 'longDate' }}</p>
             <p><strong>Provincia:</strong> {{ inmueble.provincia }}</p>
             <p><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
             <p><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
             <p><strong>Baños:</strong> {{ inmueble.banyos }}</p>
             <p><strong>Descripción:</strong> {{ inmueble.descripcion }}</p>
-            <p><strong>Precio:</strong> {{ inmueble.precio | currency:'EUR' }}</p>
+            <p class="price"><strong>Precio por {{ diasAlquiler }} días:</strong> {{ precioAlquiler | currency:'EUR' }}</p>
         </div>
     </div>
     <div class="additional-images">
         <img *ngFor="let img of inmueble.imagenes" [src]="sanitizeImageUrl(img)" alt="Imagen Adicional">
     </div>
     <div class="valoraciones-container">
-        <button class="alquilar-btn">Alquilar</button>
+        <button class="alquilar-btn" (click)="openDialog(inmueble)">Alquilar</button>
         <h2 class="h2-valoraciones">Valoraciones</h2>
         <div *ngIf="inmueble.valoraciones && inmueble.valoraciones.length > 0; else noValoraciones">
             <div *ngFor="let valoracion of inmueble.valoraciones" class="review">
