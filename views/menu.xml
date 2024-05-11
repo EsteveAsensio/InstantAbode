@@ -48,8 +48,16 @@
         sequence = "4" action="instant_abode.alquiler_action_window" groups="grupo_admins"/>
         <!-- actions -->
 
-        <menuitem name="Alquileres Recibidos" id="instant_abode.menu_alquileresProp_list"
-            parent="instant_abode.menu_root" action="instant_abode.alquileresProp_action_window" 
+        <menuitem name="Alquileres Recibidos" id="instant_abode.menu_misalquileres"
+            parent="instant_abode.menu_root" groups="grupo_propietarios" sequence="3" />
+
+        <menuitem name="Alquileres" id="instant_abode.menu_alquileresProp_list"
+            parent="instant_abode.menu_misalquileres" action="instant_abode.alquileresProp_action_window" 
             groups="grupo_propietarios" sequence="3" />
+
+         <!-- Menú para acceder al gráfico -->
+         <menuitem id="menu_instant_abode_alquiler_graph" name="Reportes Alquileres"
+         parent="instant_abode.menu_misalquileres" action="action_instant_abode_alquiler_graph" 
+         groups="grupo_propietarios"/>
     </data>
 </odoo>

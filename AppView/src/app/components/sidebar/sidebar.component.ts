@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth-service';
+import { GeneralDAO } from '../../services/general.dao';
+import { Usuario } from '../../models/usuario.modelo';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,9 +12,23 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  constructor(private authService: AuthService) { }
+  public usuario: Usuario = {} as Usuario;
+  constructor(private articuloService: GeneralDAO, private authService: AuthService, private sanitizer: DomSanitizer) { }
 
   logout() {
     this.authService.logout();
+  }
+  ngOnInit(): void {
+    this.loadUserData();
+  }
+
+  private async loadUserData(): Promise<void> {
+    const usuario = await this.articuloService.getLocalUsuario();
+    if (usuario !== null) {
+      this.usuario = usuario;
+    }
+  }
+  sanitizeImageUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 }

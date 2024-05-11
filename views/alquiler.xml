@@ -22,18 +22,40 @@
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Alquiler</h1>
                         <field name="fechaInicio" />
-                        <field name="fechaFinal"/>
-                        <field name="precio"/>
+                        <field name="fechaFinal" />
+                        <field name="precio" />
                     </group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Inmueble</h1>
                         <field name="inmueble" />
                         <h1 style="color:#d2d2ff" colspan="2">Cliente</h1>
-                        <field name="cliente"/>
+                        <field name="cliente" />
                     </group>
                 </group>
             </form>
         </field>
+    </record>
+
+    <!-- Vista de gráfico para Alquileres -->
+    <record id="view_instant_abode_alquiler_graph" model="ir.ui.view">
+        <field name="name">instant_abode.alquiler.graph</field>
+        <field name="model">instant_abode.alquiler</field>
+        <field name="arch" type="xml">
+            <graph string="Resumen de Alquileres" type="bar">
+                <field name="inmueble" type="row"/>
+                <field name="precio" type="measure" operator="sum"/>
+                <field name="inmueble" type="col"/>
+                <field name="valoracionInmueble" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Acción para abrir la vista de gráfico -->
+    <record id="action_instant_abode_alquiler_graph" model="ir.actions.act_window">
+        <field name="name">Reportes Alquileres</field>
+        <field name="res_model">instant_abode.alquiler</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_instant_abode_alquiler_graph" />
     </record>
 
     <!-- actions opening views on models -->

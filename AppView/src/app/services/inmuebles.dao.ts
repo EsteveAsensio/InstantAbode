@@ -51,15 +51,15 @@ export class InmuebleDAO {
                     return data.result.inmuebles;
                 } else {
                     console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
+                    this.errorHandler.handleHttpError(data);
                     return [];
                 }
             } else {
-                this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
+                this.errorHandler.handleHttpError(data);
                 return [];
             }
         } catch (error: any) {
-            this.errorHandler.handleHttpError(error, false, "Obtener Inmuebles");
+            this.errorHandler.handleHttpError(error);
             return [];
         }
     }
@@ -77,18 +77,18 @@ export class InmuebleDAO {
 
             if (data.result) {
                 if (data.result.status == 200) {
-                    return data.result.message;
+                    return true;
                 } else {
                     console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
-                    return [];
+                    this.errorHandler.handleHttpError(data);
+                    return false;
                 }
             } else {
-                this.errorHandler.handleHttpError(data, false, "Obtener Inmuebles");
-                return [];
+                this.errorHandler.handleHttpError(data);
+                return false;
             }
         } catch (error: any) {
-            this.errorHandler.handleHttpError(error, false, "Obtener Inmuebles");
+            this.errorHandler.handleHttpError(error);
             return [];
         }
     }
@@ -103,17 +103,17 @@ export class InmuebleDAO {
                     return data.inmuebles;
                 } else {
                     ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Obtener Alquileres");
+                    this.errorHandler.handleHttpError(data);
                     return [];
                 }
             } else {
                 ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Obtener Alquileres");
+                this.errorHandler.handleHttpError(data);
                 return [];
             }
         } catch (error: any) {
             ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Obtener Alquileres");
+            this.errorHandler.handleHttpError(error);
             return [];
         }
     }
@@ -128,17 +128,17 @@ export class InmuebleDAO {
                     return data.inmueble;
                 } else {
                     ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Información Inmueble");
+                    this.errorHandler.handleHttpError(data);
                     return null
                 }
             } else {
                 ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Información Inmueble");
+                this.errorHandler.handleHttpError(data);
                 return null
             }
         } catch (error: any) {
             ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Información Inmueble");
+            this.errorHandler.handleHttpError(error);
             return null
         }
     }

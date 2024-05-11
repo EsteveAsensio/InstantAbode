@@ -27,19 +27,19 @@ export class ValoracionesDAO {
                     return data.valoraciones;
                 } else {
                     ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Obtener Valoraciones");
+                    this.errorHandler.handleHttpError(data);
                 }
             } else {
                 ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Obtener Valoraciones");
+                this.errorHandler.handleHttpError(data);
             }
         } catch (error: any) {
             ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Obtener Valoraciones");
+            this.errorHandler.handleHttpError(error);
         }
     }
 
-    async modificarValoracionInmueble(tipo: string, valoracion: any): Promise<void | string> {
+    async modificarValoracionInmueble(tipo: string, valoracion: any) {
         try {
             const valoracionData = {
                 "id": valoracion.id,
@@ -51,23 +51,23 @@ export class ValoracionesDAO {
             ///console.log(data)
 
             if (data) {
-                if (data.status == 200) {
-                    return data.result.message;
+                if (data.result.status == 200) {
+                    return true;
                 } else {
-                    ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Modificar Valoraciones");
+                    this.errorHandler.handleHttpError(data);
+                    return false;
                 }
             } else {
-                ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Modificar Valoraciones");
+                this.errorHandler.handleHttpError(data);
+                return false;
             }
         } catch (error: any) {
-            ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Modificar Valoraciones");
+            this.errorHandler.handleHttpError(error);
+            return true;
         }
     }
 
-    async addValoracionInmueble(tipo: string, valoracion: any): Promise<void | string> {
+    async addValoracionInmueble(tipo: string, valoracion: any){
         try {
             const valoracionData = {
                 "id": valoracion.id,
@@ -80,41 +80,39 @@ export class ValoracionesDAO {
             ///console.log(data)
 
             if (data) {
-                if (data.status == 200) {
-                    return data.result.message;
+                if (data.result.status == 200) {
+                    return true;
                 } else {
-                    ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Añadir Valoraciones");
+                    this.errorHandler.handleHttpError(data);
+                    return false;
                 }
             } else {
-                ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Añadir Valoraciones");
+                this.errorHandler.handleHttpError(data);
+                return false;
             }
         } catch (error: any) {
-            ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Añadir Valoraciones");
+            this.errorHandler.handleHttpError(error);
+            return false;
         }
     }
 
-    async eliminarValoracionInmueble(tipo: string): Promise<void | any> {
+    async eliminarValoracionInmueble(tipo: string){
         try {
             const data: any = await this.service.deleteUno(tipo).toPromise();
-            ///console.log(data)
-
             if (data) {
                 if (data.status == 200) {
-                    return data.result.message;
+                    return true;
                 } else {
-                    ////console.log(data)
-                    this.errorHandler.handleHttpError(data, false, "Eliminar Valoraciones");
+                    this.errorHandler.handleHttpError(data);
+                    return false;
                 }
             } else {
-                ////console.log(data)
-                this.errorHandler.handleHttpError(data, false, "Eliminar Valoraciones");
+                this.errorHandler.handleHttpError(data);
+                return false;
             }
         } catch (error: any) {
-            ////console.log(error)
-            this.errorHandler.handleHttpError(error, false, "Eliminar Valoraciones");
+            this.errorHandler.handleHttpError(error);
+            return false;
         }
     }
 

@@ -1,7 +1,7 @@
 /* Sidebar Styles */
 .sidebar {
   height: 100vh;
-  width: 250px;
+  width: 250px; /* Adjusted width for larger screens */
   position: fixed;
   z-index: 1;
   top: 0;
@@ -10,7 +10,7 @@
   overflow-x: hidden;
   padding-top: 20px;
   box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.1);
-  transition: width 0.3s;
+  transition: all 0.3s; /* Changed to 'all' for transitioning both width and transform properties */
 }
 
 .sidebar a {
@@ -25,12 +25,26 @@
 
 .sidebar a img.icon {
   margin-right: 10px;
-  width: 24px; /* Adjust based on your icon size */
-  height: 24px; /* Adjust based on your icon size */
+  width: 24px;
+  height: 24px;
 }
 
 .sidebar a:hover {
   background-color: #ddd;
+}
+
+/* Profile image */
+.profile-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover; /* Ensure the image fits and is not stretched */
 }
 
 .sidebar h1 {
@@ -38,21 +52,27 @@
   margin-bottom: 20px;
 }
 
+/* Responsive Styles for Mobile Devices */
 @media (max-width: 768px) {
   .sidebar {
-    width: 60px; /* Compact sidebar for mobile */
+    width: 100%; /* Full width on smaller screens */
+    position: relative; /* Adjust position for mobile */
   }
-  
-  .sidebar a {
-    justify-content: center; /* Center icons in compact mode */
-    padding: 12px; /* Adjust padding for better touch target */
+
+  .sidebar.collapsed {
+    transform: translateX(-100%); /* Hide sidebar off-screen when collapsed */
   }
-  
-  .sidebar h1 {
-    display: none; /* Hide title in compact mode */
+
+  .btn.btn-primary.d-md-none {
+    display: block; /* Show toggle button on small screens */
+    margin: 10px; /* Add some margin around the button */
   }
-  
-  .contenedor {
-    margin-left: 60px; /* Adjust main container margin for compact sidebar */
+
+  .collapse.d-md-block {
+    display: none; /* Initially hide the sidebar contents */
+  }
+
+  .collapse.show {
+    display: block; /* Show sidebar when toggled */
   }
 }

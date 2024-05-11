@@ -51,11 +51,13 @@ export class InmueblesAlquiladosComponent {
   async eliminarValoracion(idValoracion: number) {
     const confirm = await SwalAnimation.showConfirmDeleteMessageSwal();
     if (confirm) {
-      await this.valoDAO.eliminarValoracionInmueble("InstantAbode/eliminarValoracionInmueble/" + idValoracion);
-      this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['inmuebles-alquilados']);
-      });
-
+      const eliminar = await this.valoDAO.eliminarValoracionInmueble("InstantAbode/eliminarValoracionInmueble/" + idValoracion);
+      if (eliminar){
+        SwalAnimation.showCustomSuccessSwal("Valoración eliminada con éxito.");
+        this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['inmuebles-alquilados']);
+        });
+      }
     }
   }
 

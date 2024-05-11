@@ -15,7 +15,7 @@ class ClientesController(http.Controller):
             contrasenya = request_data.get('contrasenya')
 
             if not username or not contrasenya:
-                return {'status': 400, 'message': 'Datos de usuario incompletos'}
+                return {'status': 400, 'titulo' : 'Login Cliente', 'message': 'Datos de usuario incompletos'}
 
             cliente = http.request.env["instant_abode.cliente"].sudo().search([("name","=",username)])
 
@@ -31,32 +31,65 @@ class ClientesController(http.Controller):
                     'correo': cliente.correo,
                     'imagen': 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
                 }
-                return {'status': 200, 'usuario': usuario}
+                return {'status': 200, 'titulo' : 'Login Cliente', 'usuario': usuario}
             else:
-                return {'status': 400, 'message': 'Usuario no encontrado o contraseña incorrecta'}
+                return {'status': 400, 'titulo' : 'Login Cliente', 'message': 'Usuario no encontrado o contraseña incorrecta'}
         except Exception as error:
             data = {
                 "status": 500,
+                'titulo' : 'Login Cliente',
                 "message": str(error)
             }
             return data
+
+                #GET
+    @http.route(['/InstantAbode/getCliente/<int:idUser>'], auth='user', type="http", methods=['GET'])
+    def getCliente(self, idUser):
+        try:
+            cliente = request.env['instant_abode.cliente'].sudo().search([('id', '=', idUser)])
+
+            if not cliente:
+                data = json.dumps({'status': 400, 'titulo' : 'Obtener Cliente', 'message' : 'El cliente ya no existe. Cierra la sesión lo antes posible.'})
+                return Response(data, content_type='application/json', status=200)
+
+            usuario = {
+                'id': cliente.id,
+                'dni': cliente.dni,
+                'nombreCliente': cliente.nombreCliente,
+                'apellidos': cliente.apellidos,
+                'telefono': cliente.telefono,
+                'name': cliente.name,
+                'contrasenya': cliente.contrasenya,
+                'correo': cliente.correo,
+                'imagen': 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
+            }
+
+            data = json.dumps({'status': 200, 'titulo' : 'Obtener Cliente', 'cliente': usuario})
+            return Response(data, content_type='application/json', status=200)
+
+        except Exception as error:
+            data = json.dumps({'status': 500, 'titulo' : 'Obtener Cliente', 'message': str(error)})
+            return Response(data, content_type='application/json', status=500)
+        
+        
     #post
     @http.route('/InstantAbode/registrarNuevoUsuario', type='json', auth='public', methods=['POST'], csrf=False)
     def registrarNuevoUsuario(self, **kw):
         response = request.httprequest.json
         try:
     
-            result = http.request.env["instant_abode.cliente"].sudo().create(response)
+            http.request.env["instant_abode.cliente"].sudo().create(response)
 
             data={
                 "status":200,
+                'titulo' : 'Usuario Registrado',
                 "message":"Nuevo usuario añadido."
             }
             return data
         except ValidationError as ve:
-            return {"status": 400, "message": str(ve)}
+            return {"status": 400, 'titulo' : 'Registrar Usuario', "message": str(ve)}
         except Exception as error:
-            return {"status": 500, "message": str(error)}
+            return {"status": 500, 'titulo' : 'Registrar Usuario', "message": str(error)}
 
     #GET
     @http.route('/InstantAbode/provincias', type='http', auth='user', methods=['GET'])
@@ -68,11 +101,11 @@ class ClientesController(http.Controller):
                 ['provincia']  
             )
             provincias = [prov['provincia'] for prov in provincias_data if prov['provincia']]
-            data = json.dumps({'status': 200, 'provincias': provincias})
+            data = json.dumps({'status': 200, 'titulo' : 'Obtener las Provincias', 'provincias': provincias})
             return Response(data, content_type='application/json', status=200)
         
         except Exception as error:
-            data = json.dumps({'status': 500, 'message': str(error)})
+            data = json.dumps({'status': 500, 'titulo' : 'Obtener las Provincias', 'message': str(error)})
             return Response(data, content_type='application/json', status=500)    
         
     #GET
@@ -82,7 +115,7 @@ class ClientesController(http.Controller):
             alquileres = request.env['instant_abode.alquiler'].sudo().search([('cliente.id', '=', idUser)])
 
             if not alquileres:
-                data = json.dumps({'status': 400, 'message': 'Todavía no has alquilado ningún inmueble.'})
+                data = json.dumps({'status': 400, 'titulo' : 'Alquileres', 'message': 'Todavía no has alquilado ningún inmueble.'})
                 return Response(data, content_type='application/json', status=200)
 
             alquileres_dispo = []
@@ -122,11 +155,11 @@ class ClientesController(http.Controller):
                         'valoracionInmueble': valoracion_data
                     })
                 
-            data = json.dumps({'status': 200, 'inmuebles': alquileres_dispo})
+            data = json.dumps({'status': 200, 'titulo' : 'Nuevo Alquiler Realizado', 'inmuebles': alquileres_dispo})
             return Response(data, content_type='application/json', status=200)
 
         except Exception as error:
-            data = json.dumps({'status': 500, 'message': str(error)})
+            data = json.dumps({'status': 500, 'titulo' : 'Alquileres', 'message': str(error)})
             return Response(data, content_type='application/json', status=500)
         
         
@@ -148,7 +181,7 @@ class ClientesController(http.Controller):
             ])
 
             if not inmuebles:
-                return {"status": 400, "message": "No hay inmuebles disponibles."}
+                return {"status": 400, 'titulo' : 'Buscar Inmuebles', "message": "No hay inmuebles disponibles."}
 
             inmuebles_disponibles = []
             for inmueble in inmuebles:
@@ -163,7 +196,7 @@ class ClientesController(http.Controller):
                     diferencia_dias = (fecha_final - fecha_inicio).days
 
                     if diferencia_dias <= 0:
-                        return {"status": 400, "message": "La fecha final debe ser posterior a la fecha de inicio."}
+                        return {"status": 400, 'titulo' : 'Buscar Inmuebles', "message": "La fecha final debe ser posterior a la fecha de inicio."}
 
                     fecha_inicio_iso = fecha_inicio.isoformat()
                     fecha_final_iso = fecha_final.isoformat()
@@ -189,12 +222,14 @@ class ClientesController(http.Controller):
 
             return {
                 "status": 200,
+                'titulo' : 'Buscar Inmuebles', 
                 "inmuebles": inmuebles_disponibles
             }
 
         except Exception as error:
             data = {
                 "status": 500,
+                'titulo' : 'Buscar Inmuebles', 
                 "message": str(error)
             }
             return data
@@ -206,11 +241,11 @@ class ClientesController(http.Controller):
             inmueble = request.env['instant_abode.inmueble'].sudo().search([('id', '=', idInmueble)])
 
             if not inmueble:
-                data = json.dumps({'status': 400, 'message': 'Ya no existe ese inmueble'})
+                data = json.dumps({'status': 400, 'titulo' : 'Información Inmueble', 'message': 'Ya no existe ese inmueble'})
                 return Response(data, content_type='application/json', status=200)
 
             if inmueble.state == "Ocultar":
-                data = json.dumps({'status': 400, 'message': 'El inmueble ya no está cara al público'})
+                data = json.dumps({'status': 400, 'titulo' : 'Información Inmueble', 'message': 'El inmueble ya no está cara al público'})
                 return Response(data, content_type='application/json', status=200)
 
             lista_valoraciones = self.valoracionesInmueble(inmueble.id)
@@ -232,11 +267,11 @@ class ClientesController(http.Controller):
             }
 
 
-            data = json.dumps({'status': 200, 'inmueble': inmuebleInfo})
+            data = json.dumps({'status': 200, 'titulo' : 'Información Inmueble', 'inmueble': inmuebleInfo})
             return Response(data, content_type='application/json', status=200)
 
         except Exception as error:
-            data = json.dumps({'status': 500, 'message': str(error)})
+            data = json.dumps({'status': 500, 'titulo' : 'Información Inmueble', 'message': str(error)})
             return Response(data, content_type='application/json', status=500)
             
         
@@ -291,14 +326,14 @@ class ClientesController(http.Controller):
 
             existe_cliente = request.env['instant_abode.cliente'].sudo().search([("id", '=', cliente_id)])
             if not existe_cliente:
-                return {"status": 400, "message": "El usuario con el que está iniciado sesión no existe. Cerra sesión lo antes posible."}
+                return {"status": 400, 'titulo' : 'Realizar Alquiler', "message": "El usuario con el que está iniciado sesión no existe. Cerra sesión lo antes posible."}
             
             existe_inmueble = request.env['instant_abode.inmueble'].sudo().search([("id", '=', inmueble_id)])
             if not existe_inmueble:
-                return {"status": 400, "message": "El inmueble ya no existe."}
+                return {"status": 400, 'titulo' : 'Realizar Alquiler', "message": "El inmueble ya no existe."}
 
             if existe_inmueble.state == 'Ocultar':
-                return {"status": 400, "message": "El inmueble ya no está cara al público."}
+                return {"status": 400, 'titulo' : 'Realizar Alquiler', "message": "El inmueble ya no está cara al público."}
 
             alquiler_data = {
                 'cliente': cliente_id,
@@ -308,10 +343,10 @@ class ClientesController(http.Controller):
             }
             request.env['instant_abode.alquiler'].sudo().create(alquiler_data)
 
-            return {"status": 200, "message": "Alquiler realizado con éxito."}
+            return {"status": 200, 'titulo' : 'Realizar Alquiler', "message": "Alquiler realizado con éxito."}
 
         except Exception as error:
-            return {"status": 500, "message": str(error)}
+            return {"status": 500, 'titulo' : 'Realizar Alquiler', "message": str(error)}
 
         
     @http.route('/InstantAbode/modificarCliente', type='json', auth='user', methods=['PUT'])
@@ -324,7 +359,8 @@ class ClientesController(http.Controller):
             if not cliente_actual.exists():
                 return {
                     "status": 400,
-                    "message": "Error, no existe el cliente."
+                    'titulo' : 'Modificar Perfil',
+                    "message": "El usuario con el que está iniciado sesión no existe. Cerra sesión lo antes posible."
                 }
 
             # Verificar la unicidad en los campos críticos del usuario asociado
@@ -346,20 +382,24 @@ class ClientesController(http.Controller):
                     if request.env['res.users'].sudo().search(dominio).exists():
                         return {
                             "status": 400,
+                            'titulo' : 'Modificar Perfil',
                             "message": f"El {descripcion} {response[campo]} ya está registrado en otro usuario."
                         }
-
-            # Actualizar el cliente y su usuario asociado
+            print("Estado antes de actualizar:", cliente_actual.read())
             cliente_actual.sudo().write(response)
+            print("Estado después de actualizar:", cliente_actual.read())
 
+            #antes de devolver 200 comprobar respuesta del .write
             return {
                 "status": 200,
-                "id": cliente_actual.id
+                'titulo' : 'Modificar Perfil',
+                "message": 'Modificaciones realizadas con éxito.'
             }
 
         except Exception as error:
             return {
                 "status": 500,
+                'titulo' : 'Modificar Perfil',
                 "message": str(error)
             }
 
@@ -371,7 +411,7 @@ class ClientesController(http.Controller):
             valoraciones = request.env['instant_abode.valoracioninmueble'].sudo().search([('cliente.id', '=', idUser)])
 
             if not valoraciones:
-                data = json.dumps({'status': 400, 'message': 'El usuario no ha realizado ninguna valoración.'})
+                data = json.dumps({'status': 400, 'titulo' : 'Obtener Valoraciones', 'message': 'El usuario no ha realizado ninguna valoración.'})
                 return Response(data, content_type='application/json', status=200)
 
             lista_valoraciones = []
@@ -396,11 +436,11 @@ class ClientesController(http.Controller):
                     }
                 })
 
-            data = json.dumps({'status': 200, 'valoraciones': lista_valoraciones})
+            data = json.dumps({'status': 200, 'titulo' : 'Obtener Valoraciones', 'valoraciones': lista_valoraciones})
             return Response(data, content_type='application/json', status=200)
 
         except Exception as error:
-            data = json.dumps({'status': 500, 'message': str(error)})
+            data = json.dumps({'status': 500, 'titulo' : 'Obtener Valoraciones', 'message': str(error)})
             return Response(data, content_type='application/json', status=500)
 
 
@@ -410,16 +450,16 @@ class ClientesController(http.Controller):
         try:
             valoracion = request.env['instant_abode.valoracioninmueble'].sudo().browse(valoracionid)
             if not valoracion.exists():
-                data = json.dumps({'status': 400, 'message': 'Valoración no encontrada.'})
+                data = json.dumps({'status': 400, 'titulo' : 'Eliminar Valoración', 'message': 'Valoración no encontrada.'})
                 return Response(data, content_type='application/json', status=400)
 
             valoracion.unlink()
 
-            data = json.dumps({'status': 200, 'message': 'Valoración eliminada correctamente.'})
+            data = json.dumps({'status': 200, 'titulo' : 'Eliminar Valoración', 'message': 'Valoración eliminada correctamente.'})
             return Response(data, content_type='application/json', status=200)
     
         except Exception as error:
-            data = json.dumps({'status': 500, 'message': error})
+            data = json.dumps({'status': 500, 'titulo' : 'Eliminar Valoración', 'message': error})
             return Response(data, content_type='application/json', status=400)
         
         
@@ -434,11 +474,12 @@ class ClientesController(http.Controller):
             if not alquiler:
                 return {
                     "status": 400,
+                    'titulo' : 'Añadir Valoración',
                     "message": "No se encontró el alquiler especificado."
                 }
 
-            # Crear la nueva valoración
-            nueva_valoracion = request.env['instant_abode.valoracioninmueble'].sudo().create({
+            # Crear la nueva valoración (mal)
+            request.env['instant_abode.valoracioninmueble'].sudo().create({
                 'name': response.get('name'),
                 'comentario': response.get('comentario'),
                 'puntuacion': response.get('puntuacion'),
@@ -448,12 +489,14 @@ class ClientesController(http.Controller):
 
             return {
                 "status": 200,
-                "message": "Valoración creada correctamente."
+                'titulo' : 'Añadir Valoración',
+                "message": "Valoración creada y añadida correctamente."
             }
        
         except Exception as error:
             return {
                 "status": 500,
+                'titulo' : 'Añadir Valoración',
                 "message":str(error)
             }
        
@@ -467,19 +510,22 @@ class ClientesController(http.Controller):
             if not result.exists():
                 data={
                 "status":400,
-                "message":"No existe la valoración"
+                'titulo' : 'Modificar Valoración',
+                "message":"No existe la valoración que intenta modificar."
                 }   
                 return data
             
             result.sudo().write(response)
             data={
                 "status":200,
-                "message":"Valoración modificada"
+                'titulo' : 'Modificar Valoración',
+                "message":"Valoración modificada con éxito"
             }
             return data
        except Exception as error:
             data={
                 "status":500,
+                'titulo' : 'Modificar Valoración',
                 "message":str(error)
             }
             return data

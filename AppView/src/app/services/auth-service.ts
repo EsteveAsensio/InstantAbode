@@ -34,7 +34,7 @@ export class AuthService {
         password: password
       }
     };
-  
+
     return this.http.post<OdooAuthResponse>(`${this.baseUrl}/web/session/authenticate`, body)
       .pipe(
         tap(response => {
@@ -78,18 +78,36 @@ export class AuthService {
           this.controladorDepPaginas();
         } else {
           ////console.log(data)
-          this.errorHandler.handleHttpError(data, false, "login");
+          this.errorHandler.handleHttpError(data);
         }
       } else {
         ////console.log(data)
-        this.errorHandler.handleHttpError(data, false, "login");
+        this.errorHandler.handleHttpError(data);
       }
     } catch (error: any) {
       ////console.log(error)
-      this.errorHandler.handleHttpError(error, false, "login");
+      this.errorHandler.handleHttpError(error);
     }
     return false;
 
+  }
+
+  async getUsuarioActualizado(id: number): Promise<Usuario | null> {
+    try {
+      var data: any = await this.service.get('InstantAbode/getCliente/' + id).toPromise();
+      if (data && data.status === 200) {
+        const usuario = data.cliente as Usuario;
+        // Actualiza solo los datos del usuario, no el token
+        sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
+        localStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
+        return usuario;
+      } else {
+        this.errorHandler.handleHttpError(data);
+      }
+    } catch (error: any) {
+      this.errorHandler.handleHttpError(error);
+    }
+    return null;
   }
 
   async registrarUsuario(username: string, password: string, dni: string, nombre: string, apellidos: string, correo: string, telefono: number, sesionIniciada: boolean) {
@@ -111,45 +129,67 @@ export class AuthService {
 
         } else {
           ////console.log(data)
-          this.errorHandler.handleHttpError(data, false, "Registrar Usuario");
+          this.errorHandler.handleHttpError(data);
         }
       } else {
         ////console.log(data)
-        this.errorHandler.handleHttpError(data, false, "Registrar Usuario");
+        this.errorHandler.handleHttpError(data);
       }
     } catch (error: any) {
       ////console.log(error)
-      this.errorHandler.handleHttpError(error, false, "Registrar Usuario");
+      this.errorHandler.handleHttpError(error);
     }
     return false;
   }
 
-  async modificarCliente(user : Usuario) {
-    const registrarData = {
-      "id": user.id,
-      "name": user.name,
-      "apellidos": user.apellidos,
-      "dni": user.apellidos,
-      "nombreCliente": user.nombreCliente,
-      "correo": user.correo,
-      "contrasenya": user.contrasenya,
-      "telefono": user.telefono,
-      "imagen": user.imagen
-    };
+  isBase64(str: string): boolean {
+    const base64Pattern = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+    return base64Pattern.test(str);
+  }
+
+  async modificarCliente(user: Usuario) {
+    let registrarData
+    if (this.isBase64(user.imagen)) {
+      registrarData = {
+        "id": user.id,
+        "name": user.name,
+        "apellidos": user.apellidos,
+        "dni": user.dni,
+        "nombreCliente": user.nombreCliente,
+        "correo": user.correo,
+        "contrasenya": user.contrasenya,
+        "telefono": user.telefono,
+        "imagen": user.imagen
+      };
+      console.log(user.dni)
+    } else {
+      registrarData = {
+        "id": user.id,
+        "name": user.name,
+        "apellidos": user.apellidos,
+        "dni": user.dni,
+        "nombreCliente": user.nombreCliente,
+        "correo": user.correo,
+        "contrasenya": user.contrasenya,
+        "telefono": user.telefono,
+      };
+      console.log(user.dni)
+    }
     try {
       var data: any = await this.service.put('InstantAbode/modificarCliente', registrarData).toPromise();
-      ///console.log(data)
       if (data.result) {
         if (data.result.status == 200) {
           return true;
         } else {
-          this.errorHandler.handleHttpError(data, false, "Modificar Usuario");
+          this.errorHandler.handleHttpError(data, "Modificar Usuario");
+          return false;
         }
       } else {
-        this.errorHandler.handleHttpError(data, false, "Modificar Usuario");
+        this.errorHandler.handleHttpError(data, "Modificar Usuario");
+        return false;
       }
     } catch (error: any) {
-      this.errorHandler.handleHttpError(error, false, "Modificar Usuario");
+      this.errorHandler.handleHttpError(error, "Modificar Usuario");
     }
     return false;
   }

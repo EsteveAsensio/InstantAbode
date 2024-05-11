@@ -34,25 +34,23 @@ export class InformacionInmuebleComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = params['id'];
-      this.fechaInicio = params['fechaInicio'];
-      this.fechaFinal = params['fechaFinal'];
-      this.cargarInmueble(id);
-      
-      
-      console.log(this.fechaFinal)
-      console.log(this.fechaInicio)
+      this.fechaInicio = new Date(params['fechaInicio']);
+      this.fechaFinal = new Date(params['fechaFinal']);
 
       if (this.fechaInicio && this.fechaFinal) {
         const diffTime = Math.abs(this.fechaFinal.getTime() - this.fechaInicio.getTime());
         this.diasAlquiler = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convierte de milisegundos a días
       }
 
+      this.cargarInmueble(id);
     });
   }
 
   async cargarInmueble(id: string) {
     this.inmueble = await this.inmueblesService.obtenerInfoInmueble('InstantAbode/infoInmueble/' + id);
     if (this.inmueble && this.diasAlquiler) {
+      this.inmueble.fechaInicio = this.fechaInicio;
+      this.inmueble.fechaFinal = this.fechaFinal;
       this.precioAlquiler = this.diasAlquiler * this.inmueble.precio;
     }
   }

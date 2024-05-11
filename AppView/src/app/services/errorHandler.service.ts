@@ -14,14 +14,14 @@ export class ErrorHandlerService {
         SwalAnimation.showCustomErrorSwal('Error', "Contraseña incorrecta");
     }
 
-    async handleHttpError(error: any, isDelete: boolean = false, procedencia: string = '') {
+    async handleHttpError(error: any, procedencia: string = '') {
         if (error.result) {
             if (error.result.status != 200) {
-                await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.status, error.result.message);
+                await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
                 
             }
         } else {
-            await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.status, error.result.message);
+            await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
             
         }
 

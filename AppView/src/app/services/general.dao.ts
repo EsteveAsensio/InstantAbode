@@ -148,7 +148,7 @@ export class GeneralDAO {
         SwalAnimation.showCustomSuccessSwal('Eliminado exitosamente');
         return data;
       } else {
-        this.errorHandler.handleHttpError(data, true);
+        this.errorHandler.handleHttpError(data);
       }
     } catch (error: any) {
       this.errorHandler.handleHttpError(error);

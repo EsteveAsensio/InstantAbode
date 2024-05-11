@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ValoracionesDAO } from '../../services/valoraciones.dao';
+import { SwalAnimation } from '../../utils/SwalAnimation';
 
 @Component({
   selector: 'app-info-valoracioninmueble',
@@ -23,11 +24,17 @@ export class InfoValoracioninmuebleComponent {
   async save(): Promise<void> {
     if (this.data.valoracion.id) {
       // Actualizar una valoración existente
-      await this.valoracionesDAO.modificarValoracionInmueble("InstantAbode/modificarValoracionInmueble", this.data.valoracion) || "";
+      const exito = await this.valoracionesDAO.modificarValoracionInmueble("InstantAbode/modificarValoracionInmueble", this.data.valoracion) || "";
+      if (exito){
+        SwalAnimation.showCustomSuccessSwal("Valoración modificada.");
+      }
     
     } else {
       // Crear nueva valoración
-      await this.valoracionesDAO.addValoracionInmueble("InstantAbode/addValoracionInmueble", this.data.valoracion) || "";
+      const exito = await this.valoracionesDAO.addValoracionInmueble("InstantAbode/addValoracionInmueble", this.data.valoracion) || "";
+      if (exito){
+        SwalAnimation.showCustomSuccessSwal("Valoración añadida.");
+      }
     }
     this.dialogRef.close();
   }

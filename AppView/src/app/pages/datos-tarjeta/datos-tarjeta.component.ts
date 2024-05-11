@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { InmuebleDAO } from '../../services/inmuebles.dao';
 import { GeneralDAO } from '../../services/general.dao';
 import { Usuario } from '../../models/usuario.modelo';
+import { SwalAnimation } from '../../utils/SwalAnimation';
 
 @Component({
   selector: 'app-datos-tarjeta',
@@ -31,12 +32,20 @@ export class DatosTarjetaComponent {
   
     //Controlar mensajes (nota)
   async pagar(): Promise<void> {
-    await this.inmuebleDAO.realizarAlquiler("InstantAbode/realizarAlquiler", this.data, this.usuario.id) || "";
-    
+    if (this.comprobar()){
+      const alquiler = await this.inmuebleDAO.realizarAlquiler("InstantAbode/realizarAlquiler", this.data, this.usuario.id) || "";
+    if (alquiler){
+      SwalAnimation.showCustomSuccessSwal("Alquiler Realizado con éxito.");
+    }
     this.dialogRef.close();
+    }
   }
 
   async cancelar(): Promise<void> {
     this.dialogRef.close();
+  }
+
+  comprobar(): boolean {
+    return true;
   }
 }
