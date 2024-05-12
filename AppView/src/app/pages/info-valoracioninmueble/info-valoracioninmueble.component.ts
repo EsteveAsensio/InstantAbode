@@ -24,9 +24,13 @@ export class InfoValoracioninmuebleComponent {
   async save(): Promise<void> {
     if (this.data.valoracion.id) {
       // Actualizar una valoración existente
-      const exito = await this.valoracionesDAO.modificarValoracionInmueble("InstantAbode/modificarValoracionInmueble", this.data.valoracion) || "";
-      if (exito){
-        SwalAnimation.showCustomSuccessSwal("Valoración modificada.");
+      if(this.data.valoracion.comentario == "" || this.data.valoracion.comentario == null){
+        await SwalAnimation.showCustomWarningMessageSwal("Advertencia " + "Comentario", "El comentario debe contener algo de contenido.");
+      }else{
+        const exito = await this.valoracionesDAO.modificarValoracionInmueble("InstantAbode/modificarValoracionInmueble", this.data.valoracion) || "";
+        if (exito){
+          SwalAnimation.showCustomSuccessSwal("Valoración modificada.");
+        }
       }
     
     } else {

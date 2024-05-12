@@ -30,6 +30,8 @@
     'data': [
         'security/grupos_seguridad.xml',
         'security/ir.model.access.csv',
+        'views/plantilla_web.xml',
+        'views/error_template.xml',
         'views/cliente.xml',
         'views/propietario.xml',
         'views/valoracioncliente.xml',

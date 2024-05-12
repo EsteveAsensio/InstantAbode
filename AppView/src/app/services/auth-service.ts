@@ -126,20 +126,19 @@ export class AuthService {
       if (data.result) {
 
         if (data.result.status == 200) {
-
+          return true;
         } else {
-          ////console.log(data)
           this.errorHandler.handleHttpError(data);
+          return false;
         }
       } else {
-        ////console.log(data)
         this.errorHandler.handleHttpError(data);
+        return false;
       }
     } catch (error: any) {
-      ////console.log(error)
       this.errorHandler.handleHttpError(error);
+      return false;
     }
-    return false;
   }
 
   isBase64(str: string): boolean {

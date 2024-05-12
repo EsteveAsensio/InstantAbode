@@ -1,0 +1,21 @@
+<odoo>
+    <template id="error_template" name="Error Template">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container mt16 mb16">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h1>¡Aviso!</h1>
+                            <t t-if="message">
+                                <div class="alert alert-danger" role="alert">
+                                    <p t-esc="message"/>
+                                </div>
+                            </t>
+                            <a href="/registro_propietario" class="btn btn-primary">Volver</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

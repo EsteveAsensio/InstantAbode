@@ -107,3 +107,10 @@
       height: 150px; /* Menor altura en dispositivos móviles */
   }
 }
+
+.no-alquileres {
+  color: #666;
+  font-size: 16px;
+  padding: 10px;
+  text-align: center;
+}

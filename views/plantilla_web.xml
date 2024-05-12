@@ -1,0 +1,47 @@
+<odoo>
+    <template id="form_registro_propietario" name="Registro de Propietario">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h2>Registro de Propietario</h2>
+                <form action="/create_propietario" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <div class="form-group">
+                        <label for="nombreCliente">Nombre:</label>
+                        <input type="text" class="form-control" id="nombreCliente"
+                            name="nombreCliente" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos:</label>
+                        <input type="text" class="form-control" id="apellidos" name="apellidos" />
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo electrónico:</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <input type="text" class="form-control" id="vat" name="vat"
+                            required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" class="form-control" id="phone" name="phone" />
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreCliente">Nombre Usuario:</label>
+                        <input type="text" class="form-control" id="name"
+                            name="name" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasenya">Constraseña:</label>
+                        <input type="password" class="form-control" id="contrasenya" name="contrasenya" required="required" />
+
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

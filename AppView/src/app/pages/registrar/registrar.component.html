@@ -15,7 +15,7 @@
       </div>
       <div>
         <label for="apellidos">Apellidos</label>
-        <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos">
+        <input type="text" id="apellidos" name="apellidos" [(ngModel)]="cliente.apellidos" placeholder="Apellidos">
       </div>
       <div>
         <label for="dni">DNI</label>
@@ -27,7 +27,7 @@
       </div>
       <div>
         <label for="telefono">Teléfono</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono">
+        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" [(ngModel)]="cliente.telefono">
       </div>
       <div class="grupo-botones">
         <button type="submit" class="aceptar" (click)="registrarUsuario()">Aceptar</button>

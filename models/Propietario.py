@@ -79,41 +79,7 @@ class Propietario(models.Model):
     @api.model
     def create(self, vals):
         self.validar_unicidad(vals)
-        partner = self.env['res.partner'].create({
-            'name': vals.get('nombreCliente'),
-            'email': vals.get('correo'),
-            'phone': vals.get('telefono'),
-            'vat': vals.get('dni'),
-            'image_1920' : vals.get('imagen'),
-        })
-
         cliente = super(Propietario, self).create(vals)
-
-        new_user = self.env['res.users'].create({
-            'name': cliente.nombreCliente,
-            'login': cliente.name,
-            'partner_id': partner.id,
-            'password': cliente.contrasenya,
-            'image_1920' : cliente.imagen,
-        })
-
-        cliente.user_id = new_user.id
-
-            # Buscar los grupos necesarios
-        grup_propietarios = self.env['res.groups'].search([('name', '=', 'Propietarios')], limit=1)
-        grupo_permisos_extra = self.env['res.groups'].search([('name', '=', 'Creación de contactos')], limit=1)
-
-        # Lista para mantener los ids de los grupos
-        groups_ids = []
-        if grup_propietarios:
-            groups_ids.append(grup_propietarios.id)
-        if grupo_permisos_extra:
-            groups_ids.append(grupo_permisos_extra.id)
-
-        # Asignar los grupos al usuario
-        if groups_ids:
-            new_user.groups_id = [(6, 0, groups_ids)]
-
         return cliente
     
     def unlink(self):
@@ -215,57 +181,46 @@ class Propietario(models.Model):
                 raise ValidationError(f"El nombre de usuario {vals['name']} ya está registrado.")
         
     
-    def nuevoUsuarioNotificacion(self):
-        nombre = self.usuarioAleatorio()
-        contrasenya = self.contrasenyaAleatoria()
+    def notificarPropietario(self):        
+        partner = self.env['res.partner'].create({
+            'name': self.nombreCliente,
+            'email': self.correo,
+            'phone': self.telefono,
+            'vat': self.dni,
+            'image_1920' : self.imagen,
+        })
 
-        # Verificar
-        while self.env['instant_abode.propietario'].search([('name', '=', nombre)]) or \
-                self.env['instant_abode.propietario'].search([('contrasenya', '=', contrasenya)]):
-            nombre = self.usuarioAleatorio()
-            contrasenya = self.contrasenyaAleatoria()
+        new_user = self.env['res.users'].create({
+            'name': self.nombreCliente,
+            'login': self.name,
+            'password': self.contrasenya,
+            'partner_id': partner.id,
+            'image_1920' : self.imagen,
+        })
 
-        while self.env['instant_abode.cliente'].search([('name', '=', nombre)]) or \
-            self.env['instant_abode.cliente'].search([('contrasenya', '=', contrasenya)]):
-            nombre = self.usuarioAleatorio()
-            contrasenya = self.contrasenyaAleatoria()
+        self.user_id = new_user.id
 
-        self.name = nombre
-        self.contrasenya = contrasenya
+        # Buscar los grupos necesarios
+        grup_propietarios = self.env['res.groups'].search([('name', '=', 'Propietarios')], limit=1)
+        grupo_permisos_extra = self.env['res.groups'].search([('name', '=', 'Creación de contactos')], limit=1)
 
-    def contrasenyaAleatoria(self):
-        especiales = string.punctuation
-        digitos = string.digits
-        letras = string.ascii_letters
+        # Lista para mantener los ids de los grupos
+        groups_ids = []
+        if grup_propietarios:
+            groups_ids.append(grup_propietarios.id)
+        if grupo_permisos_extra:
+            groups_ids.append(grupo_permisos_extra.id)
 
-        longitud = random.randint(5, 15)  # Longitud aleatoria entre 5 y 15 caracteres
+        # Asignar los grupos al usuario
+        if groups_ids:
+            new_user.groups_id = [(6, 0, groups_ids)]
 
-        # Al menos un carácter especial, un dígito y cinco letras
-        contrasenya = ''.join(random.choice(especiales) +
-                              random.choice(digitos) +
-                              ''.join(random.choice(letras) for _ in range(5)) +
-                              ''.join(random.choice(especiales + digitos + letras) for _ in range(longitud - 7)))
-
-        # Mezcla los caracteres de la contraseña
-        contrasenya = ''.join(random.sample(contrasenya, len(contrasenya)))
-        return contrasenya
-
-    def usuarioAleatorio(self):
-        nombre_usuario = ''.join(random.choices(string.ascii_lowercase, k=8))  # Genera un nombre de usuario de 8 caracteres
-        return nombre_usuario
-    
-    def notificarPropietario(self):
-        # Configuración del servidor SMTP
+        # Enviar notificación por correo electrónico
         correo_emisor = 'esteve.ase2004@gmail.com'
         contrasenya_emisor = 'zzuq smod izrq mgpu'  # clave
         correo_receptor = self.correo
-
         asunto = "¡Bienvenido/a a InstantAbode!"
-        mensaje = (
-            f'Hola {self.nombreCliente} {self.apellidos}.\n La petición para hacerte propietario/a en nuestra aplicación InstantAbode ha sido aceptada.\n'
-            f'Tu nuevo usuario y contraseña son los siguientes:\n\nUsuario: {self.name}\nContraseña: {self.contrasenya}\n\n'
-            f'Estos datos pueden ser modificados al entrar dentro de la aplicación > Perfil.\nMuchas gracias por confiar en nosotros.'
-        )
+        mensaje = f"Hola {self.nombreCliente} {self.apellidos}.\n Tu cuenta en nuestra aplicación InstantAbode ha sido creada.\n Usuario: {self.name}\n Contraseña: {self.contrasenya}\n\n Puedes cambiar la contraseña al iniciar sesión en el servidor."
 
         # Crear el objeto mensaje
         msg = EmailMessage()
@@ -274,8 +229,8 @@ class Propietario(models.Model):
         msg['Subject'] = asunto
         msg.set_content(mensaje)
 
+        # Enviar el correo
         context = ssl.create_default_context()
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context= context) as smtp:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
             smtp.login(correo_emisor, contrasenya_emisor)
             smtp.sendmail(correo_emisor, correo_receptor, msg.as_string())

@@ -20,10 +20,15 @@ export class RegistrarComponent {
   cancelar() {
     this.router.navigate(['login'])
   }
-  registrarUsuario() {
+
+  async registrarUsuario() {
     if(this.comprobar()){
-      this.authService.registrarUsuario(this.cliente.name, this.cliente.contrasenya,this.cliente.dni,
+      const correcto = await this.authService.registrarUsuario(this.cliente.name, this.cliente.contrasenya,this.cliente.dni,
         this.cliente.nombreCliente,this.cliente.apellidos,this.cliente.correo,this.cliente.telefono, false);
+        if(correcto){
+          SwalAnimation.showCustomSuccessSwal("Nuevo usuario registrado");
+          this.router.navigate(['login'])
+        }
     }
   }
   comprobar(): boolean {

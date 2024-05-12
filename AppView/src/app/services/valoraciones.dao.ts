@@ -41,6 +41,7 @@ export class ValoracionesDAO {
 
     async modificarValoracionInmueble(tipo: string, valoracion: any) {
         try {
+
             const valoracionData = {
                 "id": valoracion.id,
                 "comentario": valoracion.comentario,

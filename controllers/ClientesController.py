@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import json
 from odoo.http import request, Response
 import datetime
+import re
 
 class ClientesController(http.Controller):
 
@@ -385,9 +386,8 @@ class ClientesController(http.Controller):
                             'titulo' : 'Modificar Perfil',
                             "message": f"El {descripcion} {response[campo]} ya está registrado en otro usuario."
                         }
-            print("Estado antes de actualizar:", cliente_actual.read())
+                    
             cliente_actual.sudo().write(response)
-            print("Estado después de actualizar:", cliente_actual.read())
 
             #antes de devolver 200 comprobar respuesta del .write
             return {
@@ -477,6 +477,13 @@ class ClientesController(http.Controller):
                     'titulo' : 'Añadir Valoración',
                     "message": "No se encontró el alquiler especificado."
                 }
+            
+            if response.get('puntuacion') < 1 or response.get('puntuacion') > 10:
+                return {
+                    "status": 400,
+                    'titulo': 'Añadir Valoración',
+                    "message": "La puntuación debe estar entre 1 y 10."
+                }
 
             # Crear la nueva valoración (mal)
             request.env['instant_abode.valoracioninmueble'].sudo().create({
@@ -515,6 +522,13 @@ class ClientesController(http.Controller):
                 }   
                 return data
             
+            if response.get('puntuacion') < 1 or response.get('puntuacion') > 10:
+                return {
+                    "status": 400,
+                    'titulo': 'Añadir Valoración',
+                    "message": "La puntuación debe estar entre 1 y 10."
+                }
+            
             result.sudo().write(response)
             data={
                 "status":200,
@@ -529,3 +543,86 @@ class ClientesController(http.Controller):
                 "message":str(error)
             }
             return data
+
+    @http.route(['/registro_propietario'], type='http', auth="public", website=True)
+    def registro_propietario(self, **kw):
+        return request.render("instant_abode.form_registro_propietario")
+    
+
+    @http.route('/create_propietario', type='http', auth='public', methods=['POST'], website=True)
+    def create_propietario(self, **post):
+        # Preparar los datos para la creación del registro Propietario
+        propietario_vals = {
+            'dni': post.get('vat'), 
+            'correo': post.get('email'), 
+            'telefono': post.get('phone'),
+            'nombreCliente': post.get('nombreCliente'), 
+            'apellidos': post.get('apellidos'),
+            'name': post.get('name'),
+            'contrasenya': post.get('contrasenya')
+        }
+
+        # Verificación de unicidad en el modelo res.partner y res.users
+        campos_partner = {'dni': 'vat', 'correo': 'email', 'telefono': 'phone'}
+        for campo, partner_field in campos_partner.items():
+            valor = propietario_vals[campo]
+            if valor:
+                dominio = [(partner_field, '=', valor)]
+                existe = request.env['res.partner'].sudo().search(dominio, limit=1)
+                if existe:
+                    descripcion = {'dni': 'DNI', 'correo': 'correo electrónico', 'telefono': 'teléfono'}[campo]
+                    return request.render("instant_abode.error_template", {
+                        'message': f"El {descripcion} {valor} ya está registrado en otro usuario."
+                    })
+
+        # Verificar la unicidad del nombre de usuario en res.users
+        if propietario_vals['name']:
+            user_exist = request.env['res.users'].sudo().search([('login', '=', propietario_vals['name'])], limit=1)
+            if user_exist:
+                return request.render("instant_abode.error_template", {
+                    'message': "El nombre de usuario ya está registrado."
+                })
+
+        # Verificación de formato
+        if not self.validar_correo(propietario_vals['correo']):
+            return request.render("instant_abode.error_template", {'message': "El formato del correo es invalido."})
+        
+        if not self.validar_telefono(propietario_vals['telefono']):
+            return request.render("instant_abode.error_template", {'message': "El teléfono debe ser de 9 dígitos."})
+
+        if not self.validar_dni(propietario_vals['dni']):
+            return request.render("instant_abode.error_template", {'message': "El formato del DNI es incorrecto."})
+
+        # Crear el propietario
+        Propietario = request.env['instant_abode.propietario'].sudo()
+        Propietario.create(propietario_vals)
+
+        return request.redirect('/contactus-thank-you')
+
+    def validar_correo(self, correo):
+        if correo and not re.match(r"[^@]+@[^@]+\.[^@]+", correo):
+            return False
+        return True
+
+    def validar_telefono(self, telefono):
+        if telefono and len(str(telefono)) != 9:
+            return False
+        return True
+
+    def validar_dni(self, dni):
+        if not dni:
+            return False
+        letras = "TRWAGMYFPDXBNJZSQVHLCKE"
+        if len(dni) != 9:
+            return False
+        else:
+            numero = dni[:-1]
+            letra = dni[-1]
+            if not numero.isdigit():
+                return False
+            numero = int(numero)
+            correcto = letras[numero % 23]
+            if letra != correcto:
+                return False
+        return True
+
