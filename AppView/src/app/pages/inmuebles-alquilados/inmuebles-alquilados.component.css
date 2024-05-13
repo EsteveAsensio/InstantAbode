@@ -89,28 +89,42 @@
   color: white;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .app-container {
-      flex-direction: column;
+    display: flex;
+    flex-direction: column; /* Cambia la dirección a columna para tablets y móviles */
   }
 
-  .app-sidebar, .inmuebles-container {
-      width: 100%;
-      padding: 10px;
+  .app-sidebar {
+    width: 100%; /* Ajusta el sidebar para que ocupe toda la anchura en dispositivos pequeños */
+    height: auto; /* Altura automática para ajustarse al contenido */
+    padding: 10px; /* Padding reducido */
+  }
+
+  .inmuebles-container {
+    width: 100%; /* Ajusta el contenedor principal para que ocupe toda la anchura */
+    padding: 10px; /* Padding reducido para dispositivos pequeños */
+    align-items: center; /* Centra los elementos horizontalmente */
   }
 
   .inmueble-card {
-      width: 100%;
+    width: 100%; /* Hace que la tarjeta ocupe toda la anchura disponible */
+    margin: 10px 0; /* Ajusta los márgenes para un mejor espaciado */
+    flex-direction: column; /* Asegura que el contenido de la tarjeta se apile verticalmente */
   }
 
   .inmueble-image {
-      height: 150px; /* Menor altura en dispositivos móviles */
+    height: 250px; /* Ajusta la altura de la imagen para dispositivos más pequeños */
   }
-}
 
-.no-alquileres {
-  color: #666;
-  font-size: 16px;
-  padding: 10px;
-  text-align: center;
+  .inmueble-actions {
+    flex-direction: column; /* Alinea los botones verticalmente */
+    margin-bottom: 20px; /* Aumenta el margen en la parte inferior para una mejor separación */
+  }
+
+  .btn-añadir, .btn-modificar, .btn-eliminar {
+    width: 100%; /* Hace que los botones ocupen todo el ancho */
+    margin: 5px 0; /* Añade un pequeño margen entre los botones */
+    padding: 10px; /* Padding ajustado para un mejor manejo táctil */
+  }
 }

@@ -113,4 +113,51 @@
   font-size: 16px;
   padding: 10px;
 }
+@media (max-width: 1024px) {
+  .app-sidebar {
+    width: 100%; /* Ocupa todo el ancho en dispositivos pequeños */
+    height: auto; /* Altura adaptativa para ajustarse al contenido */
+    position: relative; /* Cambio de fixed a relative para que no desplace contenido */
+  }
 
+  .inmueble-container {
+    margin-left: 0; /* Elimina el margen para permitir que el contenedor se expanda */
+    padding: 10px; /* Padding reducido para maximizar el espacio disponible */
+    display: block; /* Asegura un flujo de bloque estándar */
+  }
+
+  .header-details {
+    flex-direction: column; /* Cambia la disposición de fila a columna */
+    align-items: center; /* Centra el contenido horizontalmente */
+    text-align: center; /* Centra el texto de los detalles */
+  }
+
+  .main-image {
+    width: 100%; /* Amplía la imagen principal para que ocupe el ancho completo */
+    height: auto; /* Mantiene la proporción de la imagen */
+    margin: 0 0 20px 0; /* Agrega margen inferior para separar del texto */
+  }
+
+  .text-details {
+    width: 100%; /* Ajusta el contenedor de texto para llenar el ancho disponible */
+  }
+
+  .additional-images img {
+    width: 25%; /* Hace las imágenes adicionales más grandes */
+    height: auto; /* Mantiene la proporción de las imágenes */
+    margin: 5px; /* Mantiene un pequeño margen entre imágenes */
+  }
+
+  .inmueble-actions {
+    flex-direction: column; /* Alinea los botones en columna para evitar superposiciones */
+  }
+
+  .btn-añadir, .btn-modificar, .btn-eliminar {
+    width: 100%; /* Expande los botones para llenar el contenedor */
+    margin: 5px 0; /* Añade margen vertical para separación */
+  }
+
+  .valoraciones-container {
+    padding: 20px 0; /* Añade padding para separar secciones */
+  }
+}

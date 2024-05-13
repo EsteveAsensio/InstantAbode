@@ -6,10 +6,34 @@
   transition: margin-left 0.3s;
 }
 
-@media (max-width: 768px) {
+/* Media Queries para Tablets y Móviles */
+@media (max-width: 1024px) { /* Ajusta para incluir tablets */
   .contenedor {
-    margin-left: 60px;
+    margin-left: 0;
+    margin-right: 0;
     padding: 10px;
+    width: 100%; /* Asegura que el contenedor ocupe toda la pantalla disponible */
+    box-sizing: border-box; /* Incluye el padding y borde en el ancho y alto */
+  }
+
+  /* Centrar todos los elementos dentro del contenedor */
+  .grupo, .grupo-fechas, .grupo-botones {
+    text-align: center;
+  }
+
+  .grupo-botones button {
+    width: auto; /* Permite que los botones sean tan grandes como su contenido */
+    margin: 10px auto; /* Añade margen superior e inferior, y auto para los laterales */
+  }
+
+  .inmuebles-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los inmuebles horizontalmente */
+  }
+
+  input, select, .inmueble-card {
+    width: 100%; /* Los elementos de entrada ocupan el ancho completo */
   }
 }
 

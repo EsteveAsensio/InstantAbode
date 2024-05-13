@@ -17,6 +17,10 @@ class Propietario(models.Model):
     apellidos = fields.Char(string="Apellidos", help="Apellidos del propietario")
     correo = fields.Char(string="Correo", help="Correo del propietario", required=True) #No repetidos y formato
     telefono = fields.Char(string="Teléfono", help="Teléfono del propietario") #No repetidos y numeros
+
+    #Notificación
+    concepto = fields.Char(string="Concepto", help="Experiencia o información del trabajador") #No repetidos y numeros
+    notificado = fields.Boolean(string= "Notificado", help="Saber si el propietario ha sido informado o no.", readonly=True, default=False)
     #Información Cuenta Usuario
     name = fields.Char(string="Nombre de Usuario", help="Nombre del usuario", required=True) #No repetidos
     contrasenya = fields.Char(string="Contraseña", help="Contraseña del usuario", required=True) #No repetidos y formato
@@ -179,7 +183,38 @@ class Propietario(models.Model):
             existing_login = self.env['res.users'].search([('login', '=', vals['name'])])
             if len(existing_login) > 1 or (existing_login and existing_login.id != self.id):
                 raise ValidationError(f"El nombre de usuario {vals['name']} ya está registrado.")
-        
+            
+    # Comprobar si el DNI está presente y si ya está registrado en otro propietario
+        if 'dni' in vals:
+            dni_provided = vals.get('dni')
+            if dni_provided:
+                propietario = self.env['instant_abode.propietario'].search([('dni', '=', dni_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El dni {dni_provided} ya está registrado en otro propietario.")
+
+        # Comprobar si el nombre de usuario está presente y si ya está registrado en otro propietario
+        if 'name' in vals:
+            name_provided = vals.get('name')
+            if name_provided:
+                propietario = self.env['instant_abode.propietario'].search([('name', '=', name_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El nombre de usuario {name_provided} ya está registrado en otro propietario.")
+
+        # Comprobar si el correo está presente y si ya está registrado en otro propietario
+        if 'correo' in vals:
+            correo_provided = vals.get('correo')
+            if correo_provided:
+                propietario = self.env['instant_abode.propietario'].search([('correo', '=', correo_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El correo {correo_provided} ya está registrado en otro propietario.")
+
+        # Comprobar si el teléfono está presente y si ya está registrado en otro propietario
+        if 'telefono' in vals:
+            telefono_provided = vals.get('telefono')
+            if telefono_provided:
+                propietario = self.env['instant_abode.propietario'].search([('telefono', '=', telefono_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El teléfono {telefono_provided} ya está registrado en otro propietario.")  
     
     def notificarPropietario(self):        
         partner = self.env['res.partner'].create({
@@ -234,3 +269,5 @@ class Propietario(models.Model):
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
             smtp.login(correo_emisor, contrasenya_emisor)
             smtp.sendmail(correo_emisor, correo_receptor, msg.as_string())
+
+        self.notificado = True

@@ -13,7 +13,7 @@ class Inmueble(models.Model):
     habitaciones = fields.Integer(string="Habitaciones", help="Habitaciones del inmueble", required=True)
     banyos = fields.Integer(string="Baños", help="Baños del inmueble", required=True)
     metrosCuadrados = fields.Integer(string="Metros Cuadrados", help="Metros cuadrados del inmueble", required=True)
-    descripcion = fields.Html(string="Descripción", help="Descripción del inmueble")
+    descripcion = fields.Char(string="Descripción", help="Descripción del inmueble")
     adicionales = fields.Char(string="Adicionales", help="Datos adicionales del inmueble")
     imagenPrincipal = fields.Binary(string="Imagen Principal", help="Foto principal del inmueble, será la primera imagen que se mostrará al cliente", store=True, required=True)
     imagenes = fields.One2many('ir.attachment', 'inmueble_id', string='Imágenes')

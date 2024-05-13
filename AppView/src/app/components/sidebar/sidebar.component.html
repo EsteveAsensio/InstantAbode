@@ -1,20 +1,14 @@
 <div class="sidebar">
-  <!-- Botón para pantallas móviles, oculto en pantallas grandes -->
-  <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu">
-    <img src="assets/desplegable.png" alt="Menu" style="width: 30px; height: auto;">
-  </button>
-
-  <!-- Imagen de perfil del usuario -->
-  <div class="profile-image-container">
-    <img [src]="sanitizeImageUrl(usuario.imagen)" class="profile-img">
-  </div>
-
+  <!-- Imagen de perfil del usuario y menú -->
   <div class="collapse d-md-block" id="sidebarMenu">
+    <div class="profile-image-container">
+      <img [src]="sanitizeImageUrl(usuario.imagen)" class="profile-img">
+    </div>
     <h1>InstantAbode</h1>
-    <a href="principal"><img src="assets/InstantAbodeIMG.png" class="icon"> Página principal</a>
-    <a href="perfil-usuario"><img src="assets/perfil.png" class="icon"> Perfil</a>
-    <a href="valoraciones-inmuebles"><img src="assets/valoraciones.png" class="icon"> Valoraciones</a>
-    <a href="inmuebles-alquilados"><img src="assets/alquileres.png" class="icon"> Alquileres Realizados</a>
-    <a (click)="logout()"><img src="assets/salir.png" class="icon"> Cerrar sesión</a>
+    <a href="principal"><img src="assets/InstantAbodeIMG.png" class="icon"> <div class="texto">Página principal</div></a>
+    <a href="perfil-usuario"><img src="assets/perfil.png" class="icon"> <div class="texto">Perfil</div></a>
+    <a href="valoraciones-inmuebles"><img src="assets/valoraciones.png" class="icon"> <div class="texto">Valoraciones</div></a>
+    <a href="inmuebles-alquilados"><img src="assets/alquileres.png" class="icon"> <div class="texto">Alquileres Realizados</div></a>
+    <a (click)="logout()"><img src="assets/salir.png" class="icon"> <div class="texto">Cerrar sesión</div></a>
   </div>
 </div>

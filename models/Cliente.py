@@ -193,3 +193,36 @@ class Cliente(models.Model):
             existing_login = self.env['res.users'].search([('login', '=', vals['name']), ('id', '!=', self.user_id.id)])
             if existing_login:
                 raise ValidationError(f"El nombre de usuario {vals['name']} ya está registrado.")
+
+    # Comprobar si el DNI está presente y si ya está registrado en otro propietario
+        if 'dni' in vals:
+            dni_provided = vals.get('dni')
+            if dni_provided:
+                propietario = self.env['instant_abode.propietario'].search([('dni', '=', dni_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El dni {dni_provided} ya está registrado en otro propietario.")
+
+        # Comprobar si el nombre de usuario está presente y si ya está registrado en otro propietario
+        if 'name' in vals:
+            name_provided = vals.get('name')
+            if name_provided:
+                propietario = self.env['instant_abode.propietario'].search([('name', '=', name_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El nombre de usuario {name_provided} ya está registrado en otro propietario.")
+
+        # Comprobar si el correo está presente y si ya está registrado en otro propietario
+        if 'correo' in vals:
+            correo_provided = vals.get('correo')
+            if correo_provided:
+                propietario = self.env['instant_abode.propietario'].search([('correo', '=', correo_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El correo {correo_provided} ya está registrado en otro propietario.")
+
+        # Comprobar si el teléfono está presente y si ya está registrado en otro propietario
+        if 'telefono' in vals:
+            telefono_provided = vals.get('telefono')
+            if telefono_provided:
+                propietario = self.env['instant_abode.propietario'].search([('telefono', '=', telefono_provided)], limit=1)
+                if propietario and propietario.id != self.id:
+                    raise ValidationError(f"El teléfono {telefono_provided} ya está registrado en otro propietario.")  
+

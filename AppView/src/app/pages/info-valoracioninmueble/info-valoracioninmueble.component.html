@@ -6,6 +6,6 @@
   <input type="number" [(ngModel)]="data.valoracion.puntuacion" min="1" max="10" style="width:100%;">
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button (click)="save()" cdkFocusInitial>Guardar</button>
+  <button mat-button class="cancelar-btn" (click)="onNoClick()">Cancelar</button>
+  <button mat-button class="aceptar-btn" (click)="save()" cdkFocusInitial>Guardar</button>
 </div>

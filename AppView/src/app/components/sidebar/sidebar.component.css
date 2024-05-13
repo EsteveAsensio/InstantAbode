@@ -1,16 +1,17 @@
 /* Sidebar Styles */
 .sidebar {
-  height: 100vh;
-  width: 250px; /* Adjusted width for larger screens */
+  height: 100vh; 
+  width: 250px;
   position: fixed;
-  z-index: 1;
+  z-index: 1050;
   top: 0;
   left: 0;
   background-color: #f4f4f4;
   overflow-x: hidden;
   padding-top: 20px;
   box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.1);
-  transition: all 0.3s; /* Changed to 'all' for transitioning both width and transform properties */
+  transition: transform 0.3s ease; 
+  transform: translateX(0);
 }
 
 .sidebar a {
@@ -33,7 +34,6 @@
   background-color: #ddd;
 }
 
-/* Profile image */
 .profile-image-container {
   display: flex;
   justify-content: center;
@@ -44,7 +44,7 @@
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  object-fit: cover; /* Ensure the image fits and is not stretched */
+  object-fit: cover;
 }
 
 .sidebar h1 {
@@ -52,27 +52,34 @@
   margin-bottom: 20px;
 }
 
+
 /* Responsive Styles for Mobile Devices */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .sidebar {
-    width: 100%; /* Full width on smaller screens */
-    position: relative; /* Adjust position for mobile */
+    height: 50px;
+    width: 100%; 
+    top: auto; 
+    bottom: 0; 
+    overflow-x: scroll;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    white-space: nowrap;
   }
 
-  .sidebar.collapsed {
-    transform: translateX(-100%); /* Hide sidebar off-screen when collapsed */
+  .profile-image-container, .sidebar h1, .sidebar a div.texto {
+    display: none;
   }
 
-  .btn.btn-primary.d-md-none {
-    display: block; /* Show toggle button on small screens */
-    margin: 10px; /* Add some margin around the button */
+  .sidebar a {
+    margin-right: 20px;
+    padding: 5px;
+    display: inline-flex;
+    align-items: center; 
   }
 
-  .collapse.d-md-block {
-    display: none; /* Initially hide the sidebar contents */
-  }
-
-  .collapse.show {
-    display: block; /* Show sidebar when toggled */
+  .sidebar a img.icon {
+    width: 24px;
+    height: 24px;
   }
 }

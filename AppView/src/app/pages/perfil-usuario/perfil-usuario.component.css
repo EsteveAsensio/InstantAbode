@@ -31,14 +31,17 @@
 }
 
 .contenedor {
-  margin: 20px auto;
-  max-width: 600px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex; /* Usa flexbox para un control de layout más flexible */
+  flex-direction: column; /* Los elementos hijos se apilan verticalmente */
+  align-items: center; /* Centra los elementos hijos horizontalmente */
+  margin: 0 auto; /* Centra el contenedor horizontalmente en la página */
+  max-width: 800px; /* Máximo ancho del contenedor para evitar que sea demasiado ancho en pantallas grandes */
+  background-color: #fff; /* Fondo blanco para el contenedor */
+  padding: 20px; /* Padding dentro del contenedor */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para mejor visibilidad */
+  width: 100%; /* Asegura que toma todo el ancho disponible hasta 800px */
 }
-
 
 .back-button {
   padding: 5px 10px;
@@ -85,10 +88,20 @@ input {
   border: 1px solid #ccc;
 }
 
+.grupo {
+  width: 100%; /* Asegura que los grupos de entrada ocupen todo el ancho del contenedor */
+  padding: 10px; /* Espaciado interior para cada grupo de entrada */
+}
+input, select {
+  width: 100%; /* Los elementos de entrada toman todo el ancho del grupo contenedor */
+  padding: 8px; /* Padding para hacer las entradas más fáciles de interactuar */
+  border: 1px solid #ccc; /* Borde sutil para las entradas */
+}
+
 .grupo-botones {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  width: 100%; /* Los botones ocupan todo el ancho del contenedor */
 }
 
 .grupo-botones button {
@@ -97,6 +110,8 @@ input {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  flex: 1; /* Los botones crecen para llenar el espacio */
+  margin: 5px; /* Margen alrededor de los botones para evitar que se toquen */
 }
 
 .grupo-botones button.aceptar {
@@ -115,4 +130,33 @@ input {
 
 .grupo-botones button.cancelar:hover {
   background-color: #218838;
+}
+
+@media (max-width: 768px) {
+  .contenedor {
+    width: 100%; /* En dispositivos móviles, el contenedor debería tomar todo el ancho disponible */
+    padding: 10px; /* Padding reducido en móviles */
+    margin: 0; /* Elimina cualquier margen en móviles para usar todo el espacio */
+  }
+  
+  .row {
+    flex-direction: column; /* Cambia la dirección del flex a columna */
+  }
+
+  .half {
+    width: 100%; /* Asegura que cada input tome todo el ancho disponible */
+    padding: 0; /* Elimina el padding específico de los lados para que no afecte el diseño */
+  }
+
+  .grupo {
+    width: 100%; /* Los grupos ocupan todo el ancho */
+    padding: 10px 0; /* Padding solo vertical para separar los inputs */
+  }
+
+  .grupo-botones button {
+    margin-top: 10px; /* Añade espacio arriba de cada botón para separarlos visualmente */
+    width: 100%; /* Los botones ocupan todo el ancho disponible */
+    margin-bottom: 25px;
+  }
+  
 }

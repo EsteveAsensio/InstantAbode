@@ -17,17 +17,18 @@ export class ErrorHandlerService {
     async handleHttpError(error: any, procedencia: string = '') {
         if (error.result) {
             if (error.result.status != 200) {
-                await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
-                
+                if (error.result.titulo) {
+                    await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
+                } else {
+                    await SwalAnimation.showCustomWarningMessageSwal("Error", error.result.message);
+                }
+
             }
         } else {
-            await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
-            
+            await SwalAnimation.showCustomWarningMessageSwal("Error", error.result.message);
         }
-
-
     }
-    
+
     handleUnauthorizedError(procedencia: string = ''): void {
         if (procedencia == "login") {
             SwalAnimation.showCustomWarningMessageSwal('Contraseña o usuario incorrecto', 'La contraseña o el usuario es incorrecto');

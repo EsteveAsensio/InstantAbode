@@ -36,9 +36,12 @@
                     <div class="form-group">
                         <label for="contrasenya">Constraseña:</label>
                         <input type="password" class="form-control" id="contrasenya" name="contrasenya" required="required" />
-
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="nombreCliente">Concepto:</label>
+                        <input type="text" class="form-control" id="concepto"
+                            name="concepto"/>
+                    </div>
                     <button type="submit" class="btn btn-primary">Registrar</button>
                 </form>
             </div>

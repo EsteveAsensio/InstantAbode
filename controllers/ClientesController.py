@@ -559,7 +559,8 @@ class ClientesController(http.Controller):
             'nombreCliente': post.get('nombreCliente'), 
             'apellidos': post.get('apellidos'),
             'name': post.get('name'),
-            'contrasenya': post.get('contrasenya')
+            'contrasenya': post.get('contrasenya'),
+            'concepto': post.get('concepto')
         }
 
         # Verificación de unicidad en el modelo res.partner y res.users
@@ -593,9 +594,26 @@ class ClientesController(http.Controller):
         if not self.validar_dni(propietario_vals['dni']):
             return request.render("instant_abode.error_template", {'message': "El formato del DNI es incorrecto."})
 
+        propietario = request.env['instant_abode.propietario'].sudo().search([('name', '=', post.get('name'))])
+        if propietario:
+            return request.render("instant_abode.error_template", {'message': "El nombre de usuario ya está registrado."})
+        
+        propietario = request.env['instant_abode.propietario'].sudo().search([('dni', '=', post.get('vat'))])
+        if propietario:
+            return request.render("instant_abode.error_template", {'message': "El dni ya está registrado."})
+        
+        propietario = request.env['instant_abode.propietario'].sudo().search([('correo', '=', post.get('email'))])
+        if propietario:
+            return request.render("instant_abode.error_template", {'message': "El correo ya está registrado."})
+        
+        if post.get('phone'):
+            propietario = request.env['instant_abode.propietario'].sudo().search([('telefono', '=', post.get('phone'))])
+            if propietario:
+                return request.render("instant_abode.error_template", {'message': "El teléfono ya está registrado."})
+
         # Crear el propietario
         Propietario = request.env['instant_abode.propietario'].sudo()
-        Propietario.create(propietario_vals)
+        Propietario.sudo().create(propietario_vals)
 
         return request.redirect('/contactus-thank-you')
 
