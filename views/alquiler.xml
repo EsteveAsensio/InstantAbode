@@ -41,11 +41,13 @@
         <field name="name">instant_abode.alquiler.graph</field>
         <field name="model">instant_abode.alquiler</field>
         <field name="arch" type="xml">
-            <graph string="Resumen de Alquileres" type="bar">
-                <field name="inmueble" type="row"/>
-                <field name="precio" type="measure" operator="sum"/>
-                <field name="inmueble" type="col"/>
-                <field name="valoracionInmueble" type="col"/>
+            <graph string="Reporte de Alquileres" type="bar">
+                <field name="inmueble" type="row" />
+                <field name="precio" type="measure" operator="sum" />
+                <field name="inmueble" type="col" />
+                <field name="cliente" />
+                <field name="fechaInicio" />
+                <field name="fechaFinal" />
             </graph>
         </field>
     </record>
@@ -54,6 +56,7 @@
     <record id="action_instant_abode_alquiler_graph" model="ir.actions.act_window">
         <field name="name">Reportes Alquileres</field>
         <field name="res_model">instant_abode.alquiler</field>
+        <field name="domain">[('inmueble.propietario.user_id','=',uid)]</field>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="view_instant_abode_alquiler_graph" />
     </record>
@@ -62,13 +65,6 @@
     <record model="ir.actions.act_window" id="instant_abode.alquiler_action_window">
         <field name="name">Alquiler</field>
         <field name="res_model">instant_abode.alquiler</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record model="ir.actions.act_window" id="instant_abode.alquileresCliente_action_window">
-        <field name="name">Alquileres Cliente</field>
-        <field name="res_model">instant_abode.alquiler</field>
-        <field name="domain">[('cliente.user_id','=',uid)]</field>
         <field name="view_mode">tree,form</field>
     </record>
 

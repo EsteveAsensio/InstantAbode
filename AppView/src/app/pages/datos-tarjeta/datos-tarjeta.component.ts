@@ -36,6 +36,8 @@ export class DatosTarjetaComponent {
       const alquiler = await this.inmuebleDAO.realizarAlquiler("InstantAbode/realizarAlquiler", this.data, this.usuario.id) || "";
     if (alquiler){
       SwalAnimation.showCustomSuccessSwal("Alquiler Realizado con éxito.");
+    }else{
+      SwalAnimation.showCustomErrorSwal("Error", "El inmueble ya ha sido alquilado en esas fechas.");
     }
     this.dialogRef.close();
     }

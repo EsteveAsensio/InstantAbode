@@ -5,10 +5,10 @@
       <img [src]="sanitizeImageUrl(usuario.imagen)" class="profile-img">
     </div>
     <h1>InstantAbode</h1>
-    <a href="principal"><img src="assets/InstantAbodeIMG.png" class="icon"> <div class="texto">Página principal</div></a>
-    <a href="perfil-usuario"><img src="assets/perfil.png" class="icon"> <div class="texto">Perfil</div></a>
-    <a href="valoraciones-inmuebles"><img src="assets/valoraciones.png" class="icon"> <div class="texto">Valoraciones</div></a>
-    <a href="inmuebles-alquilados"><img src="assets/alquileres.png" class="icon"> <div class="texto">Alquileres Realizados</div></a>
+    <a (click)="navigate('principal')"><img src="assets/InstantAbodeIMG.png" class="icon"> <div class="texto">Página principal</div></a>
+    <a (click)="navigate('perfil-usuario')"><img src="assets/perfil.png" class="icon"> <div class="texto">Perfil</div></a>
+    <a (click)="navigate('valoraciones-inmuebles')"><img src="assets/valoraciones.png" class="icon"> <div class="texto">Valoraciones</div></a>
+    <a (click)="navigate('inmuebles-alquilados')"><img src="assets/alquileres.png" class="icon"> <div class="texto">Alquileres Realizados</div></a>
     <a (click)="logout()"><img src="assets/salir.png" class="icon"> <div class="texto">Cerrar sesión</div></a>
   </div>
 </div>

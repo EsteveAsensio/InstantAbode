@@ -115,23 +115,8 @@ class Propietario(models.Model):
         if campos_validos:
             self.validar_unicidad(campos_validos)
 
-        # Lógica para desactivar el usuario y aplicar cambios
-        desactivar_usuario = False
-        if 'name' in vals and vals['name'] != self.name:
-            desactivar_usuario = True
-        if 'dni' in vals and vals['dni'] != self.dni:
-            desactivar_usuario = True
-        if 'correo' in vals and vals['correo'] != self.correo:
-            desactivar_usuario = True
-        if 'telefono' in vals and vals['telefono'] != self.telefono:
-            desactivar_usuario = True
-            
-        # Desactivar el usuario antes de realizar cambios si es necesario
+        # Actualizar el partner y el usuario asociado
         for cliente in self:
-            if desactivar_usuario and cliente.user_id:
-                cliente.user_id.active = False  # Desactivar antes de aplicar cambios
-
-            # Actualizar el partner y el usuario asociado
             partner_vals = {}
             if 'nombreCliente' in vals:
                 partner_vals['name'] = vals['nombreCliente']
@@ -143,8 +128,10 @@ class Propietario(models.Model):
                 partner_vals['vat'] = vals['dni']
             if 'imagen' in vals:
                 partner_vals['image_1920'] = vals['imagen']
-            if partner_vals and cliente.user_id.partner_id:
-                cliente.user_id.partner_id.write(partner_vals)
+
+            # Uso de sudo() para escribir en el partner asociado si es necesario
+            if partner_vals:
+                cliente.user_id.partner_id.sudo().write(partner_vals)
 
             user_vals = {}
             if 'name' in vals:
@@ -153,12 +140,11 @@ class Propietario(models.Model):
                 user_vals['password'] = vals['contrasenya']
             if 'imagen' in vals:
                 user_vals['image_1920'] = vals['imagen']
-            if user_vals and cliente.user_id:
-                cliente.user_id.write(user_vals)
 
-            if desactivar_usuario and cliente.user_id:
-                cliente.user_id.active = True  # Reactivar después de aplicar cambios
-            
+            # Uso de sudo() para escribir en res.users solo bajo condiciones controladas
+            if user_vals:
+                cliente.user_id.sudo().write(user_vals)
+
         return super(Propietario, self).write(vals)
 
 

@@ -21,7 +21,8 @@
                 <header>
                     <button string="Notificar Cuenta" type="object" name="notificarPropietario"
                         confirm="¿Está seguro que desea notificar al propietario sobre su nueva cuenta?"
-                        groups="instant_abode.grupo_admins" attrs="{'invisible': [('notificado', '=', True)]}"/>
+                        groups="instant_abode.grupo_admins"
+                        attrs="{'invisible': [('notificado', '=', True)]}" />
                 </header>
                 <group>
                     <group>
@@ -31,8 +32,8 @@
                         <field name="dni" />
                         <field name="correo" />
                         <field name="telefono" />
-                        <field name="notificado" attrs="{'invisible': [('notificado', '=', True)]}"/>
-                        <field name="concepto" attrs="{'invisible': [('notificado', '=', True)]}"/>
+                        <field name="notificado" attrs="{'invisible': [('notificado', '=', True)]}" />
+                        <field name="concepto" attrs="{'invisible': [('notificado', '=', True)]}" />
                     </group>
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Cuenta Usuario</h1>
@@ -55,13 +56,25 @@
         </field>
     </record>
 
+    <!-- Filter-->
+    <record model="ir.ui.view" id="filter_propietraio">
+        <field name="name">Filtro Propietraio</field>
+        <field name="model">instant_abode.propietario</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Notificado" name="notificado" domain="[('notificado', '=', True)]"/>
+                <filter string="No Notificado" name="no_notificado" domain="[('notificado', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <!-- actions opening views on models -->
     <record model="ir.actions.act_window" id="instant_abode.propietario_action_window">
         <field name="name">Propietario</field>
         <field name="res_model">instant_abode.propietario</field>
         <field name="view_mode">tree,form</field>
     </record>
-    
+
     <record model="ir.actions.act_window" id="instant_abode.miperfil_action_window">
         <field name="name">Mi Perfil</field>
         <field name="res_model">instant_abode.propietario</field>

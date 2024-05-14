@@ -17,12 +17,7 @@ export class ErrorHandlerService {
     async handleHttpError(error: any, procedencia: string = '') {
         if (error.result) {
             if (error.result.status != 200) {
-                if (error.result.titulo) {
-                    await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
-                } else {
-                    await SwalAnimation.showCustomWarningMessageSwal("Error", error.result.message);
-                }
-
+                await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
             }
         } else {
             await SwalAnimation.showCustomWarningMessageSwal("Error", error.result.message);

@@ -10,12 +10,13 @@
             <p><strong>Localización:</strong> {{ inmueble.localizacion }}</p>
             <p><strong>Habitaciones:</strong> {{ inmueble.habitaciones }}</p>
             <p><strong>Baños:</strong> {{ inmueble.banyos }}</p>
+            <p><strong>Adicionales:</strong> {{ inmueble.adicionales }}</p>
             <p><strong>Descripción:</strong> {{ inmueble.descripcion }}</p>
             <p class="price"><strong>Precio por {{ diasAlquiler }} días:</strong> {{ precioAlquiler | currency:'EUR' }}</p>
         </div>
     </div>
     <div class="additional-images">
-        <img *ngFor="let img of inmueble.imagenes" [src]="sanitizeImageUrl(img)" alt="Imagen Adicional">
+        <img *ngFor="let img of inmueble.imagenes; let i = index" [src]="sanitizeImageUrl(img)" alt="Imagenes Adicionales" (click)="cambiarImagenPrincipal(i)">
     </div>
     <div class="valoraciones-container">
         <button class="alquilar-btn" (click)="openDialog(inmueble)">Alquilar</button>

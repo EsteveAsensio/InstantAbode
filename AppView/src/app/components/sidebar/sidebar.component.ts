@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth-service';
 import { GeneralDAO } from '../../services/general.dao';
 import { Usuario } from '../../models/usuario.modelo';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,7 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class SidebarComponent {
   public usuario: Usuario = {} as Usuario;
-  constructor(private articuloService: GeneralDAO, private authService: AuthService, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private articuloService: GeneralDAO, private authService: AuthService, private sanitizer: DomSanitizer) { }
 
   logout() {
     this.authService.logout();
@@ -30,5 +31,9 @@ export class SidebarComponent {
   }
   sanitizeImageUrl(url: string) {
     return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+  navigate(route: string) {
+    this.router.navigateByUrl('/RefreshComponent')
+    this.router.navigateByUrl(route);
   }
 }

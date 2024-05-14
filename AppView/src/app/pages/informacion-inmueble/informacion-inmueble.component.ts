@@ -65,4 +65,12 @@ export class InformacionInmuebleComponent implements OnInit {
       data: inmuele
     });
   }
+
+  cambiarImagenPrincipal(index: number): void {
+    const imagenSeleccionada = this.inmueble.imagenes[index];
+
+    this.inmueble.imagenes.push(this.inmueble.imagenPrincipal);
+    this.inmueble.imagenPrincipal = imagenSeleccionada;
+    this.inmueble.imagenes.splice(index, 1);
+}
 }

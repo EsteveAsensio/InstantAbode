@@ -81,12 +81,7 @@ class ClientesController(http.Controller):
     
             http.request.env["instant_abode.cliente"].sudo().create(response)
 
-            data={
-                "status":200,
-                'titulo' : 'Usuario Registrado',
-                "message":"Nuevo usuario añadido."
-            }
-            return data
+            return {"status":200,'titulo' : 'Usuario Registrado',"message":"Nuevo usuario añadido."}
         except ValidationError as ve:
             return {"status": 400, 'titulo' : 'Registrar Usuario', "message": str(ve)}
         except Exception as error:
