@@ -1,8 +1,8 @@
 export const PROTOCOLO = 'http';
 
 
-export const IP = 'miproyecto.es';
-export const IPLOCAL = 'localhost';
+export const IP = 'instantabode.es';
+export const IPLOCAL = '192.168.1.59';
 export const PORT = '8069';
 
 

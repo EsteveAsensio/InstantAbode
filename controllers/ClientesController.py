@@ -30,7 +30,7 @@ class ClientesController(http.Controller):
                     'name': cliente.name,
                     'contrasenya': cliente.contrasenya,
                     'correo': cliente.correo,
-                    'imagen': 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
+                    'imagen': 'http://192.168.1.59:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
                 }
                 return {'status': 200, 'titulo' : 'Login Cliente', 'usuario': usuario}
             else:
@@ -62,7 +62,7 @@ class ClientesController(http.Controller):
                 'name': cliente.name,
                 'contrasenya': cliente.contrasenya,
                 'correo': cliente.correo,
-                'imagen': 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
+                'imagen': 'http://192.168.1.59:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id)
             }
 
             data = json.dumps({'status': 200, 'titulo' : 'Obtener Cliente', 'cliente': usuario})
@@ -144,7 +144,7 @@ class ClientesController(http.Controller):
                         'inmueble': {
                             'id' : alquiler.inmueble.id,
                             'name' : alquiler.inmueble.name,
-                            'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(alquiler.inmueble.id),
+                            'imagenPrincipal': 'http://192.168.1.59:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(alquiler.inmueble.id),
                             'localizacion' : alquiler.inmueble.localizacion,
                             'provincia' : alquiler.inmueble.provincia
                         },
@@ -210,8 +210,8 @@ class ClientesController(http.Controller):
                         'adicionales' : inmueble.adicionales,
                         'precio' : inmueble.precio,
                         'precioAlquiler' : precioAlquiler,
-                        'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
-                        'imagenes': ['http://localhost:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes],
+                        'imagenPrincipal': 'http://192.168.1.59:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
+                        'imagenes': ['http://192.168.1.59:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes],
                         'fechaInicio' : fecha_inicio_iso,
                         "fechaFinal" : fecha_final_iso
                     })
@@ -257,8 +257,8 @@ class ClientesController(http.Controller):
                 'descripcion' : inmueble.descripcion,
                 'adicionales' : inmueble.adicionales,
                 'precio' : inmueble.precio,
-                'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
-                'imagenes': ['http://localhost:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes],
+                'imagenPrincipal': 'http://192.168.1.59:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(inmueble.id),
+                'imagenes': ['http://192.168.1.59:8069/web/image?model=ir.attachment&id={}'.format(img.id) for img in inmueble.imagenes],
                 'valoraciones' : lista_valoraciones
             }
 
@@ -304,7 +304,7 @@ class ClientesController(http.Controller):
             clienteInfo = {
                 'id' : cliente.id,
                 'name' : cliente.name,
-                'imagen' : 'http://localhost:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id),
+                'imagen' : 'http://192.168.1.59:8069/web/image?model=instant_abode.cliente&id={}&field=imagen'.format(cliente.id),
             }
 
             return clienteInfo
@@ -426,7 +426,7 @@ class ClientesController(http.Controller):
                         'name': valoracion.alquiler.name,
                         'inmueble' : {
                             'id': valoracion.alquiler.inmueble.id,
-                            'imagenPrincipal': 'http://localhost:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(valoracion.alquiler.inmueble.id),
+                            'imagenPrincipal': 'http://192.168.1.59:8069/web/image?model=instant_abode.inmueble&id={}&field=imagenPrincipal'.format(valoracion.alquiler.inmueble.id),
                         }
                     }
                 })

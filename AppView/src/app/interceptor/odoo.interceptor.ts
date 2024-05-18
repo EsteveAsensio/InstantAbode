@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 export class OdooInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const sessionId = localStorage.getItem('odoo_session_id');
+        console.log(sessionId)
         if (sessionId) {
             // Añadir el session_id a las cabeceras de la solicitud
             const clonedRequest = req.clone({

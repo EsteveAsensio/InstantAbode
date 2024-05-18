@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { tap } from 'rxjs/operators';
 import * as CryptoJS from 'crypto-js';
@@ -13,7 +13,7 @@ import { ErrorHandlerService } from './errorHandler.service';
 import { OdooAuthResponse } from '../interface/odoo.interfaces';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class AuthService {
   private static encryptedKey = 'aaaaa';
   constructor(private http: HttpClient, private router: Router, private service: BaseService, private errorHandler: ErrorHandlerService) { }
 
-  loginOdoo(username: string, password: string) {
+  loginOdoo(username: string, password: string): Observable<HttpResponse<any>> {
     const body = {
       jsonrpc: "2.0",
       params: {
@@ -35,61 +35,71 @@ export class AuthService {
       }
     };
 
-    return this.http.post<OdooAuthResponse>(`${this.baseUrl}/web/session/authenticate`, body)
+    return this.http.post<any>(`${this.baseUrl}/web/session/authenticate`, body, { observe: 'response' })
       .pipe(
         tap(response => {
-          if (response && response.result && response.result.session_id) {
-            const sessionId = response.result.session_id;
-            console.log(response)
-            localStorage.setItem('odoo_session_id', sessionId);  // Guardar session_id
+          // Aquí se accede a la propiedad `body` de `HttpResponse`
+          const cookieHeader = response.headers.get('Set-Cookie');
+          let sessionId = this.extractSessionIdFromCookie(cookieHeader);
+          if (sessionId) {
+            sessionStorage.setItem('odoo_session_id', sessionId);
+            console.log('Odoo session ID stored:', sessionId);
+          }
+          // Agrega el siguiente bloque para manejar la respuesta del cuerpo correctamente
+          if (response.body && response.body.result && response.body.result.session_id) {
+            console.log('Odoo login successful, session ID:', response.body.result.session_id);
           }
         }),
         catchError(error => {
-          console.log(error)
           console.error('Error during Odoo authentication:', error);
-          return throwError(() => error);  // Propaga el error para manejo externo
+          return throwError(() => new Error('Odoo authentication failed'));
         })
       );
+}
+
+
+  private extractSessionIdFromCookie(cookieHeader: string | null): string | null {
+    if (!cookieHeader) return null;
+    const match = cookieHeader.match(/session_id=([^;]+)/);
+    return match ? match[1] : null;
   }
+
+  
 
   async login(username: string, password: string, sesionIniciada: boolean) {
-    const loginData = {
-      "username": username,
-      "contrasenya": password
-    };
+    const loginData = { "username": username, "contrasenya": password };
+  
     try {
-      var data: any = await this.service.post('InstantAbode/login', loginData).toPromise();
-      ///console.log(data)
-      if (data.result) {
-
-        if (data.result.status == 200) {
-
-          this.authToken = data.token;
-          var usuario = data.result.usuario as Usuario;
-
-          sessionStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
-          sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
-          if (sesionIniciada) {
-            localStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
-            localStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
-          }
-
+      const data: any = await this.service.post('InstantAbode/login', loginData).toPromise();
+      if (data.result && data.result.status === 200) {
+        this.authToken = data.token;
+        var usuario = data.result.usuario as Usuario;
+  
+        sessionStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
+        sessionStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
+        if (sesionIniciada) {
+          localStorage.setItem('encryptedToken', this.encryptData(this.authToken, this.encryptedKey));
+          localStorage.setItem('encryptedUsuario', this.encryptData(JSON.stringify(usuario), this.encryptedKey));
+        }
+  
+  
+        // Ahora intenta iniciar sesión en Odoo
+        const odooLoginResponse = await this.loginOdoo(username, password).toPromise();
+        if (odooLoginResponse && odooLoginResponse.body && odooLoginResponse.body.result) {
+          console.log('Odoo login successful');
           this.controladorDepPaginas();
         } else {
-          ////console.log(data)
-          this.errorHandler.handleHttpError(data);
+          throw new Error('Odoo login failed');
         }
       } else {
-        ////console.log(data)
         this.errorHandler.handleHttpError(data);
       }
-    } catch (error: any) {
-      ////console.log(error)
+    } catch (error) {
+      console.error(error);
       this.errorHandler.handleHttpError(error);
     }
-    return false;
-
   }
+  
 
   async getUsuarioActualizado(id: number): Promise<Usuario | null> {
     try {
@@ -171,7 +181,6 @@ export class AuthService {
         "contrasenya": user.contrasenya,
         "telefono": user.telefono,
       };
-      console.log(user.dni)
     }
     try {
       var data: any = await this.service.put('InstantAbode/modificarCliente', registrarData).toPromise();
@@ -201,15 +210,16 @@ export class AuthService {
 
   logout(): void {
     this.authToken = null;
-
+  
     localStorage.removeItem('encryptedToken');
     localStorage.removeItem('encryptedUsuario');
-
     sessionStorage.removeItem('encryptedToken');
     sessionStorage.removeItem('encryptedUsuario');
-
+  
+    // Limpiar session_id de sessionStorage
+    sessionStorage.removeItem('odoo_session_id'); 
+  
     this.router.navigateByUrl('/login');
-
   }
 
 

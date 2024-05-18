@@ -20,7 +20,11 @@ export class ErrorHandlerService {
                 await SwalAnimation.showCustomWarningMessageSwal("Error " + error.result.titulo, error.result.message);
             }
         } else {
-            await SwalAnimation.showCustomWarningMessageSwal("Error", error.result.message);
+            if(error.result.message){
+                await SwalAnimation.showCustomWarningMessageSwal("Error", error.result.message);
+            }else{
+                await SwalAnimation.showCustomWarningMessageSwal("Error", error.message);
+            }
         }
     }
 
