@@ -19,7 +19,7 @@ class Propietario(models.Model):
     telefono = fields.Char(string="Teléfono", help="Teléfono del propietario") #No repetidos y numeros
 
     #Notificación
-    concepto = fields.Char(string="Concepto", help="Experiencia o información del trabajador") #No repetidos y numeros
+    concepto = fields.Char(string="Concepto", help="Experiencia o información del trabajador", readonly=True,)
     notificado = fields.Boolean(string= "Notificado", help="Saber si el propietario ha sido informado o no.", readonly=True, default=False)
     #Información Cuenta Usuario
     name = fields.Char(string="Nombre de Usuario", help="Nombre del usuario", required=True) #No repetidos

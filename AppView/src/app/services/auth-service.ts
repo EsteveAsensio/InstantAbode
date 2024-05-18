@@ -52,7 +52,6 @@ export class AuthService {
       );
   }
 
-
   async login(username: string, password: string, sesionIniciada: boolean) {
     const loginData = {
       "username": username,
@@ -205,16 +204,26 @@ export class AuthService {
 
     localStorage.removeItem('encryptedToken');
     localStorage.removeItem('encryptedUsuario');
-    localStorage.removeItem('encryptedEmpresa');
 
     sessionStorage.removeItem('encryptedToken');
     sessionStorage.removeItem('encryptedUsuario');
-    sessionStorage.removeItem('encryptedEmpresa');
-    sessionStorage.removeItem('encryptedEjercicio');
-    this.eliminarModoSeguro();
+
     this.router.navigateByUrl('/login');
 
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   static logout(): void {
@@ -231,12 +240,10 @@ export class AuthService {
     sessionStorage.removeItem('encryptedEjercicio');
     sessionStorage.removeItem('passwordModoSeguro');
     sessionStorage.removeItem('codigoModoSeguro');
+
+
   }
 
-  eliminarModoSeguro() {
-    sessionStorage.removeItem('passwordModoSeguro');
-    sessionStorage.removeItem('codigoModoSeguro');
-  }
 
   getAuthToken(): string | null {
 
@@ -266,26 +273,11 @@ export class AuthService {
     return sessionStorage.getItem('encryptedUsuario') || localStorage.getItem('encryptedUsuario');
   }
 
-  getencryptedCarrito(): string | null {
-    return sessionStorage.getItem('encryptedCarrito') || localStorage.getItem('encryptedCarrito');
-  }
 
-  // Se asume que esta debería ser una función no estática, dado el contexto de las demás funciones
   static getencryptedUsuario(): string | null {
     return sessionStorage.getItem('encryptedUsuario') || localStorage.getItem('encryptedUsuario');
   }
 
-  getEncryptedEmpresa(): string | null {
-    return sessionStorage.getItem('encryptedEmpresa') || localStorage.getItem('encryptedEmpresa');
-  }
-
-  static getEncryptedEmpresa(): string | null {
-    return sessionStorage.getItem('encryptedEmpresa') || localStorage.getItem('encryptedEmpresa');
-  }
-
-  getEncryptedEjercicio(): string | null {
-    return sessionStorage.getItem('encryptedEjercicio') || localStorage.getItem('encryptedEjercicio');
-  }
 
   getEncryptedToken(): string | null {
     return sessionStorage.getItem('encryptedToken') || localStorage.getItem('encryptedToken');
