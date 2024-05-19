@@ -70,6 +70,10 @@ class Cliente(models.Model):
     @api.model
     def create(self, vals):
         self.validar_unicidad(vals)
+        return self.crear_registros(vals)
+    
+    def crear_registros(self, vals):
+        # Crear el partner relacionado
         partner = self.env['res.partner'].create({
             'name': vals.get('nombreCliente'),
             'email': vals.get('correo'),
@@ -78,36 +82,34 @@ class Cliente(models.Model):
             'image_1920': vals.get('imagen'),
         })
 
+        # Crear el registro del cliente
+        vals['user_id'] = self.crear_usuario_asociado(vals, partner.id).id
         cliente = super(Cliente, self).create(vals)
+        self.asignar_grupos_usuario(cliente.user_id)
+        return cliente
 
-        # Creación del usuario con los grupos adecuados
+    def crear_usuario_asociado(self, vals, partner_id):
+        # Creación del usuario y asociación con el partner
         new_user = self.env['res.users'].create({
-            'name': cliente.nombreCliente,
-            'login': cliente.name,
-            'partner_id': partner.id,
-            'password': cliente.contrasenya,
-            'image_1920': cliente.imagen
+            'name': vals.get('nombreCliente'),
+            'login': vals.get('name'),
+            'partner_id': partner_id,
+            'password': vals.get('contrasenya'),
+            'image_1920': vals.get('imagen'),
         })
+        return new_user
 
-        cliente.user_id = new_user.id
-
-        #Buscar los grupos necesarios
+    def asignar_grupos_usuario(self, user):
+        # Asignación de grupos al nuevo usuario
         grupo_clientes = self.env['res.groups'].search([('name', '=', 'Clientes')], limit=1)
         grupo_permisos_extra = self.env['res.groups'].search([('name', '=', 'Creación de contactos')], limit=1)
-
-        # Lista para mantener los ids de los grupos
         groups_ids = []
         if grupo_clientes:
             groups_ids.append(grupo_clientes.id)
         if grupo_permisos_extra:
             groups_ids.append(grupo_permisos_extra.id)
-
-        # Asignar los grupos al usuario
         if groups_ids:
-            new_user.groups_id = [(6, 0, groups_ids)]
-
-        return cliente
-
+            user.groups_id = [(6, 0, groups_ids)]
 
     def unlink(self):
         for cliente in self:
@@ -125,23 +127,8 @@ class Cliente(models.Model):
     def write(self, vals):
         self.validar_unicidad(vals)
 
-        # Lógica para desactivar el usuario y aplicar cambios
-        desactivar_usuario = False
-        if 'name' in vals and vals['name'] != self.name:
-            desactivar_usuario = True
-        if 'dni' in vals and vals['dni'] != self.dni:
-            desactivar_usuario = True
-        if 'correo' in vals and vals['correo'] != self.correo:
-            desactivar_usuario = True
-        if 'telefono' in vals and vals['telefono'] != self.telefono:
-            desactivar_usuario = True
-            
-        # Desactivar el usuario antes de realizar cambios si es necesario
+        # Actualizar el partner y el usuario asociado sin desactivar
         for cliente in self:
-            if desactivar_usuario and cliente.user_id:
-                cliente.user_id.active = False  # Desactivar antes de aplicar cambios
-
-            # Actualizar el partner y el usuario asociado
             partner_vals = {}
             if 'nombreCliente' in vals:
                 partner_vals['name'] = vals['nombreCliente']
@@ -166,10 +153,8 @@ class Cliente(models.Model):
             if user_vals and cliente.user_id:
                 cliente.user_id.write(user_vals)
 
-            if desactivar_usuario and cliente.user_id:
-                cliente.user_id.active = True  # Reactivar después de aplicar cambios
-            
         return super(Cliente, self).write(vals)
+
 
 
     def validar_unicidad(self, vals):

@@ -78,7 +78,18 @@ class ClientesController(http.Controller):
     def registrarNuevoUsuario(self, **kw):
         response = request.httprequest.json
         try:
+            if not self.validar_correo(response['correo']):
+                return {"status": 400, 'titulo' : 'Registrar Usuario', "message": "El formato del correo es erróneo."}
     
+            if not self.validar_dni(response['dni']):
+                return {"status": 400, 'titulo' : 'Registrar Usuario', "message": "El formato del dni es erróneo"}
+            
+            if not self.validar_contrasenya(response['contrasenya']):
+                return {"status": 400, 'titulo' : 'Registrar Usuario', "message": "El formato de la contraseña es errónea"}
+            
+            if not self.validar_telefono(response['telefono']):
+                return {"status": 400, 'titulo' : 'Registrar Usuario', "message": "El formato del correo es erróneo."}
+
             http.request.env["instant_abode.cliente"].sudo().create(response)
 
             return {"status":200,'titulo' : 'Usuario Registrado',"message":"Nuevo usuario añadido."}
@@ -637,5 +648,20 @@ class ClientesController(http.Controller):
             correcto = letras[numero % 23]
             if letra != correcto:
                 return False
+        return True
+    
+    def validar_contrasenya(self, contrasenya):
+        # Menos 5 letras
+        if len(re.findall(r'[a-zA-Z]', contrasenya)) < 5:
+            return False
+        
+        # Carácter especial
+        if not re.search(r'[!@#$%^&*()_+{}\|:"<>?~\[\];\',./]', contrasenya):
+            return False
+        
+        # Un número
+        if not re.search(r'\d', contrasenya):
+            return False
+        
         return True
 
