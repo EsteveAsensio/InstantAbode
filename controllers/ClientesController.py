@@ -7,7 +7,7 @@ import datetime
 import re
 
 class ClientesController(http.Controller):
-
+    
     @http.route(['/InstantAbode/login'], auth='public', type="json", methods=['POST'], csrf=False)
     def login(self, **kw):
         try:

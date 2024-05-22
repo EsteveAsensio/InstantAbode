@@ -19,7 +19,7 @@ class Inmueble(models.Model):
     imagenes = fields.One2many('ir.attachment', 'inmueble_id', string='Imágenes')
     precio = fields.Float(string="Precio", help="Precio del inmueble, puede variar dependiendo de la instancia en el", required=True)
     #Propietario
-    propietario = fields.Many2one("instant_abode.propietario", string="Propietario", ondelete="cascade", default=lambda self: self.default_propietario())
+    propietario = fields.Many2one("instant_abode.propietario", string="Propietario", ondelete="cascade", default=lambda self: self.default_propietario(), required=True)
     #Alquileres
     alquileres = fields.One2many("instant_abode.alquiler", "inmueble")
     #Dar de alta

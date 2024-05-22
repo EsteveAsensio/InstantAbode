@@ -30,7 +30,7 @@
                     <group>
                         <h1 style="color:#d2d2ff" colspan="2">Cuenta Usuario</h1>
                         <field name="name" />
-                        <field name="contrasenya" />
+                        <field name="contrasenya" groups="instant_abode.grupo_propietarios" invisible="1"/>
                         <field name="imagen" widget="image" options="{'size': [150, 150]}" />
                     </group>
                 </group>
